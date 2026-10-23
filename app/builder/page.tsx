@@ -13,13 +13,13 @@ import EducationStep from '@/components/builder/steps/EducationStep';
 import SkillsStep from '@/components/builder/steps/SkillsStep';
 import SummaryStep from '@/components/builder/steps/SummaryStep';
 import FinalizeStep from '@/components/builder/steps/FinalizeStep';
-import { LayoutGrid, X, ArrowLeft, Printer, Eye, ChevronDown, Check } from 'lucide-react';
+import { LayoutGrid, X, ArrowLeft, Printer, Download, Eye, ChevronDown, Check } from 'lucide-react';
 
 const STEPS = [
   { id: 1, label: 'Contact' },
-  { id: 2, label: 'Work experience' },
-  { id: 3, label: 'Education' },
-  { id: 4, label: 'Skills' },
+  { id: 2, label: 'Education' },
+  { id: 3, label: 'Work experience' },
+  { id: 4, label: 'Additional info' },
   { id: 5, label: 'Summary' },
   { id: 6, label: 'Finalize' },
 ];
@@ -34,8 +34,8 @@ export default function BuilderPage() {
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
   const [isMobilePreviewOpen, setIsMobilePreviewOpen] = useState(false);
   const [isMobileStepsDropdownOpen, setIsMobileStepsDropdownOpen] = useState(false);
-  const [experienceSubStep, setExperienceSubStep] = useState<'intro' | 'form'>('intro');
   const [educationSubStep, setEducationSubStep] = useState<'intro' | 'form'>('intro');
+  const [experienceSubStep, setExperienceSubStep] = useState<'intro' | 'form'>('intro');
   const [skillsSubStep, setSkillsSubStep] = useState<'intro' | 'form'>('intro');
   const [summarySubStep, setSummarySubStep] = useState<'intro' | 'form'>('intro');
 
@@ -45,9 +45,9 @@ export default function BuilderPage() {
       case 1:
         return <ContactStep />;
       case 2:
-        return <ExperienceStep mode={experienceSubStep} />;
-      case 3:
         return <EducationStep mode={educationSubStep} />;
+      case 3:
+        return <ExperienceStep mode={experienceSubStep} />;
       case 4:
         return <SkillsStep mode={skillsSubStep} />;
       case 5:
@@ -62,15 +62,15 @@ export default function BuilderPage() {
   const handleNextClick = () => {
     if (currentStep === 1) {
       setStep(2);
-      setExperienceSubStep('intro');
-    } else if (currentStep === 2 && experienceSubStep === 'intro') {
-      setExperienceSubStep('form');
-    } else if (currentStep === 2 && experienceSubStep === 'form') {
-      setStep(3);
       setEducationSubStep('intro');
-    } else if (currentStep === 3 && educationSubStep === 'intro') {
+    } else if (currentStep === 2 && educationSubStep === 'intro') {
       setEducationSubStep('form');
-    } else if (currentStep === 3 && educationSubStep === 'form') {
+    } else if (currentStep === 2 && educationSubStep === 'form') {
+      setStep(3);
+      setExperienceSubStep('intro');
+    } else if (currentStep === 3 && experienceSubStep === 'intro') {
+      setExperienceSubStep('form');
+    } else if (currentStep === 3 && experienceSubStep === 'form') {
       setStep(4);
       setSkillsSubStep('intro');
     } else if (currentStep === 4 && skillsSubStep === 'intro') {
@@ -81,29 +81,30 @@ export default function BuilderPage() {
     } else if (currentStep === 5 && summarySubStep === 'intro') {
       setSummarySubStep('form');
     } else if (currentStep === 5 && summarySubStep === 'form') {
+      setStep(6);
     } else if (currentStep === 6) {
       if (typeof window !== 'undefined') {
-        window.dispatchEvent(new CustomEvent('applet-print-cv'));
+        window.dispatchEvent(new CustomEvent('applet-print-cv', { detail: { mode: 'download' } }));
       }
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleBackClick = () => {
-    if (currentStep === 2 && experienceSubStep === 'form') {
-      setExperienceSubStep('intro');
-    } else if (currentStep === 2 && experienceSubStep === 'intro') {
-      setStep(1);
-    } else if (currentStep === 3 && educationSubStep === 'form') {
+    if (currentStep === 2 && educationSubStep === 'form') {
       setEducationSubStep('intro');
-    } else if (currentStep === 3 && educationSubStep === 'intro') {
+    } else if (currentStep === 2 && educationSubStep === 'intro') {
+      setStep(1);
+    } else if (currentStep === 3 && experienceSubStep === 'form') {
+      setExperienceSubStep('intro');
+    } else if (currentStep === 3 && experienceSubStep === 'intro') {
       setStep(2);
-      setExperienceSubStep('form');
+      setEducationSubStep('form');
     } else if (currentStep === 4 && skillsSubStep === 'form') {
       setSkillsSubStep('intro');
     } else if (currentStep === 4 && skillsSubStep === 'intro') {
       setStep(3);
-      setEducationSubStep('form');
+      setExperienceSubStep('form');
     } else if (currentStep === 5 && summarySubStep === 'form') {
       setSummarySubStep('intro');
     } else if (currentStep === 5 && summarySubStep === 'intro') {
@@ -128,8 +129,8 @@ export default function BuilderPage() {
       <div className="hidden lg:block shrink-0 sticky top-0 h-screen overflow-y-auto">
         <Stepper
           onStepClick={(id) => {
-            if (id === 2) setExperienceSubStep('form');
-            if (id === 3) setEducationSubStep('form');
+            if (id === 2) setEducationSubStep('form');
+            if (id === 3) setExperienceSubStep('form');
             if (id === 4) setSkillsSubStep('form');
             if (id === 5) setSummarySubStep('form');
           }}
@@ -280,15 +281,21 @@ export default function BuilderPage() {
           </div>
         </main>
 
-        {/* Mobile Fixed Bottom Navigation Bar (Full-Width Next Button matching image_13b97d3f.png) */}
+        {/* Mobile Fixed Bottom Navigation Bar */}
         <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-[#E8EAF5] px-4 py-3 z-30 shadow-[0_-4px_16px_rgba(0,0,0,0.04)]">
+          {currentStep === 6 && (
+            <div className="text-[11px] text-slate-500 text-center mb-1.5 font-medium flex items-center justify-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              <span>ATS-friendly PDF &bull; 100% parser safe</span>
+            </div>
+          )}
           <button
             type="button"
             onClick={handleNextClick}
             className="w-full py-3.5 bg-[#4B4DED] hover:bg-[#3D3FC9] active:scale-98 text-white font-semibold text-base rounded-xl shadow-[0_4px_14px_rgba(75,77,237,0.25)] flex items-center justify-center gap-2 transition-all cursor-pointer"
           >
             <span>{currentStep === 6 ? 'Download PDF' : 'Next'}</span>
-            {currentStep === 6 && <Printer className="w-4 h-4" />}
+            {currentStep === 6 && <Download className="w-4 h-4" />}
           </button>
         </div>
 
@@ -302,16 +309,22 @@ export default function BuilderPage() {
             Back
           </button>
 
-
-
-          <button
-            type="button"
-            onClick={handleNextClick}
-            className="px-9 py-2.5 bg-[#4B4DED] hover:bg-[#3D3FC9] active:scale-98 text-white font-semibold text-sm rounded-xl shadow-xs flex items-center gap-2 transition-all cursor-pointer"
-          >
-            <span>{currentStep === 6 ? 'Download PDF' : 'Next'}</span>
-            {currentStep === 6 && <Printer className="w-4 h-4" />}
-          </button>
+          <div className="flex items-center gap-4">
+            {currentStep === 6 && (
+              <span className="text-xs text-slate-500 font-medium hidden sm:flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                <span>ATS-friendly PDF &bull; A4 formatted</span>
+              </span>
+            )}
+            <button
+              type="button"
+              onClick={handleNextClick}
+              className="px-9 py-2.5 bg-[#4B4DED] hover:bg-[#3D3FC9] active:scale-98 text-white font-semibold text-sm rounded-xl shadow-xs flex items-center gap-2 transition-all cursor-pointer"
+            >
+              <span>{currentStep === 6 ? 'Download PDF' : 'Next'}</span>
+              {currentStep === 6 && <Download className="w-4 h-4" />}
+            </button>
+          </div>
         </footer>
       </div>
 

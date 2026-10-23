@@ -95,8 +95,10 @@ export interface CvState {
   referencesText: string;
   customSections: CustomSectionItem[];
   importedFileName: string | null;
+  customPdfFileName: string;
 
   // Actions
+  setCustomPdfFileName: (name: string) => void;
   setStep: (step: number) => void;
   nextStep: () => void;
   prevStep: () => void;
@@ -178,8 +180,8 @@ export const useCvStore = create<CvState>()(
     (set) => ({
       currentStep: 1,
       language: 'English (UK)',
-      activeTemplate: 'castor',
-      themeColor: '#C4A482',
+      activeTemplate: 'uk-traditional',
+      themeColor: '#000000',
       contact: initialContact,
       experiences: initialExperiences,
       educations: initialEducations,
@@ -193,7 +195,9 @@ export const useCvStore = create<CvState>()(
       referencesText: 'References available on request',
       customSections: [],
       importedFileName: null,
+      customPdfFileName: '',
 
+      setCustomPdfFileName: (customPdfFileName) => set({ customPdfFileName }),
       setStep: (step) => set({ currentStep: step }),
       nextStep: () => set((state) => ({ currentStep: Math.min(state.currentStep + 1, 6) })),
       prevStep: () => set((state) => ({ currentStep: Math.max(state.currentStep - 1, 1) })),
@@ -461,6 +465,7 @@ export const useCvStore = create<CvState>()(
         awardsList: state.awardsList || [],
         referencesText: state.referencesText || 'References available on request',
         customSections: state.customSections || [],
+        customPdfFileName: state.customPdfFileName || '',
       }),
     }
   )

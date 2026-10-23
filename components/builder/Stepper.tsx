@@ -7,9 +7,9 @@ import { Check } from 'lucide-react';
 
 const STEPS = [
   { id: 1, label: 'Contact' },
-  { id: 2, label: 'Work experience' },
-  { id: 3, label: 'Education' },
-  { id: 4, label: 'Skills' },
+  { id: 2, label: 'Education' },
+  { id: 3, label: 'Work experience' },
+  { id: 4, label: 'Additional info' },
   { id: 5, label: 'Summary' },
   { id: 6, label: 'Finalize' },
 ];

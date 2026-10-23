@@ -7,6 +7,7 @@ import { CV, CvSettings } from '@/types/cv';
 import TemplateGallery from '@/components/TemplateGallery';
 import TemplateControls from '@/components/TemplateControls';
 import CvPreview from '@/components/CvPreview';
+import { CV_TEMPLATES } from '@/templates/registry';
 import { X, Sliders, LayoutGrid, Check } from 'lucide-react';
 
 interface TemplateModalProps {
@@ -70,7 +71,7 @@ export default function TemplateModal({ isOpen, onClose }: TemplateModalProps) {
                 }`}
               >
                 <LayoutGrid className="w-3.5 h-3.5" />
-                <span>Templates (20)</span>
+                <span>Templates ({CV_TEMPLATES.length})</span>
               </button>
               <button
                 type="button"

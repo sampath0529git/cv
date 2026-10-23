@@ -30,60 +30,61 @@ export interface PageContent {
 }
 
 const A4_HEIGHT_PX = 1123;
-const PAGE_PADDING_VERTICAL = 72; // 36px top + 36px bottom
-const BASE_USABLE_HEIGHT = A4_HEIGHT_PX - PAGE_PADDING_VERTICAL; // 1051px
-const CONTINUATION_HEADER_HEIGHT = 38;
+// 48px top padding + 48px bottom padding + 24px footer + safety cushion
+const PAGE_PADDING_VERTICAL = 104;
+const BASE_USABLE_HEIGHT = A4_HEIGHT_PX - PAGE_PADDING_VERTICAL; // 1019px
+const CONTINUATION_HEADER_HEIGHT = 40;
+const ITEM_SAFETY_BUFFER = 14;
 
 /**
  * Calculates realistic item heights based on character counts and typography.
  */
 function estimateStatementHeight(text: string, isTwoColumn: boolean): number {
   if (!text.trim()) return 0;
-  const charsPerLine = isTwoColumn ? 68 : 95;
+  const charsPerLine = isTwoColumn ? 60 : 76;
   const lines = Math.ceil(text.length / charsPerLine) || 1;
   const titleHeight = 32;
-  const lineHeight = 16;
+  const lineHeight = 17;
   const margin = 16;
   return titleHeight + (lines * lineHeight) + margin;
 }
 
 function estimateExperienceItemHeight(item: ExperienceItem, isTwoColumn: boolean): number {
-  const charsPerLine = isTwoColumn ? 62 : 88;
-  const headerHeight = 32; // Role + company + dates
+  const charsPerLine = isTwoColumn ? 56 : 74;
+  const headerHeight = 34; // Role + company + dates
   let bulletsHeight = 0;
 
   if (item.bullets && item.bullets.length > 0) {
     for (const bullet of item.bullets) {
       if (!bullet.trim()) continue;
       const lines = Math.ceil(bullet.length / charsPerLine) || 1;
-      bulletsHeight += (lines * 16) + 4;
+      bulletsHeight += (lines * 17) + 5;
     }
   } else if (item.description) {
     const lines = Math.ceil(item.description.length / charsPerLine) || 1;
-    bulletsHeight += (lines * 16) + 4;
+    bulletsHeight += (lines * 17) + 5;
   }
 
-  const marginBottom = 14;
+  const marginBottom = 16;
   return headerHeight + bulletsHeight + marginBottom;
 }
 
 function estimateEducationItemHeight(item: EducationItem, isTwoColumn: boolean): number {
-  const headerHeight = 30; // Qualification + institution + dates
+  const charsPerLine = isTwoColumn ? 56 : 74;
+  const headerHeight = 32; // Qualification + institution + dates
   let descHeight = 0;
 
   if (item.bullets && item.bullets.length > 0) {
-    const charsPerLine = isTwoColumn ? 62 : 88;
     for (const b of item.bullets) {
       const lines = Math.ceil(b.length / charsPerLine) || 1;
-      descHeight += (lines * 15) + 3;
+      descHeight += (lines * 16) + 4;
     }
   } else if (item.description) {
-    const charsPerLine = isTwoColumn ? 62 : 88;
     const lines = Math.ceil(item.description.length / charsPerLine) || 1;
-    descHeight += (lines * 15) + 3;
+    descHeight += (lines * 16) + 4;
   }
 
-  const marginBottom = 12;
+  const marginBottom = 14;
   return headerHeight + descHeight + marginBottom;
 }
 
@@ -175,9 +176,9 @@ export function paginateCv(cv: CV, isTwoColumn: boolean = false): PageContent[] 
 
   // Section order
   const defaultOrder = [
-    'statement',
-    'experience',
     'education',
+    'experience',
+    'statement',
     'skills',
     'projects',
     'certifications',
@@ -197,7 +198,7 @@ export function paginateCv(cv: CV, isTwoColumn: boolean = false): PageContent[] 
   for (const sectionKey of sectionOrder) {
     if (sectionKey === 'statement' && cv.personalStatement?.trim()) {
       const stmtHeight = estimateStatementHeight(cv.personalStatement, isTwoColumn);
-      if (currentHeight + stmtHeight > currentUsableHeight) {
+      if (currentHeight + stmtHeight > currentUsableHeight - ITEM_SAFETY_BUFFER) {
         startNewPage();
       }
       currentPage.showStatement = true;
@@ -214,14 +215,14 @@ export function paginateCv(cv: CV, isTwoColumn: boolean = false): PageContent[] 
 
         // If this is the first item of the section on this page, ensure title + item fit together
         if (isFirstInExp) {
-          if (currentHeight + titleHeight + itemH > currentUsableHeight) {
+          if (currentHeight + titleHeight + itemH > currentUsableHeight - ITEM_SAFETY_BUFFER) {
             // Section title wouldn't leave room for even 1 item: move title + item to next page
             startNewPage();
           }
           currentPage.experienceTitle = 'Work Experience';
           currentHeight += titleHeight;
           isFirstInExp = false;
-        } else if (currentHeight + itemH > currentUsableHeight) {
+        } else if (currentHeight + itemH > currentUsableHeight - ITEM_SAFETY_BUFFER) {
           // Additional item doesn't fit on this page: move to next page
           startNewPage();
           currentPage.experienceTitle = 'Work Experience (continued)';
@@ -241,13 +242,13 @@ export function paginateCv(cv: CV, isTwoColumn: boolean = false): PageContent[] 
         const itemH = estimateEducationItemHeight(edu, isTwoColumn);
 
         if (isFirstInEdu) {
-          if (currentHeight + titleHeight + itemH > currentUsableHeight) {
+          if (currentHeight + titleHeight + itemH > currentUsableHeight - ITEM_SAFETY_BUFFER) {
             startNewPage();
           }
           currentPage.educationTitle = 'Education';
           currentHeight += titleHeight;
           isFirstInEdu = false;
-        } else if (currentHeight + itemH > currentUsableHeight) {
+        } else if (currentHeight + itemH > currentUsableHeight - ITEM_SAFETY_BUFFER) {
           startNewPage();
           currentPage.educationTitle = 'Education (continued)';
           currentHeight += titleHeight;
@@ -263,7 +264,7 @@ export function paginateCv(cv: CV, isTwoColumn: boolean = false): PageContent[] 
       // but in single column they are in the main flow.
       if (!isTwoColumn) {
         const skillsH = estimateSkillsHeight(cv.skills);
-        if (currentHeight + skillsH > currentUsableHeight) {
+        if (currentHeight + skillsH > currentUsableHeight - ITEM_SAFETY_BUFFER) {
           startNewPage();
         }
         currentPage.showSkills = true;
@@ -281,13 +282,13 @@ export function paginateCv(cv: CV, isTwoColumn: boolean = false): PageContent[] 
         const itemH = 50;
 
         if (isFirstInProj) {
-          if (currentHeight + titleHeight + itemH > currentUsableHeight) {
+          if (currentHeight + titleHeight + itemH > currentUsableHeight - ITEM_SAFETY_BUFFER) {
             startNewPage();
           }
           currentPage.projectTitle = 'Key Projects';
           currentHeight += titleHeight;
           isFirstInProj = false;
-        } else if (currentHeight + itemH > currentUsableHeight) {
+        } else if (currentHeight + itemH > currentUsableHeight - ITEM_SAFETY_BUFFER) {
           startNewPage();
           currentPage.projectTitle = 'Key Projects (continued)';
           currentHeight += titleHeight;
@@ -300,7 +301,7 @@ export function paginateCv(cv: CV, isTwoColumn: boolean = false): PageContent[] 
 
     if (sectionKey === 'certifications' && cv.certifications && cv.certifications.length > 0) {
       const certsH = estimateCertificationsHeight(cv.certifications);
-      if (currentHeight + certsH > currentUsableHeight) {
+      if (currentHeight + certsH > currentUsableHeight - ITEM_SAFETY_BUFFER) {
         startNewPage();
       }
       currentPage.showCertifications = true;
@@ -311,7 +312,7 @@ export function paginateCv(cv: CV, isTwoColumn: boolean = false): PageContent[] 
     if (sectionKey === 'languages' && cv.languages && cv.languages.length > 0) {
       if (!isTwoColumn) {
         const langsH = estimateLanguagesHeight(cv.languages);
-        if (currentHeight + langsH > currentUsableHeight) {
+        if (currentHeight + langsH > currentUsableHeight - ITEM_SAFETY_BUFFER) {
           startNewPage();
         }
         currentPage.showLanguages = true;
@@ -322,7 +323,7 @@ export function paginateCv(cv: CV, isTwoColumn: boolean = false): PageContent[] 
 
     if (sectionKey === 'awards' && cv.awards && cv.awards.length > 0) {
       const awardsH = estimateAwardsHeight(cv.awards);
-      if (currentHeight + awardsH > currentUsableHeight) {
+      if (currentHeight + awardsH > currentUsableHeight - ITEM_SAFETY_BUFFER) {
         startNewPage();
       }
       currentPage.showAwards = true;
@@ -332,7 +333,7 @@ export function paginateCv(cv: CV, isTwoColumn: boolean = false): PageContent[] 
 
     if (sectionKey === 'volunteering' && cv.volunteering && cv.volunteering.length > 0) {
       const volH = 32 + (cv.volunteering.length * 45);
-      if (currentHeight + volH > currentUsableHeight) {
+      if (currentHeight + volH > currentUsableHeight - ITEM_SAFETY_BUFFER) {
         startNewPage();
       }
       currentPage.showVolunteering = true;
@@ -343,7 +344,7 @@ export function paginateCv(cv: CV, isTwoColumn: boolean = false): PageContent[] 
     if (sectionKey === 'interests' && cv.interests && cv.interests.length > 0) {
       if (!isTwoColumn) {
         const intH = 40;
-        if (currentHeight + intH > currentUsableHeight) {
+        if (currentHeight + intH > currentUsableHeight - ITEM_SAFETY_BUFFER) {
           startNewPage();
         }
         currentPage.showInterests = true;
@@ -355,7 +356,7 @@ export function paginateCv(cv: CV, isTwoColumn: boolean = false): PageContent[] 
     if (sectionKey === 'custom' && cv.customSections && cv.customSections.length > 0) {
       for (const customSec of cv.customSections) {
         const secH = 32 + (customSec.content ? 40 : 0) + ((customSec.bullets?.length || 0) * 18);
-        if (currentHeight + secH > currentUsableHeight) {
+        if (currentHeight + secH > currentUsableHeight - ITEM_SAFETY_BUFFER) {
           startNewPage();
         }
         currentPage.customSections.push(customSec);
@@ -365,7 +366,7 @@ export function paginateCv(cv: CV, isTwoColumn: boolean = false): PageContent[] 
 
     if (sectionKey === 'references' && cv.references) {
       const refH = 34;
-      if (currentHeight + refH > currentUsableHeight) {
+      if (currentHeight + refH > currentUsableHeight - ITEM_SAFETY_BUFFER) {
         startNewPage();
       }
       currentPage.references = cv.references;

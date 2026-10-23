@@ -80,14 +80,8 @@ export function cvStoreToCv(
       ? [{ group: 'Key Skills', items: skillItems }]
       : [];
 
-  // Template ID mapping (handle legacy template names if present)
-  let templateId = store.activeTemplate || 'london';
-  if (templateId === 'castor' || templateId === 'modern-beige') templateId = 'manchester';
-  if (templateId === 'capella' || templateId === 'minimal-clean') templateId = 'cambridge';
-  if (templateId === 'pollux') templateId = 'glasgow';
-  if (templateId === 'regulus') templateId = 'leeds';
-  if (templateId === 'executive-navy') templateId = 'edinburgh';
-  if (templateId === 'tech-slate') templateId = 'cardiff';
+  // Template ID mapping (defaults to uk-traditional)
+  const templateId = 'uk-traditional';
 
   return {
     personal: {

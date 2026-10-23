@@ -98,22 +98,24 @@
   .cv-page-wrapper {
     position: static !important;
     width: 210mm !important;
-    height: 297mm !important;
+    height: auto !important;
     min-height: 297mm !important;
-    max-height: 297mm !important;
+    max-height: none !important;
     margin: 0 !important;
     padding: 0 !important;
     transform: none !important;
     page-break-after: always !important;
     break-after: page !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
 
   .cv-page {
     position: static !important;
     width: 210mm !important;
-    height: 297mm !important;
+    height: auto !important;
     min-height: 297mm !important;
-    max-height: 297mm !important;
+    max-height: none !important;
     margin: 0 !important;
     padding: 0 !important;
     box-shadow: none !important;
@@ -124,7 +126,7 @@
     break-after: page !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
-    overflow: hidden !important;
+    overflow: visible !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
@@ -140,8 +142,24 @@
     display: none !important;
   }
 
+  /* Prevent cutting off text within sections, entries, and lists */
+  .cv-page section,
+  .cv-page header,
+  .cv-section,
+  .cv-item,
+  .cv-page .grid,
+  .cv-page li,
+  .cv-page p,
   .break-inside-avoid {
     break-inside: avoid !important;
     page-break-inside: avoid !important;
+  }
+
+  .cv-page h1,
+  .cv-page h2,
+  .cv-page h3,
+  .break-after-avoid {
+    break-after: avoid !important;
+    page-break-after: avoid !important;
   }
 }

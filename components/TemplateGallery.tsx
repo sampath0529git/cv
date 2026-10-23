@@ -188,6 +188,24 @@ export default function TemplateGallery({
             </div>
           );
         })}
+
+        {/* Modular Next Template Slot */}
+        <div className="flex flex-col rounded-2xl p-4 bg-slate-50 border-2 border-dashed border-slate-200 justify-between items-center text-center">
+          <div className="my-auto py-6 space-y-2">
+            <div className="w-10 h-10 rounded-full bg-slate-200/80 text-slate-500 mx-auto flex items-center justify-center">
+              <Sparkles className="w-5 h-5 text-[#4B4DED]" />
+            </div>
+            <h4 className="font-bold text-xs sm:text-sm text-slate-800">
+              Upload New Template
+            </h4>
+            <p className="text-[11px] text-slate-500 max-w-[200px] mx-auto leading-relaxed">
+              Upload or add more templates anytime. They will automatically appear in this gallery.
+            </p>
+          </div>
+          <div className="w-full py-1.5 rounded-lg text-xs font-semibold bg-white border border-slate-200 text-slate-500">
+            More templates ready
+          </div>
+        </div>
       </div>
     </div>
   );
