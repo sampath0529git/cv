@@ -1,6 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
+import { ProjectItem, CustomSectionItem } from '@/types/cv';
+
 export interface WorkExperience {
   id: string;
   jobTitle: string;
@@ -87,6 +89,11 @@ export interface CvState {
   summary: string;
   languagesList: string[];
   interestsList: string[];
+  certificationsList: string[];
+  projectsList: ProjectItem[];
+  awardsList: string[];
+  referencesText: string;
+  customSections: CustomSectionItem[];
   importedFileName: string | null;
 
   // Actions
@@ -119,11 +126,21 @@ export interface CvState {
   // Summary
   setSummary: (text: string) => void;
 
-  // Language & Interests
+  // Language, Interests, Certifications, Projects, Awards, References, Custom Sections
   addLanguageItem: (lang: string) => void;
   removeLanguageItem: (index: number) => void;
   addInterestItem: (interest: string) => void;
   removeInterestItem: (index: number) => void;
+  addCertification: (cert: string) => void;
+  removeCertification: (index: number) => void;
+  addProject: (project: ProjectItem) => void;
+  removeProject: (index: number) => void;
+  addAward: (award: string) => void;
+  removeAward: (index: number) => void;
+  setReferencesText: (text: string) => void;
+  addCustomSection: (section: CustomSectionItem) => void;
+  removeCustomSection: (id: string) => void;
+  updateCustomSection: (id: string, fields: Partial<CustomSectionItem>) => void;
 
   // Import
   setImportedFile: (fileName: string) => void;
@@ -170,6 +187,11 @@ export const useCvStore = create<CvState>()(
       summary: '',
       languagesList: initialLanguages,
       interestsList: initialInterests,
+      certificationsList: [],
+      projectsList: [],
+      awardsList: [],
+      referencesText: 'References available on request',
+      customSections: [],
       importedFileName: null,
 
       setStep: (step) => set({ currentStep: step }),
@@ -321,6 +343,57 @@ export const useCvStore = create<CvState>()(
           interestsList: state.interestsList.filter((_, i) => i !== index),
         })),
 
+      addCertification: (cert) =>
+        set((state) => {
+          if (!cert.trim()) return state;
+          return { certificationsList: [...state.certificationsList, cert.trim()] };
+        }),
+
+      removeCertification: (index) =>
+        set((state) => ({
+          certificationsList: state.certificationsList.filter((_, i) => i !== index),
+        })),
+
+      addProject: (project) =>
+        set((state) => ({
+          projectsList: [...state.projectsList, project],
+        })),
+
+      removeProject: (index) =>
+        set((state) => ({
+          projectsList: state.projectsList.filter((_, i) => i !== index),
+        })),
+
+      addAward: (award) =>
+        set((state) => {
+          if (!award.trim()) return state;
+          return { awardsList: [...state.awardsList, award.trim()] };
+        }),
+
+      removeAward: (index) =>
+        set((state) => ({
+          awardsList: state.awardsList.filter((_, i) => i !== index),
+        })),
+
+      setReferencesText: (referencesText) => set({ referencesText }),
+
+      addCustomSection: (section) =>
+        set((state) => ({
+          customSections: [...state.customSections, section],
+        })),
+
+      removeCustomSection: (id) =>
+        set((state) => ({
+          customSections: state.customSections.filter((s) => s.id !== id),
+        })),
+
+      updateCustomSection: (id, fields) =>
+        set((state) => ({
+          customSections: state.customSections.map((s) =>
+            s.id === id ? { ...s, ...fields } : s
+          ),
+        })),
+
       setImportedFile: (importedFileName) => set({ importedFileName }),
 
       loadParsedCvData: (data) =>
@@ -338,11 +411,18 @@ export const useCvStore = create<CvState>()(
           educations: initialEducations,
           skills: initialSkills,
           summary: '',
+          languagesList: [],
+          interestsList: [],
+          certificationsList: [],
+          projectsList: [],
+          awardsList: [],
+          referencesText: 'References available on request',
+          customSections: [],
           importedFileName: null,
         }),
     }),
     {
-      name: 'yourbrand-cv-builder-storage-v3',
+      name: 'yourbrand-cv-builder-storage-v4',
       onRehydrateStorage: () => (state) => {
         if (!state) return;
         if (state.experiences) {
@@ -370,24 +450,17 @@ export const useCvStore = create<CvState>()(
         activeTemplate: state.activeTemplate,
         themeColor: state.themeColor,
         contact: state.contact,
-        experiences: (state.experiences || []).filter(
-          (e) =>
-            e.id !== 'exp-1' &&
-            e.id !== 'exp-2' &&
-            e.jobTitle !== 'Job title' &&
-            Boolean(e.jobTitle?.trim() || e.employer?.trim())
-        ),
-        educations: (state.educations || []).filter(
-          (e) =>
-            e.id !== 'edu-1' &&
-            e.id !== 'edu-2' &&
-            e.degree !== 'Name of the diploma / training' &&
-            Boolean(e.degree?.trim() || e.school?.trim())
-        ),
-        skills: state.skills,
-        summary: state.summary,
-        languagesList: state.languagesList,
-        interestsList: state.interestsList,
+        experiences: state.experiences || [],
+        educations: state.educations || [],
+        skills: state.skills || [],
+        summary: state.summary || '',
+        languagesList: state.languagesList || [],
+        interestsList: state.interestsList || [],
+        certificationsList: state.certificationsList || [],
+        projectsList: state.projectsList || [],
+        awardsList: state.awardsList || [],
+        referencesText: state.referencesText || 'References available on request',
+        customSections: state.customSections || [],
       }),
     }
   )

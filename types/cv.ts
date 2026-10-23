@@ -17,6 +17,9 @@ export interface PersonalDetails {
   linkedin?: string;
   website?: string;
   photoUrl?: string; // Optional, off by default
+  dateOfBirth?: string;
+  nationality?: string;
+  drivingLicence?: string;
 }
 
 export interface ExperienceItem {
@@ -28,6 +31,7 @@ export interface ExperienceItem {
   endDate: string;
   current: boolean;
   bullets: string[];
+  description?: string;
 }
 
 export interface EducationItem {
@@ -37,6 +41,9 @@ export interface EducationItem {
   startDate: string;
   endDate: string;
   grade?: string;
+  location?: string;
+  description?: string;
+  bullets?: string[];
 }
 
 export interface SkillGroup {
@@ -49,6 +56,7 @@ export interface ProjectItem {
   title: string;
   description: string;
   link?: string;
+  technologies?: string[];
 }
 
 export interface LanguageItem {
@@ -62,6 +70,13 @@ export interface VolunteeringItem {
   organisation: string;
   date?: string;
   description?: string;
+}
+
+export interface CustomSectionItem {
+  id: string;
+  title: string;
+  content?: string;
+  bullets?: string[];
 }
 
 export interface CvSettings {
@@ -84,6 +99,8 @@ export interface CV {
   languages: LanguageItem[];
   volunteering: VolunteeringItem[];
   interests: string[];
+  awards?: string[];
+  customSections?: CustomSectionItem[];
   references: string; // Default: "References available on request"
   settings: CvSettings;
 }
@@ -95,5 +112,18 @@ export interface TemplateDefinition {
   description: string;
   bestFor: string;
   supportsPhoto: boolean;
-  component: React.ComponentType<{ cv: CV }>;
+  component: React.ComponentType<{
+    cv: CV;
+    pageData?: any;
+    pageIndex?: number;
+    totalPages?: number;
+  }>;
 }
+
+// Strict ISO 216 A4 Document Dimensions (210mm × 297mm, 1 : √2 aspect ratio)
+export const A4_WIDTH_MM = 210;
+export const A4_HEIGHT_MM = 297;
+export const A4_ASPECT_RATIO = A4_HEIGHT_MM / A4_WIDTH_MM; // ~1.4142857
+export const A4_WIDTH_PX = 794; // 210mm at standard 96 CSS DPI (793.70px)
+export const A4_HEIGHT_PX = 1123; // 297mm at standard 96 CSS DPI (1122.52px)
+

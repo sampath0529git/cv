@@ -160,18 +160,19 @@ export default function ContactStep() {
 
         {/* Email */}
         <div>
-          <label className="block text-sm font-semibold text-slate-800 mb-2">
+          <label htmlFor="contact-email" className="block text-sm font-semibold text-slate-800 mb-2">
             Email
           </label>
           <div className="relative">
             <input
+              id="contact-email"
               type="email"
               value={contact.email}
               onChange={(e) => updateContact({ email: e.target.value })}
               placeholder="e.g. elsa.manet@gmail.com"
               className="w-full h-[56px] pl-4 pr-11 rounded-xl border border-[#E3E6F0] bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#4B4DED] focus:ring-2 focus:ring-[#4B4DED]/10 transition-all text-sm sm:text-base shadow-2xs"
             />
-            {contact.email.trim().length > 0 && (
+            {contact.email.trim().length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact.email.trim()) && (
               <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#00C26D] flex items-center justify-center">
                 <Check className="w-5 h-5 stroke-[2.5]" />
               </div>
@@ -181,11 +182,12 @@ export default function ContactStep() {
 
         {/* Phone number */}
         <div>
-          <label className="block text-sm font-semibold text-slate-800 mb-2">
+          <label htmlFor="contact-phone" className="block text-sm font-semibold text-slate-800 mb-2">
             Phone number
           </label>
           <div className="relative">
             <input
+              id="contact-phone"
               type="tel"
               value={contact.phone}
               onChange={(e) => updateContact({ phone: e.target.value })}

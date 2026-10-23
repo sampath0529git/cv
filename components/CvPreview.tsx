@@ -2,12 +2,23 @@
 
 import React, { useRef, useState, useEffect } from 'react';
 import { useReactToPrint } from 'react-to-print';
-import { CV, FontScale } from '@/types/cv';
+import {
+  CV,
+  FontScale,
+  A4_WIDTH_PX,
+  A4_HEIGHT_PX,
+  A4_WIDTH_MM,
+  A4_HEIGHT_MM,
+  A4_ASPECT_RATIO,
+} from '@/types/cv';
 import { getTemplateById } from '@/templates/registry';
 import { useCvStore } from '@/store/useCvStore';
 import { cvStoreToCv, cvToCvStore } from '@/lib/cvAdapter';
 import { SAMPLE_UK_CV } from '@/data/sampleCv';
+import { paginateCv } from '@/lib/cvPagination';
 import { Download, RefreshCw, ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
+
+export { A4_WIDTH_PX, A4_HEIGHT_PX, A4_WIDTH_MM, A4_HEIGHT_MM, A4_ASPECT_RATIO };
 
 export const FONT_MAP: Record<string, { label: string; cssFont: string; category: string }> = {
   inter: { label: 'Inter', cssFont: 'var(--font-inter), ui-sans-serif, system-ui, sans-serif', category: 'Modern Sans' },
@@ -72,34 +83,125 @@ export default function CvPreview({
     }
   }, [activeCv.settings]);
 
-  // Responsive scaling to fit viewport container
+  // Responsive scaling to fit viewport container while strictly maintaining A4 proportions (210mm × 297mm)
   useEffect(() => {
     const handleResize = () => {
       if (!containerRef.current) return;
       const containerWidth = containerRef.current.clientWidth;
       if (containerWidth > 0) {
-        // A4 pixel width at standard 96 DPI is 794px
-        const padding = 32;
-        const targetWidth = 794;
-        const calculated = Math.min(1.05, Math.max(0.35, (containerWidth - padding) / targetWidth));
+        // Enforce strict A4 proportion: scale to fit available container width
+        const padding = containerWidth < 480 ? 16 : 24;
+        const available = Math.max(200, containerWidth - padding);
+        const calculated = Math.min(1.0, Math.max(0.28, available / A4_WIDTH_PX));
         setAutoScale(calculated);
       }
     };
 
     handleResize();
+    const observer = new ResizeObserver(() => {
+      handleResize();
+    });
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
+
+  const templateDef = getTemplateById(activeCv.settings.templateId);
+  const TemplateComponent = templateDef.component;
+  const isTwoColumn =
+    activeCv.settings.templateId === 'manchester' ||
+    activeCv.settings.templateId === 'glasgow' ||
+    activeCv.settings.templateId === 'shoreditch' ||
+    activeCv.settings.templateId === 'leeds' ||
+    activeCv.settings.templateId === 'birmingham';
+
+  // Compute paginated pages
+  const pages = React.useMemo(() => {
+    return paginateCv(activeCv, isTwoColumn);
+  }, [activeCv, isTwoColumn]);
 
   // Format document title for PDF download
   const sanitizedName = (activeCv.personal.fullName || 'Curriculum_Vitae').trim().replace(/[^a-zA-Z0-9_-]/g, '_');
   const pdfFileName = `${sanitizedName}-CV.pdf`;
 
-  // react-to-print hook
+  // react-to-print hook with strict A4 dimensions
   const handlePrint = useReactToPrint({
     contentRef: printRef,
     documentTitle: pdfFileName.replace('.pdf', ''),
+    pageStyle: `
+      @page {
+        size: A4 portrait;
+        margin: 0;
+      }
+      @media print {
+        html, body {
+          margin: 0 !important;
+          padding: 0 !important;
+          background: #ffffff !important;
+          width: 210mm !important;
+          height: auto !important;
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+        .cv-page-wrapper {
+          position: static !important;
+          width: 210mm !important;
+          height: 297mm !important;
+          min-width: 210mm !important;
+          min-height: 297mm !important;
+          max-width: 210mm !important;
+          max-height: 297mm !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          transform: none !important;
+          page-break-after: always !important;
+          break-after: page !important;
+        }
+        .cv-page {
+          position: static !important;
+          width: 210mm !important;
+          height: 297mm !important;
+          min-width: 210mm !important;
+          min-height: 297mm !important;
+          max-width: 210mm !important;
+          max-height: 297mm !important;
+          transform: none !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          box-shadow: none !important;
+          border: none !important;
+          page-break-after: always !important;
+          break-after: page !important;
+          page-break-inside: avoid !important;
+          break-inside: avoid !important;
+          overflow: hidden !important;
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+        .cv-page:last-child {
+          page-break-after: avoid !important;
+          break-after: avoid !important;
+        }
+        .page-badge-indicator {
+          display: none !important;
+        }
+      }
+    `,
   });
+
+  // Listen for global custom print events from buttons across the app
+  useEffect(() => {
+    const handleGlobalPrint = () => {
+      handlePrint();
+    };
+    window.addEventListener('applet-print-cv', handleGlobalPrint);
+    return () => window.removeEventListener('applet-print-cv', handleGlobalPrint);
+  }, [handlePrint]);
 
   const handleResetToSample = () => {
     if (onResetToSample) {
@@ -116,9 +218,6 @@ export default function CvPreview({
     }
   };
 
-  const templateDef = getTemplateById(activeCv.settings.templateId);
-  const TemplateComponent = templateDef.component;
-
   const fontConfig = FONT_MAP[activeCv.settings.fontFamily] || FONT_MAP.inter;
   const scaleConfig = FONT_SCALE_STYLES[activeCv.settings.fontScale] || FONT_SCALE_STYLES.md;
   const effectiveScale = customScale || autoScale * zoomLevel;
@@ -134,7 +233,7 @@ export default function CvPreview({
             </span>
             <span className="text-slate-400 hidden sm:inline">•</span>
             <span className="text-[11px] text-slate-600 truncate max-w-[140px] sm:max-w-none">
-              A4 (210 × 297 mm)
+              A4 (210 × 297 mm) • {pages.length} {pages.length === 1 ? 'Page' : 'Pages'}
             </span>
           </div>
 
@@ -143,7 +242,7 @@ export default function CvPreview({
             <div className="flex items-center gap-1 bg-white rounded-lg border border-slate-200 px-1.5 py-1">
               <button
                 type="button"
-                onClick={() => setZoomLevel((z) => Math.max(0.6, z - 0.1))}
+                onClick={() => setZoomLevel((z) => Math.max(0.5, z - 0.1))}
                 aria-label="Zoom out"
                 className="p-1 hover:bg-slate-100 rounded text-slate-600 transition-colors"
                 title="Zoom out"
@@ -198,35 +297,73 @@ export default function CvPreview({
         </div>
       )}
 
-      {/* A4 Document Viewport */}
+      {/* A4 Multi-Page Viewport */}
       <div className="w-full flex justify-center overflow-x-auto py-2">
         <div
-          style={{
-            width: `${794 * effectiveScale}px`,
-            minHeight: `${1123 * effectiveScale}px`,
-            transition: 'width 0.15s ease-out, min-height 0.15s ease-out',
-          }}
-          className="relative flex justify-center origin-top"
+          id="cv-print-area"
+          ref={printRef}
+          className="flex flex-col items-center gap-6"
         >
-          {/* Printable A4 Container (794px x 1123px at 96 DPI ≈ 210mm x 297mm) */}
-          <div
-            id="cv-print-area"
-            ref={printRef}
-            style={{
-              width: '794px',
-              minHeight: '1123px',
-              transform: `scale(${effectiveScale})`,
-              transformOrigin: 'top left',
-              fontFamily: fontConfig.cssFont,
-              fontSize: scaleConfig.baseSize,
-              lineHeight: scaleConfig.lineHeight,
-              ['--accent' as any]: activeCv.settings.accentColor || '#1e3a8a',
-            }}
-            className="cv-sheet bg-white text-slate-900 shadow-xl border border-slate-200/90 rounded-sm relative flex flex-col transition-colors duration-150"
-          >
-            {/* The selected template pure component */}
-            <TemplateComponent cv={activeCv} />
-          </div>
+          {pages.map((pageData, pageIdx) => (
+            <React.Fragment key={pageIdx}>
+              {/* Screen Page Badge Indicator (Hidden in Print) */}
+              {pages.length > 1 && (
+                <div
+                  style={{ width: `${Math.round(A4_WIDTH_PX * effectiveScale)}px` }}
+                  className="page-badge-indicator flex items-center justify-between px-1 text-[11px] font-semibold text-slate-500 select-none -mb-3"
+                >
+                  <span className="flex items-center gap-1.5 bg-slate-100 text-slate-700 px-2.5 py-0.5 rounded-full border border-slate-200/80">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#4B4DED]" />
+                    Page {pageIdx + 1} of {pages.length}
+                  </span>
+                  <span className="text-slate-400 font-mono text-[10px]">
+                    {A4_WIDTH_MM} × {A4_HEIGHT_MM} mm
+                  </span>
+                </div>
+              )}
+
+              {/* Scaled Wrapper for exact responsive sizing strictly matching A4 proportions */}
+              <div
+                className="cv-page-wrapper relative shrink-0"
+                style={{
+                  width: `${Math.round(A4_WIDTH_PX * effectiveScale)}px`,
+                  height: `${Math.round(A4_HEIGHT_PX * effectiveScale)}px`,
+                  aspectRatio: `${A4_WIDTH_MM} / ${A4_HEIGHT_MM}`,
+                  transition: 'width 0.15s ease-out, height 0.15s ease-out',
+                }}
+              >
+                {/* Printable A4 Container: exactly 210mm × 297mm (794px × 1123px at 96 DPI) */}
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: `${A4_WIDTH_PX}px`,
+                    height: `${A4_HEIGHT_PX}px`,
+                    minWidth: `${A4_WIDTH_PX}px`,
+                    maxWidth: `${A4_WIDTH_PX}px`,
+                    minHeight: `${A4_HEIGHT_PX}px`,
+                    maxHeight: `${A4_HEIGHT_PX}px`,
+                    aspectRatio: `${A4_WIDTH_MM} / ${A4_HEIGHT_MM}`,
+                    transform: `scale(${effectiveScale})`,
+                    transformOrigin: 'top left',
+                    fontFamily: fontConfig.cssFont,
+                    fontSize: scaleConfig.baseSize,
+                    lineHeight: scaleConfig.lineHeight,
+                    ['--accent' as any]: activeCv.settings.accentColor || '#1e3a8a',
+                  }}
+                  className="cv-page bg-white text-slate-900 shadow-xl border border-slate-200/90 rounded-sm flex flex-col overflow-hidden transition-colors duration-150 select-text box-border"
+                >
+                  <TemplateComponent
+                    cv={activeCv}
+                    pageData={pageData}
+                    pageIndex={pageIdx}
+                    totalPages={pages.length}
+                  />
+                </div>
+              </div>
+            </React.Fragment>
+          ))}
         </div>
       </div>
     </div>

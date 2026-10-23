@@ -81,9 +81,10 @@ export default function BuilderPage() {
     } else if (currentStep === 5 && summarySubStep === 'intro') {
       setSummarySubStep('form');
     } else if (currentStep === 5 && summarySubStep === 'form') {
-      setStep(6);
     } else if (currentStep === 6) {
-      window.print();
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('applet-print-cv'));
+      }
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -254,9 +255,9 @@ export default function BuilderPage() {
 
             {/* Desktop / Laptop Live A4 CV Preview (Side-by-side in EVERY section) */}
             <div className="hidden lg:flex lg:col-span-5 w-full flex-col items-center lg:sticky lg:top-[68px] lg:h-[calc(100vh-175px)] justify-between pb-1">
-              {/* Preview Viewport - Auto-sized to fit comfortably without overflowing */}
-              <div className="w-full flex-1 min-h-0 flex items-center justify-center overflow-hidden">
-                <CvPreview className="h-full w-auto aspect-[210/297] max-w-full overflow-hidden object-contain" />
+              {/* Preview Viewport - Scrollable multi-page A4 preview */}
+              <div className="w-full flex-1 min-h-0 flex justify-center overflow-y-auto px-1 py-1">
+                <CvPreview className="w-full" />
               </div>
 
               {/* Change Template Button below Preview (Matching image_28c4ca3f.png) */}
@@ -334,10 +335,10 @@ export default function BuilderPage() {
               </button>
             </div>
 
-            {/* Preview Sheet Viewport - Only A4 preview card and Change template button */}
+            {/* Preview Sheet Viewport - Scrollable multi-page preview and Change template button */}
             <div className="flex-1 overflow-y-auto p-4 flex flex-col items-center bg-white">
-              <div className="w-full max-w-[420px] shadow-lg rounded-2xl overflow-hidden self-start mx-auto aspect-[210/297]">
-                <CvPreview className="w-full h-full aspect-[210/297] overflow-hidden object-contain" />
+              <div className="w-full max-w-[440px] mx-auto flex flex-col items-center">
+                <CvPreview className="w-full" />
               </div>
 
               {/* Change Template Button below Preview in Mobile Sheet */}

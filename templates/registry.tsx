@@ -76,7 +76,7 @@ export const CV_TEMPLATES: TemplateDefinition[] = [
     description: 'Full-width accent header band with balanced two-column body below for structured scanning.',
     bestFor: 'Engineering, logistics, manufacturing, and supply chain management.',
     supportsPhoto: false,
-    component: (props) => <BaseTemplateSkeleton {...props} layoutVariant="sidebar-left" />,
+    component: (props) => <BaseTemplateSkeleton {...props} layoutVariant="header-band" />,
   },
   {
     id: 'glasgow',
@@ -105,7 +105,7 @@ export const CV_TEMPLATES: TemplateDefinition[] = [
     description: 'Generous white space, sans-serif typography, and uppercase micro-headings for clean reading.',
     bestFor: 'Designers, content strategists, architects, and creative directors.',
     supportsPhoto: false,
-    component: (props) => <BaseTemplateSkeleton {...props} layoutVariant="classic" />,
+    component: (props) => <BaseTemplateSkeleton {...props} layoutVariant="minimal" />,
   },
   {
     id: 'cambridge',
@@ -114,7 +114,7 @@ export const CV_TEMPLATES: TemplateDefinition[] = [
     description: 'Ultra-clean, monochrome aesthetic with single accent color reserved exclusively for headings.',
     bestFor: 'Scientific researchers, data analysts, economists, and mathematicians.',
     supportsPhoto: false,
-    component: (props) => <BaseTemplateSkeleton {...props} layoutVariant="classic" />,
+    component: (props) => <BaseTemplateSkeleton {...props} layoutVariant="minimal" />,
   },
   {
     id: 'bath',
@@ -123,7 +123,7 @@ export const CV_TEMPLATES: TemplateDefinition[] = [
     description: 'Two-tone header with compact spacing engineered to fit high-density experience cleanly.',
     bestFor: 'Experienced contractors, consultants, and career pivoters.',
     supportsPhoto: false,
-    component: (props) => <BaseTemplateSkeleton {...props} layoutVariant="classic" />,
+    component: (props) => <BaseTemplateSkeleton {...props} layoutVariant="header-band" />,
   },
   {
     id: 'norwich',
@@ -132,7 +132,7 @@ export const CV_TEMPLATES: TemplateDefinition[] = [
     description: 'Left-hand date gutter layout with chronological dates aligned beside role descriptions.',
     bestFor: 'Project managers, management consultants, and operations directors.',
     supportsPhoto: false,
-    component: (props) => <BaseTemplateSkeleton {...props} layoutVariant="classic" />,
+    component: (props) => <BaseTemplateSkeleton {...props} layoutVariant="minimal" />,
   },
 
   // --- EXECUTIVE ---
@@ -143,7 +143,7 @@ export const CV_TEMPLATES: TemplateDefinition[] = [
     description: 'Authoritative header with a dedicated "Key Achievements" highlight box under the profile.',
     bestFor: 'C-Suite, VP, Managing Directors, and Board Advisory roles.',
     supportsPhoto: false,
-    component: (props) => <BaseTemplateSkeleton {...props} layoutVariant="classic" />,
+    component: (props) => <BaseTemplateSkeleton {...props} layoutVariant="executive" />,
   },
   {
     id: 'kensington',
@@ -152,7 +152,7 @@ export const CV_TEMPLATES: TemplateDefinition[] = [
     description: 'Refined serif/sans pairing with subtle accent vertical rules emphasizing leadership results.',
     bestFor: 'Private equity, wealth management, luxury brand executives, and partners.',
     supportsPhoto: false,
-    component: (props) => <BaseTemplateSkeleton {...props} layoutVariant="classic" />,
+    component: (props) => <BaseTemplateSkeleton {...props} layoutVariant="executive" />,
   },
   {
     id: 'canary',
@@ -161,7 +161,7 @@ export const CV_TEMPLATES: TemplateDefinition[] = [
     description: 'Canary Wharf finance/consulting style: compact, metrics-friendly bullets and core skills grid.',
     bestFor: 'Investment banking, risk analysis, FinTech, and strategy consulting.',
     supportsPhoto: false,
-    component: (props) => <BaseTemplateSkeleton {...props} layoutVariant="classic" />,
+    component: (props) => <BaseTemplateSkeleton {...props} layoutVariant="executive" />,
   },
 
   // --- CREATIVE-LIGHT ---
@@ -192,7 +192,7 @@ export const CV_TEMPLATES: TemplateDefinition[] = [
     description: 'Education listed first, followed by academic projects/placements, then work experience.',
     bestFor: 'University graduates, postgraduates, intern applicants, and trainee roles.',
     supportsPhoto: false,
-    component: (props) => <BaseTemplateSkeleton {...props} layoutVariant="classic" />,
+    component: (props) => <BaseTemplateSkeleton {...props} layoutVariant="graduate" />,
   },
   {
     id: 'nottingham',
@@ -201,7 +201,7 @@ export const CV_TEMPLATES: TemplateDefinition[] = [
     description: 'Single column with "Key Skills" and "Academic Achievements" up front for early careers.',
     bestFor: 'School leavers, apprentices, career changers, and junior developers.',
     supportsPhoto: false,
-    component: (props) => <BaseTemplateSkeleton {...props} layoutVariant="classic" />,
+    component: (props) => <BaseTemplateSkeleton {...props} layoutVariant="graduate" />,
   },
 ];
 

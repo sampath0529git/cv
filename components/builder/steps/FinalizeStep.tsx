@@ -5,19 +5,22 @@ import { useCvStore } from '@/store/useCvStore';
 import { Download, Edit3, CheckCircle2, Sparkles, FileText, Printer } from 'lucide-react';
 
 export default function FinalizeStep() {
-  const { contact, experiences, educations, skills, setStep } = useCvStore();
+  const { contact, experiences, educations, skills, summary, certificationsList, languagesList, setStep } = useCvStore();
 
   const handleDownloadPdf = () => {
-    // Triggers standard browser print dialog styled for A4 page
-    window.print();
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('applet-print-cv'));
+    }
   };
 
   const sections = [
-    { id: 1, title: 'Personal Details', detail: `${contact.firstName || 'Not added'} ${contact.lastName || ''}` },
+    { id: 1, title: 'Personal Details', detail: [contact.firstName, contact.lastName].filter(Boolean).join(' ') || 'Not added' },
     { id: 2, title: 'Work Experience', detail: `${experiences.length} positions added` },
     { id: 3, title: 'Education', detail: `${educations.length} qualifications added` },
     { id: 4, title: 'Key Skills', detail: `${skills.length} skills listed` },
-    { id: 5, title: 'Professional Summary', detail: 'Completed' },
+    { id: 5, title: 'Professional Summary', detail: summary?.trim() ? 'Completed' : 'Optional' },
+    ...(languagesList && languagesList.length > 0 ? [{ id: 4, title: 'Languages', detail: `${languagesList.length} languages` }] : []),
+    ...(certificationsList && certificationsList.length > 0 ? [{ id: 4, title: 'Certifications', detail: `${certificationsList.length} certifications` }] : []),
   ];
 
   return (

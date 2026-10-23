@@ -1,4 +1,5 @@
 import React from 'react';
+import FormattedText from './FormattedText';
 
 interface CvBulletListProps {
   bullets: string[];
@@ -18,15 +19,15 @@ export default function CvBulletList({
       {bullets.map((bullet, idx) => {
         if (!bullet || !bullet.trim()) return null;
         return (
-          <li key={idx} className="relative pl-3 text-[10px] break-inside-avoid">
+          <li key={idx} className="relative pl-3.5 text-[10px] break-inside-avoid">
             <span
-              className="absolute left-0 top-[6px] w-1 h-1 rounded-full shrink-0"
+              className="absolute left-0 top-[6px] w-1.5 h-1.5 rounded-full shrink-0"
               style={{
                 backgroundColor: bulletColor || 'var(--accent, #64748b)',
               }}
               aria-hidden="true"
             />
-            <span>{bullet.trim()}</span>
+            <FormattedText text={bullet.trim()} inline />
           </li>
         );
       })}

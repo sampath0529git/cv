@@ -4,6 +4,8 @@ import { SAMPLE_UK_CV } from '@/data/sampleCv';
 
 /**
  * Converts the existing CvStore state into the unified UK CV data model.
+ * Adheres strictly to the single-source-of-truth rule:
+ * User-entered data is never discarded, truncated, or overridden with dummy text.
  */
 export function cvStoreToCv(
   store: Partial<CvState>,
@@ -25,15 +27,11 @@ export function cvStoreToCv(
     drivingLicence: '',
   };
 
-  const fullName =
-    contact.firstName || contact.lastName
-      ? `${contact.firstName || ''} ${contact.lastName || ''}`.trim()
-      : SAMPLE_UK_CV.personal.fullName;
+  const nameParts = [contact.firstName, contact.lastName].filter(Boolean);
+  const fullName = nameParts.length > 0 ? nameParts.join(' ').trim() : 'Your Name';
 
-  const location =
-    contact.city || contact.postalCode
-      ? [contact.city, contact.postalCode].filter(Boolean).join(', ')
-      : SAMPLE_UK_CV.personal.location;
+  const locationParts = [contact.city, contact.postalCode].filter(Boolean);
+  const location = locationParts.join(', ');
 
   // Convert experiences
   const experience: ExperienceItem[] = (store.experiences || []).map((exp, index) => {
@@ -50,26 +48,37 @@ export function cvStoreToCv(
       startDate: exp.startDate || '',
       endDate: exp.isCurrent ? 'Present' : exp.endDate || '',
       current: Boolean(exp.isCurrent),
-      bullets: rawBullets.length > 0 ? rawBullets : [exp.description || ''],
+      bullets: rawBullets.length > 0 ? rawBullets : (exp.description ? [exp.description] : []),
+      description: exp.description || '',
     };
   });
 
   // Convert educations
-  const education: EducationItem[] = (store.educations || []).map((edu, index) => ({
-    id: edu.id || `edu-${index}`,
-    qualification: edu.degree || 'Degree / Qualification',
-    institution: edu.school || 'Institution',
-    startDate: edu.startDate || '',
-    endDate: edu.endDate || '',
-    grade: edu.city ? `Location: ${edu.city}` : undefined,
-  }));
+  const education: EducationItem[] = (store.educations || []).map((edu, index) => {
+    const rawBullets = (edu.description || '')
+      .split('\n')
+      .map((line) => line.replace(/^[•\-*]\s*/, '').trim())
+      .filter(Boolean);
+
+    return {
+      id: edu.id || `edu-${index}`,
+      qualification: edu.degree || 'Degree / Qualification',
+      institution: edu.school || 'Institution',
+      location: edu.city || undefined,
+      startDate: edu.startDate || '',
+      endDate: edu.endDate || '',
+      grade: edu.city ? undefined : undefined,
+      description: edu.description || undefined,
+      bullets: rawBullets.length > 0 ? rawBullets : undefined,
+    };
+  });
 
   // Convert skills
   const skillItems = (store.skills || []).map((s) => s.name).filter(Boolean);
   const skills: SkillGroup[] =
     skillItems.length > 0
-      ? [{ group: 'Core Competencies', items: skillItems }]
-      : SAMPLE_UK_CV.skills;
+      ? [{ group: 'Key Skills', items: skillItems }]
+      : [];
 
   // Template ID mapping (handle legacy template names if present)
   let templateId = store.activeTemplate || 'london';
@@ -82,31 +91,30 @@ export function cvStoreToCv(
 
   return {
     personal: {
-      fullName: fullName || SAMPLE_UK_CV.personal.fullName,
-      jobTitle: contact.jobTitle || SAMPLE_UK_CV.personal.jobTitle,
-      email: contact.email || SAMPLE_UK_CV.personal.email,
-      phone: contact.phone || SAMPLE_UK_CV.personal.phone,
-      location: location || SAMPLE_UK_CV.personal.location,
-      linkedin: contact.linkedin || SAMPLE_UK_CV.personal.linkedin,
-      website: contact.website || SAMPLE_UK_CV.personal.website,
+      fullName,
+      jobTitle: contact.jobTitle || '',
+      email: contact.email || '',
+      phone: contact.phone || '',
+      location,
+      linkedin: contact.linkedin || '',
+      website: contact.website || '',
+      dateOfBirth: contact.dateOfBirth || '',
+      nationality: contact.nationality || '',
+      drivingLicence: contact.drivingLicence || '',
       photoUrl: contact.photoUrl || undefined,
     },
-    personalStatement: store.summary?.trim() || SAMPLE_UK_CV.personalStatement,
-    experience: experience.length > 0 ? experience : SAMPLE_UK_CV.experience,
-    education: education.length > 0 ? education : SAMPLE_UK_CV.education,
+    personalStatement: store.summary || '',
+    experience,
+    education,
     skills,
-    certifications: SAMPLE_UK_CV.certifications,
-    projects: SAMPLE_UK_CV.projects,
-    languages:
-      (store.languagesList || []).length > 0
-        ? store.languagesList!.map((lang) => ({ name: lang, level: 'Proficient' }))
-        : SAMPLE_UK_CV.languages,
-    volunteering: SAMPLE_UK_CV.volunteering,
-    interests:
-      (store.interestsList || []).length > 0
-        ? store.interestsList!
-        : SAMPLE_UK_CV.interests,
-    references: SAMPLE_UK_CV.references,
+    certifications: store.certificationsList || [],
+    projects: store.projectsList || [],
+    languages: (store.languagesList || []).map((lang) => ({ name: lang, level: 'Proficient' })),
+    volunteering: [],
+    interests: store.interestsList || [],
+    awards: store.awardsList || [],
+    customSections: store.customSections || [],
+    references: store.referencesText !== undefined ? store.referencesText : 'References available on request',
     settings: {
       templateId,
       accentColor: store.themeColor || '#1E3A8A',
@@ -119,7 +127,7 @@ export function cvStoreToCv(
 }
 
 /**
- * Converts a unified CV data model back into CvStore state.
+ * Converts a unified CV data model back into CvStore state (e.g. for Reset Sample or Import).
  */
 export function cvToCvStore(cv: CV): Partial<CvState> {
   const nameParts = (cv.personal.fullName || '').trim().split(' ');
@@ -138,12 +146,12 @@ export function cvToCvStore(cv: CV): Partial<CvState> {
       photoUrl: cv.personal.photoUrl || '',
       linkedin: cv.personal.linkedin || '',
       website: cv.personal.website || '',
-      dateOfBirth: '',
-      nationality: '',
-      drivingLicence: '',
+      dateOfBirth: cv.personal.dateOfBirth || '',
+      nationality: cv.personal.nationality || '',
+      drivingLicence: cv.personal.drivingLicence || '',
     },
-    summary: cv.personalStatement,
-    experiences: cv.experience.map((exp) => ({
+    summary: cv.personalStatement || '',
+    experiences: (cv.experience || []).map((exp) => ({
       id: exp.id,
       jobTitle: exp.role,
       employer: exp.company,
@@ -151,26 +159,31 @@ export function cvToCvStore(cv: CV): Partial<CvState> {
       startDate: exp.startDate,
       endDate: exp.endDate === 'Present' ? '' : exp.endDate,
       isCurrent: exp.current,
-      description: exp.bullets.join('\n'),
+      description: exp.bullets ? exp.bullets.join('\n') : (exp.description || ''),
     })),
-    educations: cv.education.map((edu) => ({
+    educations: (cv.education || []).map((edu) => ({
       id: edu.id,
       degree: edu.qualification,
       school: edu.institution,
-      city: edu.grade || '',
+      city: edu.location || '',
       startDate: edu.startDate,
       endDate: edu.endDate,
-      description: '',
+      description: edu.description || (edu.bullets ? edu.bullets.join('\n') : ''),
     })),
-    skills: cv.skills.flatMap((group) =>
+    skills: (cv.skills || []).flatMap((group) =>
       group.items.map((item, idx) => ({
         id: `sk-${idx}-${item}`,
         name: item,
         level: 'Advanced' as const,
       }))
     ),
-    languagesList: cv.languages.map((l) => l.name),
-    interestsList: cv.interests,
+    languagesList: (cv.languages || []).map((l) => l.name),
+    interestsList: cv.interests || [],
+    certificationsList: cv.certifications || [],
+    projectsList: cv.projects || [],
+    awardsList: cv.awards || [],
+    referencesText: cv.references || 'References available on request',
+    customSections: cv.customSections || [],
     themeColor: cv.settings.accentColor,
     activeTemplate: cv.settings.templateId as any,
   };
