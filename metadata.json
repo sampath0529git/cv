@@ -1,0 +1,6 @@
+{
+  "name": "MakeMyCV - Free CV Maker",
+  "description": "Create a perfect CV in minutes with AI. Recruiter-approved UK templates, free CV builder, and instant ATS-friendly PDF download.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
