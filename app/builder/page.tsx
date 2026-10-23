@@ -14,6 +14,7 @@ import SkillsStep from '@/components/builder/steps/SkillsStep';
 import SummaryStep from '@/components/builder/steps/SummaryStep';
 import FinalizeStep from '@/components/builder/steps/FinalizeStep';
 import { LayoutGrid, X, ArrowLeft, Printer, Download, Eye, ChevronDown, Check } from 'lucide-react';
+import { downloadCvPdf } from '@/lib/pdfGenerator';
 
 const STEPS = [
   { id: 1, label: 'Contact' },
@@ -83,6 +84,10 @@ export default function BuilderPage() {
     } else if (currentStep === 5 && summarySubStep === 'form') {
       setStep(6);
     } else if (currentStep === 6) {
+      const storeState = useCvStore.getState();
+      const defaultName = `${([storeState.contact.firstName, storeState.contact.lastName].filter(Boolean).join('_') || 'Curriculum_Vitae')}-CV.pdf`;
+      const fileName = storeState.customPdfFileName?.trim() ? `${storeState.customPdfFileName.trim().replace(/\.pdf$/i, '')}.pdf` : defaultName;
+      downloadCvPdf({ fileName });
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('applet-print-cv', { detail: { mode: 'download' } }));
       }
@@ -280,6 +285,25 @@ export default function BuilderPage() {
             </div>
           </div>
         </main>
+
+        {/* Dedicated persistent export container so cv-print-area is always measurable on mobile viewports */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '794px',
+            height: '1123px',
+            zIndex: -9998,
+            overflow: 'hidden',
+            pointerEvents: 'none',
+            opacity: 0,
+          }}
+          className="lg:hidden"
+        >
+          <CvPreview className="w-[794px]" />
+        </div>
 
         {/* Mobile Fixed Bottom Navigation Bar */}
         <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-[#E8EAF5] px-4 py-3 z-30 shadow-[0_-4px_16px_rgba(0,0,0,0.04)]">

@@ -16,7 +16,7 @@ import { useCvStore } from '@/store/useCvStore';
 import { cvStoreToCv, cvToCvStore } from '@/lib/cvAdapter';
 import { SAMPLE_UK_CV } from '@/data/sampleCv';
 import { paginateCv } from '@/lib/cvPagination';
-import { Download, RefreshCw, ZoomIn, ZoomOut, Maximize2, Printer, Loader2 } from 'lucide-react';
+import { Download, RefreshCw, ZoomIn, ZoomOut, Maximize2, Printer, Loader2, Check } from 'lucide-react';
 import CvSkeleton from '@/components/CvSkeleton';
 import { downloadCvPdf } from '@/lib/pdfGenerator';
 
@@ -63,6 +63,7 @@ export default function CvPreview({
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [isExportingPdf, setIsExportingPdf] = useState<boolean>(false);
   const [exportProgressText, setExportProgressText] = useState<string>('');
+  const [isDownloadSuccess, setIsDownloadSuccess] = useState<boolean>(false);
   const isFirstRender = useRef(true);
   const [storedSettings, setStoredSettings] = useState<Partial<CV['settings']> | null>(() => {
     if (typeof window === 'undefined') return null;
@@ -173,78 +174,115 @@ export default function CvPreview({
         margin: 0;
       }
       @media print {
+        *, *::before, *::after {
+          box-sizing: border-box !important;
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+          color-adjust: exact !important;
+        }
         html, body {
           margin: 0 !important;
           padding: 0 !important;
           background: #ffffff !important;
           width: 210mm !important;
+          min-height: 297mm !important;
           height: auto !important;
-          -webkit-print-color-adjust: exact !important;
-          print-color-adjust: exact !important;
         }
         .cv-page-wrapper {
-          position: static !important;
+          position: relative !important;
           width: 210mm !important;
-          height: auto !important;
+          height: 297mm !important;
           min-width: 210mm !important;
-          min-height: 297mm !important;
           max-width: 210mm !important;
-          max-height: none !important;
+          min-height: 297mm !important;
+          max-height: 297mm !important;
           margin: 0 !important;
           padding: 0 !important;
           transform: none !important;
-          page-break-after: always !important;
-          break-after: page !important;
+          overflow: hidden !important;
+          box-sizing: border-box !important;
           page-break-inside: avoid !important;
           break-inside: avoid !important;
+          page-break-after: always !important;
+          break-after: page !important;
+        }
+        .cv-page-wrapper:last-child {
+          page-break-after: auto !important;
+          break-after: auto !important;
         }
         .cv-page {
           position: static !important;
           width: 210mm !important;
-          height: auto !important;
+          height: 297mm !important;
           min-width: 210mm !important;
-          min-height: 297mm !important;
           max-width: 210mm !important;
-          max-height: none !important;
-          transform: none !important;
+          min-height: 297mm !important;
+          max-height: 297mm !important;
           margin: 0 !important;
-          padding: 0 !important;
+          box-sizing: border-box !important;
           box-shadow: none !important;
           border: none !important;
-          page-break-after: always !important;
-          break-after: page !important;
+          border-radius: 0 !important;
+          transform: none !important;
+          overflow: hidden !important;
           page-break-inside: avoid !important;
           break-inside: avoid !important;
-          overflow: visible !important;
-          -webkit-print-color-adjust: exact !important;
-          print-color-adjust: exact !important;
-        }
-        .cv-page:last-child,
-        .cv-page-wrapper:last-child {
-          page-break-after: avoid !important;
-          break-after: avoid !important;
+          page-break-after: auto !important;
+          break-after: auto !important;
         }
         .page-badge-indicator,
-        .no-print {
+        .no-print,
+        #cv-export-persistent-root,
+        #cv-pdf-export-staging,
+        button,
+        nav,
+        input,
+        aside,
+        [role="tooltip"] {
           display: none !important;
         }
         .cv-page section,
+        .cv-page article,
         .cv-page header,
+        .cv-page footer,
         .cv-section,
+        .cv-section-title,
         .cv-item,
+        .cv-entry,
+        .cv-experience-item,
+        .cv-education-item,
+        .cv-skill-tag,
         .cv-page .grid,
+        .cv-page .flex,
         .cv-page li,
+        .cv-page ul,
+        .cv-page ol,
         .cv-page p,
-        .break-inside-avoid {
+        .cv-page blockquote,
+        .cv-page table,
+        .cv-page tr,
+        .break-inside-avoid,
+        [data-section] {
           break-inside: avoid !important;
           page-break-inside: avoid !important;
+          -webkit-column-break-inside: avoid !important;
         }
         .cv-page h1,
         .cv-page h2,
         .cv-page h3,
+        .cv-page h4,
+        .cv-page h5,
+        .cv-page h6,
+        .cv-section-title,
         .break-after-avoid {
           break-after: avoid !important;
           page-break-after: avoid !important;
+        }
+        .cv-page p,
+        .cv-page li,
+        .cv-page span {
+          orphans: 3;
+          widows: 3;
         }
       }
     `,
@@ -253,12 +291,17 @@ export default function CvPreview({
   const handleDirectDownloadPdf = React.useCallback(async () => {
     if (isExportingPdf) return;
     setIsExportingPdf(true);
+    setIsDownloadSuccess(false);
     setExportProgressText('Preparing PDF...');
     try {
-      await downloadCvPdf({
+      const ok = await downloadCvPdf({
         fileName: pdfFileName,
         onProgress: (msg) => setExportProgressText(msg),
       });
+      if (ok) {
+        setIsDownloadSuccess(true);
+        setTimeout(() => setIsDownloadSuccess(false), 4000);
+      }
     } catch (err) {
       console.error('Failed to download PDF:', err);
     } finally {
@@ -372,13 +415,22 @@ export default function CvPreview({
               type="button"
               onClick={handleDirectDownloadPdf}
               disabled={isExportingPdf}
-              className="px-3 py-1 bg-[#4B4DED] hover:bg-[#3D3FC9] text-white text-xs font-semibold rounded-lg shadow-2xs flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-60"
+              className={`px-3 py-1 text-white text-xs font-semibold rounded-lg shadow-2xs flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-60 ${
+                isDownloadSuccess
+                  ? 'bg-emerald-600 hover:bg-emerald-700'
+                  : 'bg-[#4B4DED] hover:bg-[#3D3FC9]'
+              }`}
               title={`Download ${pdfFileName} (300 DPI High-Quality)`}
             >
               {isExportingPdf ? (
                 <>
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
                   <span className="max-w-[120px] truncate">{exportProgressText || 'Downloading...'}</span>
+                </>
+              ) : isDownloadSuccess ? (
+                <>
+                  <Check className="w-3.5 h-3.5 text-emerald-200" />
+                  <span>Downloaded!</span>
                 </>
               ) : (
                 <>

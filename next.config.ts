@@ -22,6 +22,12 @@ const nextConfig: NextConfig = {
   output: 'standalone',
   transpilePackages: ['motion'],
   webpack: (config, {dev}) => {
+    config.resolve = config.resolve || {};
+    config.resolve.alias = {
+      ...(config.resolve.alias || {}),
+      html2canvas: 'html2canvas-pro',
+    };
+
     // HMR is disabled in AI Studio via DISABLE_HMR env var.
     // Do not modify—file watching is disabled to prevent flickering during agent edits.
     if (dev && process.env.DISABLE_HMR === 'true') {

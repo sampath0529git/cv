@@ -138,6 +138,21 @@ export default function FinalizeStep() {
         </div>
       </div>
 
+      {/* Download Success Feedback Banner */}
+      {downloadSuccess && (
+        <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 flex items-center gap-3 animate-[fadeIn_0.2s_ease-out]">
+          <div className="w-8 h-8 rounded-full bg-emerald-500 text-white flex items-center justify-center shrink-0 shadow-xs">
+            <Check className="w-5 h-5 stroke-[2.5]" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h4 className="text-sm font-bold text-emerald-900">Your high-quality CV is downloaded!</h4>
+            <p className="text-xs text-emerald-700 mt-0.5">
+              Saved as <span className="font-mono font-semibold">{resolvedFileName}</span>. Check your downloads folder or browser tray.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Main Download Action Card */}
       <div className="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-[#0F1B4D] to-[#1E2563] text-white shadow-xl flex flex-col sm:flex-row items-center justify-between gap-6">
         <div className="space-y-2 text-center sm:text-left">
