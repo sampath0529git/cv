@@ -146,7 +146,7 @@ export default function TemplatesSection() {
                 <Eye className="w-4 h-4 text-blue-400" /> Classic Elegance
               </span>
               <Link
-                href="#cv-builder-section"
+                href="/start"
                 className="px-4 py-2 rounded-lg bg-[#3b5bfd] hover:bg-blue-600 text-white text-xs font-semibold shadow-md"
               >
                 Use this template
@@ -224,7 +224,7 @@ export default function TemplatesSection() {
                 <Eye className="w-4 h-4 text-blue-400" /> Modern Timeline
               </span>
               <Link
-                href="#cv-builder-section"
+                href="/start"
                 className="px-4 py-2 rounded-lg bg-[#3b5bfd] hover:bg-blue-600 text-white text-xs font-semibold shadow-md"
               >
                 Use this template
@@ -301,7 +301,7 @@ export default function TemplatesSection() {
                 <Eye className="w-4 h-4 text-blue-400" /> Executive Obsidian
               </span>
               <Link
-                href="#cv-builder-section"
+                href="/start"
                 className="px-4 py-2 rounded-lg bg-[#3b5bfd] hover:bg-blue-600 text-white text-xs font-semibold shadow-md"
               >
                 Use this template
@@ -370,7 +370,7 @@ export default function TemplatesSection() {
                 <Eye className="w-4 h-4 text-emerald-400" /> Emerald Luxe
               </span>
               <Link
-                href="#cv-builder-section"
+                href="/start"
                 className="px-4 py-2 rounded-lg bg-[#3b5bfd] hover:bg-blue-600 text-white text-xs font-semibold shadow-md"
               >
                 Use this template
@@ -382,7 +382,7 @@ export default function TemplatesSection() {
         {/* Central CTA */}
         <div className="mt-14 text-center">
           <Link
-            href="#cv-builder-section"
+            href="/start"
             className="inline-flex items-center justify-center px-8 py-3.5 rounded-lg bg-[#3b5bfd] hover:bg-[#2f4ee8] text-white font-semibold text-sm shadow-md transition-all active:scale-95"
           >
             Create my CV

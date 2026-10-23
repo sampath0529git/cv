@@ -55,14 +55,14 @@ export default function HeroSection() {
             {/* Primary & Secondary Action Buttons */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto pt-2">
               <Link
-                href="#cv-builder-section"
+                href="/start"
                 className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-[#4a4df2] hover:bg-[#3d40e0] text-white font-semibold text-[17px] transition-all shadow-xs hover:shadow-md active:scale-[0.99]"
               >
                 Create my CV
               </Link>
 
               <Link
-                href="#cv-builder-section"
+                href="/import"
                 className="inline-flex items-center justify-center gap-3 px-7 py-4 rounded-xl bg-white hover:bg-slate-50 text-slate-900 font-semibold text-[17px] border border-slate-200 transition-colors shadow-2xs hover:shadow-xs"
               >
                 {/* Tray Download/Import Icon */}

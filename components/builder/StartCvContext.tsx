@@ -1,7 +1,7 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import StartCvModal from './StartCvModal';
+import React, { createContext, useContext, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface StartCvContextType {
   openModal: (mode?: 'default' | 'import' | 'scratch') => void;
@@ -11,19 +11,19 @@ interface StartCvContextType {
 const StartCvContext = createContext<StartCvContextType | undefined>(undefined);
 
 export function StartCvProvider({ children }: { children: React.ReactNode }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [mode, setMode] = useState<'default' | 'import' | 'scratch'>('default');
+  const router = useRouter();
 
   const openModal = (initialMode: 'default' | 'import' | 'scratch' = 'default') => {
-    setMode(initialMode);
-    setIsOpen(true);
+    if (initialMode === 'import') {
+      router.push('/import');
+    } else {
+      router.push('/start');
+    }
   };
 
-  const closeModal = () => {
-    setIsOpen(false);
-  };
+  const closeModal = () => {};
 
-  // Intercept any click on 'Create my CV' or 'Import my CV' links/buttons globally
+  // Intercept any click on 'Create my CV' or 'Import my CV' links/buttons globally and route directly
   useEffect(() => {
     const handleGlobalClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement | null;
@@ -35,21 +35,25 @@ export function StartCvProvider({ children }: { children: React.ReactNode }) {
       const text = trigger.textContent?.trim().toLowerCase() || '';
       const href = trigger.getAttribute('href') || '';
 
-      // Check if it's a 'Create my CV' or 'Import my CV' button
+      // Check if it's an import button
+      if (text.includes('import my cv') || href === '/import') {
+        e.preventDefault();
+        router.push('/import');
+        return;
+      }
+
+      // Check if it's a 'Create my CV' or 'Create CV' button
       if (
         text.includes('create my cv') ||
         text.includes('create your cv') ||
-        text.includes('import my cv') ||
+        text.includes('create cv') ||
+        href === '/start' ||
         href === '#cv-builder-section' ||
+        (href === '#templates-section' && text.includes('create')) ||
         href === '#create-cv'
       ) {
-        // Prevent default hash jump and open modal
         e.preventDefault();
-        if (text.includes('import')) {
-          openModal('import');
-        } else {
-          openModal('default');
-        }
+        router.push('/start');
       }
     };
 
@@ -57,12 +61,11 @@ export function StartCvProvider({ children }: { children: React.ReactNode }) {
     return () => {
       document.removeEventListener('click', handleGlobalClick, true);
     };
-  }, []);
+  }, [router]);
 
   return (
     <StartCvContext.Provider value={{ openModal, closeModal }}>
       {children}
-      <StartCvModal isOpen={isOpen} onClose={closeModal} initialMode={mode} />
     </StartCvContext.Provider>
   );
 }

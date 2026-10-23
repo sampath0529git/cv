@@ -1,0 +1,6 @@
+{
+  "summary":  "Pixel-perfect implementation plan for the CV Builder SaaS onboarding flow based on the 4 provided reference screenshots. Covers the brand abstraction via lib/config.ts, Zustand store with persistence, 6-step builder workflow with real-time A4 CV preview, custom template modal, and A4 print stylesheet.",
+  "updatedAt":  "2026-10-23T06:51:33.529790785Z",
+  "requestFeedback":  true,
+  "userFacing":  true
+}

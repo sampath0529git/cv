@@ -22,14 +22,14 @@ export default function StepsSection() {
             {/* Visual Box with exact dark navy background #0a0f29 */}
             <div className="h-48 rounded-xl bg-[#0a0f29] p-4 flex flex-col justify-center items-center shadow-md">
               <div className="w-full max-w-[210px] bg-white rounded-lg p-3 text-slate-900 space-y-2 shadow-sm text-left">
-                <div className="flex items-center gap-2 p-1.5 rounded-md border border-slate-200 bg-slate-50/70 hover:bg-slate-100 cursor-pointer">
+                <Link href="/import" className="flex items-center gap-2 p-1.5 rounded-md border border-slate-200 bg-slate-50/70 hover:bg-slate-100 cursor-pointer block">
                   <Upload className="w-3.5 h-3.5 text-blue-600" />
                   <span className="text-xs font-semibold text-slate-800">Import my CV</span>
-                </div>
-                <div className="flex items-center gap-2 p-1.5 rounded-md border border-slate-200 bg-slate-50/70 hover:bg-slate-100 cursor-pointer">
+                </Link>
+                <Link href="/start" className="flex items-center gap-2 p-1.5 rounded-md border border-slate-200 bg-slate-50/70 hover:bg-slate-100 cursor-pointer block">
                   <Edit3 className="w-3.5 h-3.5 text-slate-600" />
                   <span className="text-xs font-semibold text-slate-800">From scratch</span>
-                </div>
+                </Link>
               </div>
             </div>
 
@@ -144,7 +144,7 @@ export default function StepsSection() {
         {/* Central CTA */}
         <div className="mt-12 text-center">
           <Link
-            href="#templates-section"
+            href="/start"
             className="inline-flex items-center justify-center px-8 py-3.5 rounded-lg bg-[#3b5bfd] hover:bg-[#2f4ee8] text-white font-semibold text-sm shadow-md transition-all active:scale-95"
           >
             Create my CV

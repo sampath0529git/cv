@@ -5,6 +5,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronDown, Menu, X, FileText } from 'lucide-react';
 
+import Logo from '@/components/brand/Logo';
+
 export default function TopNav() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [featuresDropdownOpen, setFeaturesDropdownOpen] = useState(false);
@@ -15,24 +17,15 @@ export default function TopNav() {
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-slate-100/80">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-14 h-20 flex items-center justify-between">
-        {/* Left: MakeMyCV Brand Logo */}
+        {/* Left: Brand Logo from lib/config.ts */}
         <div className="flex items-center gap-12">
-          <Link href="/" className="flex items-center group" aria-label="Makemycv Home">
-            <Image
-              src="/assets/logo-mark.png"
-              alt="Makemycv"
-              width={220}
-              height={60}
-              className="h-8 sm:h-9 w-auto object-contain"
-              priority
-            />
-          </Link>
+          <Logo variant="dark" href="/" />
 
           {/* Desktop Navigation Links matching exact screenshot */}
           <nav className="hidden md:flex items-center gap-8" aria-label="Main Navigation">
             {/* CV builder */}
             <Link
-              href="#cv-builder-section"
+              href="/start"
               className="flex items-center gap-2.5 text-[15px] font-medium text-slate-900 hover:text-[#4a4df2] transition-colors py-1 group"
             >
               {/* Exact folded document with pencil icon from screenshot */}
@@ -305,7 +298,7 @@ export default function TopNav() {
               <span>Cover letter</span>
             </Link>
             <Link
-              href="#templates-section"
+              href="/start"
               onClick={() => setMobileMenuOpen(false)}
               className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-800 hover:bg-slate-50"
             >
@@ -316,7 +309,7 @@ export default function TopNav() {
               <span className="font-semibold text-[#4a4df2]">My account</span>
             </div>
             <Link
-              href="#templates-section"
+              href="/start"
               onClick={() => setMobileMenuOpen(false)}
               className="w-full text-center mt-3 py-3 rounded-lg bg-[#4a4df2] text-white font-semibold text-sm shadow-sm"
             >

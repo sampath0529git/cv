@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Logo from '@/components/brand/Logo';
 
 export default function Footer() {
   const [accessibilityModalOpen, setAccessibilityModalOpen] = useState(false);
@@ -11,18 +12,9 @@ export default function Footer() {
       <footer className="bg-white border-t border-slate-100 text-slate-600 text-xs sm:text-sm py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-16 text-left">
-            {/* Left: MakeMyCV Logo & Disclaimer */}
+            {/* Left: Brand Logo & Disclaimer */}
             <div className="md:col-span-5 space-y-4">
-              <Link href="/" className="flex items-center gap-2 group inline-flex" aria-label="MakeMyCV Home">
-                <div className="w-6 h-6 flex items-center justify-center text-slate-900">
-                  <svg viewBox="0 0 32 32" className="w-6 h-6 fill-current" aria-hidden="true">
-                    <path d="M8 6C5 6 3 8 3 11C3 15 7 19 12 21C16 22.5 20 22 23 20C26 18 28 15 28 11C28 7 24 4 19 4C13 4 8 8 8 14C8 18 11 22 16 24C21 26 26 25 28 23L27 21C25 23 21 23.8 17 22.2C13 20.8 10 17.5 10 14C10 9.5 14 6 19 6C23 6 26 8.5 26 11C26 13.5 24.5 16 22 17.5C19.5 19 16 19.5 13 18C9 16 5 12.5 5 10.5C5 8.5 6.5 7.5 8 7.5L8 6Z" />
-                  </svg>
-                </div>
-                <span className="font-bold text-lg tracking-tight text-slate-900">
-                  Make<span className="font-extrabold">my</span>cv
-                </span>
-              </Link>
+              <Logo variant="dark" href="/" />
 
               <p className="text-[11px] text-slate-400 leading-relaxed max-w-sm">
                 *The names and logos of the companies mentioned above are registered trademarks belonging to their respective owners. Unless otherwise noted, these references in no way aim to suggest an affiliation or association with MakeMyCV.

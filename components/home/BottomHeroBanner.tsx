@@ -40,7 +40,7 @@ export default function BottomHeroBanner() {
 
             <div className="pt-2">
               <Link
-                href="#templates-section"
+                href="/start"
                 className="inline-flex items-center justify-center px-8 py-3.5 rounded-lg bg-[#3b5bfd] hover:bg-[#2f4ee8] text-white font-semibold text-sm shadow-md transition-all active:scale-95"
               >
                 Create my CV

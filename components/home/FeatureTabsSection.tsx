@@ -558,7 +558,7 @@ export default function FeatureTabsSection() {
 
             <div className="pt-2">
               <Link
-                href="#cv-builder-section"
+                href="/start"
                 className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-[#5054ec] hover:bg-[#4347db] text-white font-semibold text-[17px] shadow-sm transition-all active:scale-[0.99]"
               >
                 Create my CV

@@ -1,105 +1,375 @@
 'use client';
 
-import React from 'react';
-import Link from 'next/link';
-import { Sparkles, Paintbrush, ArrowLeft } from 'lucide-react';
-import TopNav from '@/components/navigation/TopNav';
-import Footer from '@/components/layout/Footer';
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useCvStore } from '@/store/useCvStore';
+import Stepper from '@/components/builder/Stepper';
+import LanguageSelect from '@/components/builder/LanguageSelect';
+import CvPreview from '@/components/builder/CvPreview';
+import TemplateModal from '@/components/builder/TemplateModal';
+import ContactStep from '@/components/builder/steps/ContactStep';
+import ExperienceStep from '@/components/builder/steps/ExperienceStep';
+import EducationStep from '@/components/builder/steps/EducationStep';
+import SkillsStep from '@/components/builder/steps/SkillsStep';
+import SummaryStep from '@/components/builder/steps/SummaryStep';
+import FinalizeStep from '@/components/builder/steps/FinalizeStep';
+import { LayoutGrid, X, ArrowLeft, Printer, Eye, ChevronDown, Check } from 'lucide-react';
 
-export default function BuilderStartPage() {
+const STEPS = [
+  { id: 1, label: 'Contact' },
+  { id: 2, label: 'Work experience' },
+  { id: 3, label: 'Education' },
+  { id: 4, label: 'Skills' },
+  { id: 5, label: 'Summary' },
+  { id: 6, label: 'Finalize' },
+];
+
+export default function BuilderPage() {
+  const router = useRouter();
+  const currentStep = useCvStore((state) => state.currentStep);
+  const setStep = useCvStore((state) => state.setStep);
+  const nextStep = useCvStore((state) => state.nextStep);
+  const prevStep = useCvStore((state) => state.prevStep);
+
+  const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
+  const [isMobilePreviewOpen, setIsMobilePreviewOpen] = useState(false);
+  const [isMobileStepsDropdownOpen, setIsMobileStepsDropdownOpen] = useState(false);
+  const [experienceSubStep, setExperienceSubStep] = useState<'intro' | 'form'>('intro');
+  const [educationSubStep, setEducationSubStep] = useState<'intro' | 'form'>('intro');
+  const [skillsSubStep, setSkillsSubStep] = useState<'intro' | 'form'>('intro');
+  const [summarySubStep, setSummarySubStep] = useState<'intro' | 'form'>('intro');
+
+  // Render the active form step
+  const renderCurrentStep = () => {
+    switch (currentStep) {
+      case 1:
+        return <ContactStep />;
+      case 2:
+        return <ExperienceStep mode={experienceSubStep} />;
+      case 3:
+        return <EducationStep mode={educationSubStep} />;
+      case 4:
+        return <SkillsStep mode={skillsSubStep} />;
+      case 5:
+        return <SummaryStep mode={summarySubStep} />;
+      case 6:
+        return <FinalizeStep />;
+      default:
+        return <ContactStep />;
+    }
+  };
+
+  const handleNextClick = () => {
+    if (currentStep === 1) {
+      setStep(2);
+      setExperienceSubStep('intro');
+    } else if (currentStep === 2 && experienceSubStep === 'intro') {
+      setExperienceSubStep('form');
+    } else if (currentStep === 2 && experienceSubStep === 'form') {
+      setStep(3);
+      setEducationSubStep('intro');
+    } else if (currentStep === 3 && educationSubStep === 'intro') {
+      setEducationSubStep('form');
+    } else if (currentStep === 3 && educationSubStep === 'form') {
+      setStep(4);
+      setSkillsSubStep('intro');
+    } else if (currentStep === 4 && skillsSubStep === 'intro') {
+      setSkillsSubStep('form');
+    } else if (currentStep === 4 && skillsSubStep === 'form') {
+      setStep(5);
+      setSummarySubStep('intro');
+    } else if (currentStep === 5 && summarySubStep === 'intro') {
+      setSummarySubStep('form');
+    } else if (currentStep === 5 && summarySubStep === 'form') {
+      setStep(6);
+    } else if (currentStep === 6) {
+      window.print();
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleBackClick = () => {
+    if (currentStep === 2 && experienceSubStep === 'form') {
+      setExperienceSubStep('intro');
+    } else if (currentStep === 2 && experienceSubStep === 'intro') {
+      setStep(1);
+    } else if (currentStep === 3 && educationSubStep === 'form') {
+      setEducationSubStep('intro');
+    } else if (currentStep === 3 && educationSubStep === 'intro') {
+      setStep(2);
+      setExperienceSubStep('form');
+    } else if (currentStep === 4 && skillsSubStep === 'form') {
+      setSkillsSubStep('intro');
+    } else if (currentStep === 4 && skillsSubStep === 'intro') {
+      setStep(3);
+      setEducationSubStep('form');
+    } else if (currentStep === 5 && summarySubStep === 'form') {
+      setSummarySubStep('intro');
+    } else if (currentStep === 5 && summarySubStep === 'intro') {
+      setStep(4);
+      setSkillsSubStep('form');
+    } else if (currentStep === 6) {
+      setStep(5);
+      setSummarySubStep('form');
+    } else if (currentStep === 1) {
+      router.push('/start');
+    } else {
+      prevStep();
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const activeStepObj = STEPS.find((s) => s.id === currentStep) || STEPS[0];
+
   return (
-    <div className="min-h-screen flex flex-col bg-[#f4f7fe] text-slate-900">
-      <TopNav />
+    <div className="min-h-screen flex flex-col lg:flex-row bg-white text-slate-900 font-sans">
+      {/* 1. Desktop Sidebar Stepper */}
+      <div className="hidden lg:block shrink-0 sticky top-0 h-screen overflow-y-auto">
+        <Stepper
+          onStepClick={(id) => {
+            if (id === 2) setExperienceSubStep('form');
+            if (id === 3) setEducationSubStep('form');
+            if (id === 4) setSkillsSubStep('form');
+            if (id === 5) setSummarySubStep('form');
+          }}
+        />
+      </div>
 
-      <main className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 py-16 sm:py-24">
-        <div className="w-full max-w-2xl text-center">
-          {/* Back link */}
-          <div className="flex justify-start mb-6">
-            <Link
-              href="/"
-              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              <span>Back to home</span>
-            </Link>
+      {/* 2. Main Workspace Area */}
+      <div className="flex-1 flex flex-col min-w-0 min-h-screen">
+        {/* Top Header Bar: Language Dropdown + Desktop Template Shortcut */}
+        <header className="w-full bg-white border-b border-[#E8EAF5] px-4 sm:px-8 py-2.5 sm:py-3.5 flex items-center justify-between sticky top-0 z-20">
+          <div className="w-28 hidden sm:block" />
+          <div className="flex justify-center flex-1 sm:flex-initial">
+            <LanguageSelect />
           </div>
+          <div className="w-28 hidden sm:block" />
+        </header>
 
-          {/* Heading matching screenshot */}
-          <h1 className="text-3xl sm:text-4xl lg:text-[44px] font-bold text-slate-950 tracking-tight leading-tight mb-8 sm:mb-12">
-            How do you want <span className="text-[#4a4df2]">to start your CV?</span>
-          </h1>
-
-          {/* Two Main Cards Container */}
-          <div className="space-y-6 sm:space-y-7 text-left max-w-xl mx-auto">
-            {/* Card 1: Import my CV */}
-            <Link
-              href="/#cv-builder-section"
-              className="group relative bg-white rounded-3xl border border-slate-200 shadow-md hover:shadow-xl hover:border-[#4a4df2] transition-all duration-200 p-6 sm:p-7 flex items-center gap-5 sm:gap-6 cursor-pointer overflow-hidden block"
+        {/* Mobile Dark Navy Navigation Capsule (Exact match for image_13b97d3f.png) */}
+        <div className="lg:hidden px-4 pt-3.5 pb-2 relative z-10">
+          <div className="bg-[#0e123a] text-white rounded-xl h-[52px] px-4 flex items-center justify-between shadow-sm">
+            {/* Left: Back button */}
+            <button
+              type="button"
+              onClick={handleBackClick}
+              className="p-1.5 -ml-1.5 text-white/90 hover:text-white transition-transform active:scale-90 cursor-pointer"
+              aria-label="Previous step"
+              title="Back"
             >
-              {/* 1. Recommended Pill Badge (Top Right) */}
-              <div className="absolute top-0 right-6 -translate-y-1/2 bg-[#131a47] text-white text-[11.5px] font-semibold px-3.5 py-1 rounded-full shadow-md flex items-center gap-1.5 z-20 border border-indigo-400/20">
-                <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
-                <span>Recommended</span>
-              </div>
+              <ArrowLeft className="w-5 h-5" />
+            </button>
 
-              {/* 2. Royal Blue Curved Accent Shape (Bottom Left Corner) */}
-              <div className="absolute bottom-0 left-0 w-24 h-24 bg-[#4a4df2] rounded-tr-[48px] pointer-events-none z-0 transition-transform group-hover:scale-105" />
+            {/* Center: Current step dropdown button */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setIsMobileStepsDropdownOpen(!isMobileStepsDropdownOpen)}
+                className="flex items-center gap-1.5 font-bold text-[15px] text-white hover:text-white/90 transition-colors cursor-pointer py-1"
+                aria-expanded={isMobileStepsDropdownOpen}
+              >
+                <span>{activeStepObj.label}</span>
+                <ChevronDown
+                  className={`w-4 h-4 text-white/80 transition-transform duration-200 ${
+                    isMobileStepsDropdownOpen ? 'rotate-180' : ''
+                  }`}
+                />
+              </button>
 
-              {/* 3. Left Icon Box */}
-              <div className="relative z-10 w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-[#eff3fd] flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
-                <svg
-                  className="w-9 h-9 sm:w-10 sm:h-10 text-[#4a4df2]"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M14 2H6a2 2 0 0 0-2 2v3" />
-                  <path d="M4 17v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z" />
-                  <polyline points="14 2 14 8 20 8" />
-                  <path d="M2 13h9" />
-                  <polyline points="8 10 11 13 8 16" />
-                </svg>
-              </div>
+              {/* Mobile Steps Dropdown Selector */}
+              {isMobileStepsDropdownOpen && (
+                <>
+                  <div
+                    className="fixed inset-0 z-40 bg-slate-950/20"
+                    onClick={() => setIsMobileStepsDropdownOpen(false)}
+                  />
+                  <div className="absolute left-1/2 -translate-x-1/2 top-11 mt-1 w-60 rounded-xl bg-white text-slate-800 shadow-2xl border border-slate-200 py-1.5 z-50 animate-[fadeIn_0.15s_ease-out]">
+                    <div className="px-3.5 py-1 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                      Steps
+                    </div>
+                    {STEPS.map((step) => {
+                      const isActive = currentStep === step.id;
+                      const isCompleted = currentStep > step.id;
+                      return (
+                        <button
+                          key={step.id}
+                          type="button"
+                          onClick={() => {
+                            setStep(step.id);
+                            if (step.id === 2) setExperienceSubStep('form');
+                            if (step.id === 3) setEducationSubStep('form');
+                            if (step.id === 4) setSkillsSubStep('form');
+                            if (step.id === 5) setSummarySubStep('form');
+                            setIsMobileStepsDropdownOpen(false);
+                          }}
+                          className={`w-full text-left px-3.5 py-2.5 text-sm flex items-center justify-between transition-colors cursor-pointer ${
+                            isActive
+                              ? 'bg-[#EEF1FF] text-[#4B4DED] font-semibold'
+                              : 'text-slate-700 hover:bg-slate-50'
+                          }`}
+                        >
+                          <span className="flex items-center gap-2.5">
+                            <span
+                              className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${
+                                isActive
+                                  ? 'bg-[#4B4DED] text-white'
+                                  : isCompleted
+                                  ? 'bg-[#4B4DED]/20 text-[#4B4DED]'
+                                  : 'bg-slate-100 text-slate-500'
+                              }`}
+                            >
+                              {step.id}
+                            </span>
+                            {step.label}
+                          </span>
+                          {isActive && <Check className="w-4 h-4 text-[#4B4DED]" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
+            </div>
 
-              {/* 4. Right Content */}
-              <div className="relative z-10 flex-1">
-                <h2 className="text-xl sm:text-2xl font-bold text-slate-900 group-hover:text-[#4a4df2] transition-colors leading-tight">
-                  Import my CV
-                </h2>
-                <p className="text-slate-500 text-sm sm:text-[15px] font-normal leading-relaxed mt-1">
-                  We&apos;ll improve the layout and optimize the content.
-                </p>
-              </div>
-            </Link>
-
-            {/* Card 2: From scratch */}
-            <Link
-              href="/#cv-builder-section"
-              className="group relative bg-white rounded-3xl border border-slate-200 shadow-md hover:shadow-xl hover:border-[#4a4df2] transition-all duration-200 p-6 sm:p-7 flex items-center gap-5 sm:gap-6 cursor-pointer overflow-hidden block"
+            {/* Right: Eye icon for mobile CV preview */}
+            <button
+              type="button"
+              onClick={() => setIsMobilePreviewOpen(true)}
+              className="p-1.5 -mr-1.5 text-white/90 hover:text-white transition-transform active:scale-90 cursor-pointer"
+              aria-label="Preview CV"
+              title="Preview CV"
             >
-              {/* 1. Left Icon Box */}
-              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-[#eff3fd] flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
-                <Paintbrush className="w-9 h-9 sm:w-10 sm:h-10 text-[#4a4df2]" strokeWidth={2.2} />
-              </div>
-
-              {/* 2. Right Content */}
-              <div className="flex-1">
-                <h2 className="text-xl sm:text-2xl font-bold text-slate-900 group-hover:text-[#4a4df2] transition-colors leading-tight">
-                  From scratch
-                </h2>
-                <p className="text-slate-500 text-sm sm:text-[15px] font-normal leading-relaxed mt-1">
-                  We&apos;ll guide you section by section.
-                </p>
-              </div>
-            </Link>
+              <Eye className="w-5 h-5" />
+            </button>
           </div>
         </div>
-      </main>
 
-      <Footer />
+        {/* Form and Live Preview Area */}
+        <main className="flex-1 px-4 sm:px-6 lg:px-8 xl:px-10 lg:py-5 pb-28 lg:pb-28 max-w-[1560px] mx-auto w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 xl:gap-10 items-start">
+            {/* Form Step (Scrollable independently) */}
+            <div className="lg:col-span-7 w-full max-w-2xl mx-auto lg:max-w-none flex-1 lg:h-[calc(100vh-170px)] lg:overflow-y-auto pr-1 sm:pr-3">
+              {renderCurrentStep()}
+            </div>
+
+            {/* Desktop / Laptop Live A4 CV Preview (Side-by-side in EVERY section) */}
+            <div className="hidden lg:flex lg:col-span-5 w-full flex-col items-center lg:sticky lg:top-[68px] lg:h-[calc(100vh-175px)] justify-between pb-1">
+              {/* Preview Viewport - Auto-sized to fit comfortably without overflowing */}
+              <div className="w-full flex-1 min-h-0 flex items-center justify-center overflow-hidden">
+                <CvPreview className="h-full w-auto aspect-[210/297] max-w-full overflow-hidden object-contain" />
+              </div>
+
+              {/* Change Template Button below Preview (Matching image_28c4ca3f.png) */}
+              <div className="mt-3 flex justify-center shrink-0 z-10">
+                <button
+                  type="button"
+                  onClick={() => setIsTemplateModalOpen(true)}
+                  className="inline-flex items-center gap-3 px-6 py-2.5 rounded-xl border border-slate-300/90 bg-white hover:border-[#4547E6] hover:bg-slate-50 text-slate-900 font-semibold text-[15px] shadow-[0_1px_3px_rgba(0,0,0,0.06)] transition-all cursor-pointer group active:scale-98"
+                >
+                  <div className="grid grid-cols-2 gap-[2.5px] w-4 h-4 shrink-0 group-hover:scale-105 transition-transform">
+                    <div className="w-[6.5px] h-[6.5px] rounded-[2px] bg-[#8B8DF9]" />
+                    <div className="w-[6.5px] h-[6.5px] rounded-[2px] bg-[#4547E6]" />
+                    <div className="w-[6.5px] h-[6.5px] rounded-[2px] bg-[#4547E6]" />
+                    <div className="w-[6.5px] h-[6.5px] rounded-[2px] bg-[#C4C7FC]" />
+                  </div>
+                  <span>Change template</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        {/* Mobile Fixed Bottom Navigation Bar (Full-Width Next Button matching image_13b97d3f.png) */}
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-[#E8EAF5] px-4 py-3 z-30 shadow-[0_-4px_16px_rgba(0,0,0,0.04)]">
+          <button
+            type="button"
+            onClick={handleNextClick}
+            className="w-full py-3.5 bg-[#4B4DED] hover:bg-[#3D3FC9] active:scale-98 text-white font-semibold text-base rounded-xl shadow-[0_4px_14px_rgba(75,77,237,0.25)] flex items-center justify-center gap-2 transition-all cursor-pointer"
+          >
+            <span>{currentStep === 6 ? 'Download PDF' : 'Next'}</span>
+            {currentStep === 6 && <Printer className="w-4 h-4" />}
+          </button>
+        </div>
+
+        {/* Desktop Fixed Bottom Navigation Bar */}
+        <footer className="hidden lg:flex fixed bottom-0 right-0 left-[270px] xl:left-[280px] bg-white border-t border-[#E8EAF5] px-6 sm:px-10 py-3.5 items-center justify-between z-30 shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
+          <button
+            type="button"
+            onClick={handleBackClick}
+            className="px-7 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-800 font-semibold text-sm hover:bg-slate-50 hover:border-slate-400 shadow-2xs transition-all cursor-pointer active:scale-98"
+          >
+            Back
+          </button>
+
+
+
+          <button
+            type="button"
+            onClick={handleNextClick}
+            className="px-9 py-2.5 bg-[#4B4DED] hover:bg-[#3D3FC9] active:scale-98 text-white font-semibold text-sm rounded-xl shadow-xs flex items-center gap-2 transition-all cursor-pointer"
+          >
+            <span>{currentStep === 6 ? 'Download PDF' : 'Next'}</span>
+            {currentStep === 6 && <Printer className="w-4 h-4" />}
+          </button>
+        </footer>
+      </div>
+
+      {/* Mobile Live CV Preview Sheet / Modal (Opened via Eye Icon) */}
+      {isMobilePreviewOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-xs flex flex-col justify-end lg:hidden">
+          <div
+            className="fixed inset-0"
+            onClick={() => setIsMobilePreviewOpen(false)}
+          />
+          <div className="relative bg-white w-full h-[92vh] rounded-t-3xl flex flex-col overflow-hidden shadow-2xl z-10 animate-[slideUp_0.2s_ease-out]">
+            {/* Top Close Button */}
+            <div className="flex justify-end px-4 pt-3 pb-1 bg-white">
+              <button
+                type="button"
+                onClick={() => setIsMobilePreviewOpen(false)}
+                className="p-2 text-slate-500 hover:text-slate-800 rounded-full bg-slate-100 cursor-pointer"
+                aria-label="Close preview"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Preview Sheet Viewport - Only A4 preview card and Change template button */}
+            <div className="flex-1 overflow-y-auto p-4 flex flex-col items-center bg-white">
+              <div className="w-full max-w-[420px] shadow-lg rounded-2xl overflow-hidden self-start mx-auto aspect-[210/297]">
+                <CvPreview className="w-full h-full aspect-[210/297] overflow-hidden object-contain" />
+              </div>
+
+              {/* Change Template Button below Preview in Mobile Sheet */}
+              <div className="mt-4 mb-4 flex justify-center shrink-0">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsMobilePreviewOpen(false);
+                    setIsTemplateModalOpen(true);
+                  }}
+                  className="inline-flex items-center gap-3 px-6 py-2.5 rounded-xl border border-slate-300/90 bg-white hover:border-[#4547E6] hover:bg-slate-50 text-slate-900 font-semibold text-[15px] shadow-[0_1px_3px_rgba(0,0,0,0.06)] transition-all cursor-pointer group active:scale-98"
+                >
+                  <div className="grid grid-cols-2 gap-[2.5px] w-4 h-4 shrink-0 group-hover:scale-105 transition-transform">
+                    <div className="w-[6.5px] h-[6.5px] rounded-[2px] bg-[#8B8DF9]" />
+                    <div className="w-[6.5px] h-[6.5px] rounded-[2px] bg-[#4547E6]" />
+                    <div className="w-[6.5px] h-[6.5px] rounded-[2px] bg-[#4547E6]" />
+                    <div className="w-[6.5px] h-[6.5px] rounded-[2px] bg-[#C4C7FC]" />
+                  </div>
+                  <span>Change template</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Template Selector Modal */}
+      <TemplateModal
+        isOpen={isTemplateModalOpen}
+        onClose={() => setIsTemplateModalOpen(false)}
+      />
     </div>
   );
 }
+
