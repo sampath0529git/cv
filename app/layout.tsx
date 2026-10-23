@@ -1,5 +1,13 @@
 import type { Metadata } from 'next';
-import { Space_Grotesk, Inter } from 'next/font/google';
+import {
+  Space_Grotesk,
+  Inter,
+  Merriweather,
+  Roboto,
+  Lora,
+  Plus_Jakarta_Sans,
+  JetBrains_Mono,
+} from 'next/font/google';
 import './globals.css';
 import { BRAND_CONFIG } from '@/lib/config';
 
@@ -13,7 +21,42 @@ const spaceGrotesk = Space_Grotesk({
 const inter = Inter({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
-  variable: '--font-sans',
+  variable: '--font-inter',
+  display: 'swap',
+});
+
+const merriweather = Merriweather({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  variable: '--font-merriweather',
+  display: 'swap',
+});
+
+const roboto = Roboto({
+  subsets: ['latin'],
+  weight: ['400', '500', '700'],
+  variable: '--font-roboto',
+  display: 'swap',
+});
+
+const lora = Lora({
+  subsets: ['latin'],
+  weight: ['400', '600', '700'],
+  variable: '--font-lora',
+  display: 'swap',
+});
+
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-jakarta',
+  display: 'swap',
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-mono',
   display: 'swap',
 });
 
@@ -97,8 +140,54 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   };
 
   return (
-    <html lang="en-GB" className={`${spaceGrotesk.variable} ${inter.variable}`}>
+    <html
+      lang="en-GB"
+      className={`${spaceGrotesk.variable} ${inter.variable} ${merriweather.variable} ${roboto.variable} ${lora.variable} ${plusJakarta.variable} ${jetbrainsMono.variable}`}
+    >
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  if (typeof window !== 'undefined') {
+                    var _currentFetch = window.fetch ? window.fetch.bind(window) : undefined;
+                    var descriptor = Object.getOwnPropertyDescriptor(window, 'fetch');
+                    if (!descriptor || descriptor.configurable) {
+                      Object.defineProperty(window, 'fetch', {
+                        configurable: true,
+                        enumerable: true,
+                        get: function() {
+                          return _currentFetch;
+                        },
+                        set: function(fn) {
+                          _currentFetch = fn;
+                        }
+                      });
+                    }
+                    if (typeof Window !== 'undefined' && Window.prototype) {
+                      var protoDesc = Object.getOwnPropertyDescriptor(Window.prototype, 'fetch');
+                      if (!protoDesc || protoDesc.configurable) {
+                        Object.defineProperty(Window.prototype, 'fetch', {
+                          configurable: true,
+                          enumerable: true,
+                          get: function() {
+                            return _currentFetch;
+                          },
+                          set: function(fn) {
+                            _currentFetch = fn;
+                          }
+                        });
+                      }
+                    }
+                  }
+                } catch (e) {
+                  // Fallback: silently handle if restricted
+                }
+              })();
+            `,
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}

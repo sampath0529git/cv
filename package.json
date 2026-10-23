@@ -4,10 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3000 -H 0.0.0.0",
-    "build": "next build",
+    "build": "NODE_ENV=production next build",
     "start": "next start",
-    "lint": "eslint .",
-    "clean": "next clean"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
@@ -21,6 +20,7 @@
     "postcss": "^8.5.6",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
+    "react-to-print": "^3.3.0",
     "tailwind-merge": "^3.3.1",
     "zustand": "^5.0.16"
   },

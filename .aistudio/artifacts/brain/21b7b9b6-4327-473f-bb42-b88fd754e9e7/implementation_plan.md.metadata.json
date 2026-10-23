@@ -1,0 +1,6 @@
+{
+  "summary":  "Implementation plan for integrating a 20-template UK ATS-friendly CV system into the existing Next.js applet, including shared types, sample data, modular templates across 6 categories, live scaled A4 preview with pagination, template controls, gallery modal, bidirectional sync with existing builder store, and react-to-print PDF export.",
+  "updatedAt":  "2026-10-23T12:48:33.126874499Z",
+  "requestFeedback":  true,
+  "userFacing":  true
+}

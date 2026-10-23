@@ -45,6 +45,26 @@ export interface ContactDetails {
 }
 
 export type TemplateId =
+  | 'london'
+  | 'bristol'
+  | 'oxford'
+  | 'york'
+  | 'manchester'
+  | 'leeds'
+  | 'birmingham'
+  | 'glasgow'
+  | 'cardiff'
+  | 'brighton'
+  | 'cambridge'
+  | 'bath'
+  | 'norwich'
+  | 'edinburgh'
+  | 'kensington'
+  | 'canary'
+  | 'shoreditch'
+  | 'newcastle'
+  | 'durham'
+  | 'nottingham'
   | 'castor'
   | 'capella'
   | 'pollux'
@@ -52,7 +72,8 @@ export type TemplateId =
   | 'modern-beige'
   | 'minimal-clean'
   | 'executive-navy'
-  | 'tech-slate';
+  | 'tech-slate'
+  | (string & {});
 
 export interface CvState {
   currentStep: number;
@@ -80,14 +101,16 @@ export interface CvState {
   removePhoto: () => void;
 
   // Experience actions
-  addExperience: () => void;
+  addExperience: (fields?: Partial<Omit<WorkExperience, 'id'>>) => void;
   updateExperience: (id: string, fields: Partial<WorkExperience>) => void;
   removeExperience: (id: string) => void;
+  moveExperience: (id: string, direction: 'up' | 'down') => void;
 
   // Education actions
-  addEducation: () => void;
+  addEducation: (fields?: Partial<Omit<Education, 'id'>>) => void;
   updateEducation: (id: string, fields: Partial<Education>) => void;
   removeEducation: (id: string) => void;
+  moveEducation: (id: string, direction: 'up' | 'down') => void;
 
   // Skills actions
   addSkill: (name: string, level?: SkillItem['level']) => void;
@@ -124,58 +147,14 @@ const initialContact: ContactDetails = {
   drivingLicence: '',
 };
 
-const initialExperiences: WorkExperience[] = [
-  {
-    id: 'exp-1',
-    jobTitle: 'Job title',
-    employer: 'Company name',
-    city: 'City',
-    startDate: 'January 2023',
-    endDate: 'Current',
-    isCurrent: true,
-    description: 'Your main missions accomplished during this job, which could arouse interest in your future employer.\n• Responsibilities and results obtained.',
-  },
-  {
-    id: 'exp-2',
-    jobTitle: 'Job title',
-    employer: 'Company name',
-    city: 'City',
-    startDate: 'January 2021',
-    endDate: 'December 2022',
-    isCurrent: false,
-    description: 'Your main missions accomplished during this job, which could arouse interest in your future employer.\n• Responsibilities and results obtained.',
-  },
-];
+const initialExperiences: WorkExperience[] = [];
 
-const initialEducations: Education[] = [
-  {
-    id: 'edu-1',
-    degree: 'Name of the diploma / training',
-    school: 'Name of the school / institution',
-    city: 'City',
-    startDate: '2020',
-    endDate: '2019',
-    description: '• Projects completed related to the position sought\n• Grades, honors',
-  },
-  {
-    id: 'edu-2',
-    degree: 'Name of the diploma / training',
-    school: 'Name of the school / institution',
-    city: 'City',
-    startDate: '2018',
-    endDate: '',
-    description: '• Projects completed related to the position sought\n• Grades, honors',
-  },
-];
+const initialEducations: Education[] = [];
 
-const initialSkills: SkillItem[] = [
-  { id: 'sk-1', name: 'Skill 1', level: 'Advanced' },
-  { id: 'sk-2', name: 'Skill 2', level: 'Advanced' },
-  { id: 'sk-3', name: 'Skill 3', level: 'Advanced' },
-];
+const initialSkills: SkillItem[] = [];
 
-const initialLanguages: string[] = ['Language (C1)', 'Language (B2)'];
-const initialInterests: string[] = ['Area of interest'];
+const initialLanguages: string[] = [];
+const initialInterests: string[] = [];
 
 export const useCvStore = create<CvState>()(
   persist(
@@ -188,7 +167,7 @@ export const useCvStore = create<CvState>()(
       experiences: initialExperiences,
       educations: initialEducations,
       skills: initialSkills,
-      summary: 'Short description of your background and professional project. Example: After an initial 3 years of experience in sales in the car yard ready to wear sector...',
+      summary: '',
       languagesList: initialLanguages,
       interestsList: initialInterests,
       importedFileName: null,
@@ -215,12 +194,12 @@ export const useCvStore = create<CvState>()(
           contact: { ...state.contact, photoUrl: '' },
         })),
 
-      addExperience: () =>
+      addExperience: (fields) =>
         set((state) => ({
           experiences: [
             ...state.experiences,
             {
-              id: 'exp-' + Date.now(),
+              id: 'exp-' + Date.now() + '-' + Math.random().toString(36).substring(2, 7),
               jobTitle: '',
               employer: '',
               city: '',
@@ -228,6 +207,7 @@ export const useCvStore = create<CvState>()(
               endDate: '',
               isCurrent: false,
               description: '',
+              ...fields,
             },
           ],
         })),
@@ -244,18 +224,31 @@ export const useCvStore = create<CvState>()(
           experiences: state.experiences.filter((exp) => exp.id !== id),
         })),
 
-      addEducation: () =>
+      moveExperience: (id, direction) =>
+        set((state) => {
+          const index = state.experiences.findIndex((e) => e.id === id);
+          if (index === -1) return state;
+          const targetIndex = direction === 'up' ? index - 1 : index + 1;
+          if (targetIndex < 0 || targetIndex >= state.experiences.length) return state;
+          const updated = [...state.experiences];
+          const [moved] = updated.splice(index, 1);
+          updated.splice(targetIndex, 0, moved);
+          return { experiences: updated };
+        }),
+
+      addEducation: (fields) =>
         set((state) => ({
           educations: [
             ...state.educations,
             {
-              id: 'edu-' + Date.now(),
+              id: 'edu-' + Date.now() + '-' + Math.random().toString(36).substring(2, 7),
               degree: '',
               school: '',
               city: '',
               startDate: '',
               endDate: '',
               description: '',
+              ...fields,
             },
           ],
         })),
@@ -271,6 +264,18 @@ export const useCvStore = create<CvState>()(
         set((state) => ({
           educations: state.educations.filter((edu) => edu.id !== id),
         })),
+
+      moveEducation: (id, direction) =>
+        set((state) => {
+          const index = state.educations.findIndex((e) => e.id === id);
+          if (index === -1) return state;
+          const targetIndex = direction === 'up' ? index - 1 : index + 1;
+          if (targetIndex < 0 || targetIndex >= state.educations.length) return state;
+          const updated = [...state.educations];
+          const [moved] = updated.splice(index, 1);
+          updated.splice(targetIndex, 0, moved);
+          return { educations: updated };
+        }),
 
       addSkill: (name, level = 'Advanced') =>
         set((state) => {
@@ -337,15 +342,48 @@ export const useCvStore = create<CvState>()(
         }),
     }),
     {
-      name: 'yourbrand-cv-builder-storage',
+      name: 'yourbrand-cv-builder-storage-v3',
+      onRehydrateStorage: () => (state) => {
+        if (!state) return;
+        if (state.experiences) {
+          state.experiences = state.experiences.filter(
+            (e) =>
+              e.id !== 'exp-1' &&
+              e.id !== 'exp-2' &&
+              e.jobTitle !== 'Job title' &&
+              Boolean(e.jobTitle?.trim() || e.employer?.trim())
+          );
+        }
+        if (state.educations) {
+          state.educations = state.educations.filter(
+            (e) =>
+              e.id !== 'edu-1' &&
+              e.id !== 'edu-2' &&
+              e.degree !== 'Name of the diploma / training' &&
+              Boolean(e.degree?.trim() || e.school?.trim())
+          );
+        }
+      },
       partialize: (state) => ({
         currentStep: state.currentStep,
         language: state.language,
         activeTemplate: state.activeTemplate,
         themeColor: state.themeColor,
         contact: state.contact,
-        experiences: state.experiences,
-        educations: state.educations,
+        experiences: (state.experiences || []).filter(
+          (e) =>
+            e.id !== 'exp-1' &&
+            e.id !== 'exp-2' &&
+            e.jobTitle !== 'Job title' &&
+            Boolean(e.jobTitle?.trim() || e.employer?.trim())
+        ),
+        educations: (state.educations || []).filter(
+          (e) =>
+            e.id !== 'edu-1' &&
+            e.id !== 'edu-2' &&
+            e.degree !== 'Name of the diploma / training' &&
+            Boolean(e.degree?.trim() || e.school?.trim())
+        ),
         skills: state.skills,
         summary: state.summary,
         languagesList: state.languagesList,

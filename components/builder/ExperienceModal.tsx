@@ -15,12 +15,14 @@ import {
   Link2,
   Undo2,
   Redo2,
+  Trash2,
 } from 'lucide-react';
 
 interface ExperienceModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (expData: Omit<WorkExperience, 'id'>, existingId?: string) => void;
+  onDelete?: (id: string) => void;
   initialExperience?: WorkExperience | null;
 }
 
@@ -82,6 +84,7 @@ export default function ExperienceModal({
   isOpen,
   onClose,
   onSave,
+  onDelete,
   initialExperience,
 }: ExperienceModalProps) {
   const [modalStep, setModalStep] = useState<1 | 2>(1);
@@ -451,9 +454,24 @@ export default function ExperienceModal({
         </div>
 
         {/* Footer Actions */}
-        <div className="px-6 sm:px-8 py-4 border-t border-slate-100 bg-white flex items-center justify-between">
+        <div className="px-6 sm:px-8 py-4 border-t border-slate-100 bg-white flex items-center justify-between gap-3">
           {modalStep === 1 ? (
-            <div className="w-full flex justify-end">
+            <>
+              {initialExperience && onDelete ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    onDelete(initialExperience.id);
+                    onClose();
+                  }}
+                  className="inline-flex items-center gap-1.5 px-3 py-2 text-rose-600 hover:bg-rose-50 rounded-xl font-medium text-sm transition-colors cursor-pointer"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  <span>Delete</span>
+                </button>
+              ) : (
+                <div />
+              )}
               <button
                 type="button"
                 onClick={handleNextFromStep1}
@@ -465,17 +483,32 @@ export default function ExperienceModal({
               >
                 Next
               </button>
-            </div>
+            </>
           ) : (
             <>
-              <button
-                type="button"
-                onClick={() => setModalStep(1)}
-                className="flex items-center gap-1 text-[#4348F2] hover:text-[#3237D4] font-semibold text-sm cursor-pointer transition-colors"
-              >
-                <ChevronLeft className="w-4 h-4 stroke-[2.5]" />
-                <span>Back</span>
-              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setModalStep(1)}
+                  className="flex items-center gap-1 text-[#4348F2] hover:text-[#3237D4] font-semibold text-sm cursor-pointer transition-colors"
+                >
+                  <ChevronLeft className="w-4 h-4 stroke-[2.5]" />
+                  <span>Back</span>
+                </button>
+                {initialExperience && onDelete && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onDelete(initialExperience.id);
+                      onClose();
+                    }}
+                    className="inline-flex items-center gap-1.5 px-3 py-2 text-rose-600 hover:bg-rose-50 rounded-xl font-medium text-sm transition-colors cursor-pointer"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                    <span>Delete</span>
+                  </button>
+                )}
+              </div>
 
               <button
                 type="button"
