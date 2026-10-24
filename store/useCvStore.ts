@@ -12,6 +12,7 @@ export interface WorkExperience {
   endDate: string;
   isCurrent: boolean;
   description: string;
+  bullets?: string[];
 }
 
 export interface Education {
@@ -22,6 +23,8 @@ export interface Education {
   startDate: string;
   endDate: string;
   description: string;
+  grade?: string;
+  bullets?: string[];
 }
 
 export interface SkillItem {
@@ -96,9 +99,13 @@ export interface CvState {
   customSections: CustomSectionItem[];
   importedFileName: string | null;
   customPdfFileName: string;
+  fontFamily: string;
+  sectionOrder: string[];
 
   // Actions
   setCustomPdfFileName: (name: string) => void;
+  setFontFamily: (font: string) => void;
+  setSectionOrder: (order: string[]) => void;
   setStep: (step: number) => void;
   nextStep: () => void;
   prevStep: () => void;
@@ -196,8 +203,12 @@ export const useCvStore = create<CvState>()(
       customSections: [],
       importedFileName: null,
       customPdfFileName: '',
+      fontFamily: 'inter',
+      sectionOrder: ['summary', 'education', 'experience', 'skills', 'languages', 'interests'],
 
       setCustomPdfFileName: (customPdfFileName) => set({ customPdfFileName }),
+      setFontFamily: (fontFamily) => set({ fontFamily }),
+      setSectionOrder: (sectionOrder) => set({ sectionOrder }),
       setStep: (step) => set({ currentStep: step }),
       nextStep: () => set((state) => ({ currentStep: Math.min(state.currentStep + 1, 6) })),
       prevStep: () => set((state) => ({ currentStep: Math.max(state.currentStep - 1, 1) })),
@@ -466,6 +477,8 @@ export const useCvStore = create<CvState>()(
         referencesText: state.referencesText || 'References available on request',
         customSections: state.customSections || [],
         customPdfFileName: state.customPdfFileName || '',
+        fontFamily: state.fontFamily || 'inter',
+        sectionOrder: state.sectionOrder || ['summary', 'education', 'experience', 'skills', 'languages', 'interests'],
       }),
     }
   )

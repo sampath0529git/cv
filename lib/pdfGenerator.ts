@@ -122,9 +122,7 @@ export async function downloadCvPdf(options: ExportPdfOptions = {}): Promise<boo
       pageClone.style.setProperty('text-rendering', 'optimizeLegibility');
 
       // Preserve active typography and accent tokens
-      if (originalPage.style.fontFamily) {
-        pageClone.style.fontFamily = originalPage.style.fontFamily;
-      }
+      pageClone.style.fontFamily = originalPage.style.fontFamily || 'Georgia, Cambria, "Times New Roman", Times, serif';
       if (originalPage.style.fontSize) {
         pageClone.style.fontSize = originalPage.style.fontSize;
       }
@@ -241,5 +239,14 @@ export async function downloadCvPdf(options: ExportPdfOptions = {}): Promise<boo
     if (document.body.contains(stagingContainer)) {
       document.body.removeChild(stagingContainer);
     }
+  }
+}
+
+/**
+ * Triggers the browser's native print dialog with A4 vector styling.
+ */
+export function triggerBrowserPrint(): void {
+  if (typeof window !== 'undefined') {
+    window.print();
   }
 }

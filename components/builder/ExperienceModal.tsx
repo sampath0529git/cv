@@ -114,6 +114,11 @@ export default function ExperienceModal({
   };
 
   const handleSave = () => {
+    const rawBullets = description
+      .split('\n')
+      .map((line) => line.replace(/^[•\-*]\s*/, '').trim())
+      .filter(Boolean);
+
     onSave(
       {
         jobTitle: jobTitle.trim(),
@@ -123,6 +128,7 @@ export default function ExperienceModal({
         endDate: endDate.trim(),
         isCurrent: endDate.trim().toLowerCase() === 'current' || endDate.trim().toLowerCase() === 'present',
         description: description.trim(),
+        bullets: rawBullets,
       },
       initialExperience?.id
     );

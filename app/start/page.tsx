@@ -74,7 +74,7 @@ export default function StartPage() {
 
             {/* Card 2: From scratch */}
             <Link
-              href="/setup?mode=scratch"
+              href="/builder"
               className="group relative block w-full bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl hover:border-[#4a4df2] transition-all duration-200 p-6 sm:p-7 overflow-hidden cursor-pointer"
             >
               <div className="flex items-center gap-5 sm:gap-6">

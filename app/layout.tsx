@@ -1,64 +1,6 @@
 import type { Metadata } from 'next';
-import {
-  Space_Grotesk,
-  Inter,
-  Merriweather,
-  Roboto,
-  Lora,
-  Plus_Jakarta_Sans,
-  JetBrains_Mono,
-} from 'next/font/google';
 import './globals.css';
 import { BRAND_CONFIG } from '@/lib/config';
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ['latin'],
-  weight: ['500', '600', '700'],
-  variable: '--font-heading',
-  display: 'swap',
-});
-
-const inter = Inter({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-inter',
-  display: 'swap',
-});
-
-const merriweather = Merriweather({
-  subsets: ['latin'],
-  weight: ['400', '700'],
-  variable: '--font-merriweather',
-  display: 'swap',
-});
-
-const roboto = Roboto({
-  subsets: ['latin'],
-  weight: ['400', '500', '700'],
-  variable: '--font-roboto',
-  display: 'swap',
-});
-
-const lora = Lora({
-  subsets: ['latin'],
-  weight: ['400', '600', '700'],
-  variable: '--font-lora',
-  display: 'swap',
-});
-
-const plusJakarta = Plus_Jakarta_Sans({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-jakarta',
-  display: 'swap',
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  variable: '--font-mono',
-  display: 'swap',
-});
 
 export const metadata: Metadata = {
   title: `Free CV Maker | Create a Professional CV Online – ${BRAND_CONFIG.name}`,
@@ -140,10 +82,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   };
 
   return (
-    <html
-      lang="en-GB"
-      className={`${spaceGrotesk.variable} ${inter.variable} ${merriweather.variable} ${roboto.variable} ${lora.variable} ${plusJakarta.variable} ${jetbrainsMono.variable}`}
-    >
+    <html lang="en-GB">
       <head>
         <script
           dangerouslySetInnerHTML={{

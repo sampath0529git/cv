@@ -48,7 +48,14 @@ export function cvStoreToCv(
       startDate: exp.startDate || '',
       endDate: exp.isCurrent ? 'Present' : exp.endDate || '',
       current: Boolean(exp.isCurrent),
-      bullets: rawBullets.length > 0 ? rawBullets : (exp.description ? [exp.description] : []),
+      bullets:
+        exp.bullets && exp.bullets.length > 0
+          ? exp.bullets
+          : rawBullets.length > 0
+          ? rawBullets
+          : exp.description
+          ? [exp.description]
+          : [],
       description: exp.description || '',
     };
   });
@@ -67,9 +74,9 @@ export function cvStoreToCv(
       location: edu.city || undefined,
       startDate: edu.startDate || '',
       endDate: edu.endDate || '',
-      grade: edu.city ? undefined : undefined,
+      grade: edu.grade || undefined,
       description: edu.description || undefined,
-      bullets: rawBullets.length > 0 ? rawBullets : undefined,
+      bullets: edu.bullets && edu.bullets.length > 0 ? edu.bullets : (rawBullets.length > 0 ? rawBullets : undefined),
     };
   });
 
@@ -81,7 +88,7 @@ export function cvStoreToCv(
       : [];
 
   // Template ID mapping (defaults to uk-traditional)
-  const templateId = 'uk-traditional';
+  const templateId = (store.activeTemplate as string) || fallbackSettings?.templateId || 'uk-traditional';
 
   return {
     personal: {
@@ -112,10 +119,10 @@ export function cvStoreToCv(
     settings: {
       templateId,
       accentColor: store.themeColor || '#1E3A8A',
-      fontFamily: fallbackSettings?.fontFamily || 'inter',
+      fontFamily: store.fontFamily || fallbackSettings?.fontFamily || 'inter',
       fontScale: fallbackSettings?.fontScale || 'md',
       showPhoto: Boolean(fallbackSettings?.showPhoto),
-      sectionOrder: fallbackSettings?.sectionOrder || SAMPLE_UK_CV.settings.sectionOrder,
+      sectionOrder: store.sectionOrder || fallbackSettings?.sectionOrder || SAMPLE_UK_CV.settings.sectionOrder,
     },
   };
 }

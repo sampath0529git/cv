@@ -31,7 +31,7 @@ export default function ImportPage() {
       city: 'London',
     });
 
-    router.push('/setup?mode=import');
+    router.push('/builder');
   };
 
   return (

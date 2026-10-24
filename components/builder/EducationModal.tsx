@@ -50,6 +50,7 @@ export default function EducationModal({
   const [city, setCity] = useState(initialEducation?.city || '');
   const [startDate, setStartDate] = useState(initialEducation?.startDate || '');
   const [endDate, setEndDate] = useState(initialEducation?.endDate || '');
+  const [grade, setGrade] = useState(initialEducation?.grade || '');
   const [description, setDescription] = useState(initialEducation?.description || '');
 
   const [hasAttemptedNext, setHasAttemptedNext] = useState(false);
@@ -75,6 +76,7 @@ export default function EducationModal({
         city: city.trim(),
         startDate: startDate.trim(),
         endDate: endDate.trim(),
+        grade: grade.trim(),
         description: description.trim(),
       },
       initialEducation?.id
@@ -244,6 +246,19 @@ export default function EducationModal({
                     className="w-full h-[50px] px-4 rounded-xl border border-slate-300 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#4348F2] focus:ring-1 focus:ring-[#4348F2] transition-all text-sm sm:text-base"
                   />
                 </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-[#0F172A] mb-1.5">
+                  Grade / Classification (optional)
+                </label>
+                <input
+                  type="text"
+                  value={grade}
+                  onChange={(e) => setGrade(e.target.value)}
+                  placeholder="e.g. First Class Honours, Upper Second (2:1), or Distinction"
+                  className="w-full h-[50px] px-4 rounded-xl border border-slate-300 text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-[#4348F2] focus:ring-1 focus:ring-[#4348F2] transition-all text-sm sm:text-base"
+                />
               </div>
             </div>
           ) : (
