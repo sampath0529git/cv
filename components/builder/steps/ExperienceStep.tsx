@@ -216,7 +216,7 @@ export default function ExperienceStep({ mode = 'form' }: ExperienceStepProps) {
 
       {/* Experience Multi-Step Modal */}
       <ExperienceModal
-        key={editingExperience?.id || (isModalOpen ? 'open-new' : 'closed')}
+        key={isModalOpen ? editingExperience?.id || 'open-new' : 'closed'}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSave={handleSaveModalExperience}

@@ -16,48 +16,48 @@ import { StartCvProvider } from '@/components/builder/StartCvContext';
 export default function HomePage() {
   return (
     <StartCvProvider>
-      <div className="min-h-screen flex flex-col bg-white text-slate-900 selection:bg-blue-600 selection:text-white">
-      {/* 1. Header Navigation Bar */}
-      <TopNav />
+      <div className="min-h-screen flex flex-col bg-white text-slate-900 overflow-x-clip selection:bg-blue-600 selection:text-white">
+        {/* 1. Header Navigation Bar */}
+        <TopNav />
 
-      {/* 2. Main Content Sections */}
-      <main className="flex-1">
-        {/* Hero Section with primary value prop and live CV mockup */}
-        <HeroSection />
+        {/* 2. Main Content Sections */}
+        <main className="flex-1">
+          {/* Hero Section with primary value prop and live CV mockup */}
+          <HeroSection />
 
-        {/* Hired by top employers banner */}
-        <HiredByBar />
+          {/* Hired by top employers banner */}
+          <HiredByBar />
 
-        {/* Interactive Feature Tabs */}
-        <div id="cv-builder-section">
-          <FeatureTabsSection />
-        </div>
+          {/* Interactive Feature Tabs */}
+          <div id="cv-builder-section">
+            <FeatureTabsSection />
+          </div>
 
-        {/* 4-Step Creation Workflow */}
-        <StepsSection />
+          {/* 4-Step Creation Workflow */}
+          <StepsSection />
 
-        {/* Social Proof Reviews and Ratings Carousel */}
-        <ReviewsSection />
+          {/* Social Proof Reviews and Ratings Carousel */}
+          <ReviewsSection />
 
-        {/* Recruiter-Approved CV Templates Carousel (Dark Navy Mode) */}
-        <TemplatesSection />
+          {/* Recruiter-Approved CV Templates Carousel (Dark Navy Mode) */}
+          <TemplatesSection />
 
-        {/* 6 Reasons to Choose ukcvmaker */}
-        <ReasonsSection />
+          {/* 6 Reasons to Choose ukcvmaker */}
+          <ReasonsSection />
 
-        {/* Editorial UK SEO Guide & Structured FAQ */}
-        <SeoGuideFaqSection />
+          {/* Editorial UK SEO Guide & Structured FAQ */}
+          <SeoGuideFaqSection />
 
-        {/* Bottom Conversion Banner */}
-        <BottomHeroBanner />
-      </main>
+          {/* Bottom Conversion Banner */}
+          <BottomHeroBanner />
+        </main>
 
-      {/* 3. Global UK Footer */}
-      <Footer />
+        {/* 3. Global UK Footer */}
+        <Footer />
 
-      {/* Floating Scroll to Top button */}
-      <ScrollToTop />
-    </div>
+        {/* Floating Scroll to Top button */}
+        <ScrollToTop />
+      </div>
     </StartCvProvider>
   );
 }

@@ -1,5 +1,11 @@
 import React from 'react';
 import { CV, A4_WIDTH_PX, A4_HEIGHT_PX } from '@/types/cv';
+import EmptyCvGuide from './shared/EmptyCvGuide';
+import {
+  resolveTemplateSectionOrder,
+  formatOptionalPersonalMeta,
+  resolvePaginatedOptionalData,
+} from './shared/templateHelpers';
 
 interface MinimalCleanTemplateProps {
   cv: CV;
@@ -15,173 +21,380 @@ export default function MinimalCleanTemplate({
   totalPages = 1,
 }: MinimalCleanTemplateProps) {
   const accent = cv.settings.accentColor || '#0f172a';
-  const fullName = cv.personal.fullName || 'Forename Surname';
-  const jobTitle = cv.personal.jobTitle || 'Professional Title';
+  const fullName = cv.personal.fullName || 'Your Name';
+  const jobTitle = cv.personal.jobTitle || '';
   const email = cv.personal.email || '';
   const phone = cv.personal.phone || '';
   const location = cv.personal.location || '';
   const linkedin = cv.personal.linkedin || '';
+  const website = cv.personal.website || '';
 
   const isFirstPage = pageIndex === 0;
   const isLastPage = pageIndex === totalPages - 1;
 
   const experiences = pageData?.experiences !== undefined ? pageData.experiences : cv.experience;
-  const educations = pageData?.educations !== undefined ? pageData.educations : (isFirstPage ? cv.education : []);
-  const allSkills = cv.skills && cv.skills.length > 0 ? cv.skills.flatMap((s) => s.items).filter(Boolean) : [];
+  const educations =
+    pageData?.educations !== undefined ? pageData.educations : isFirstPage ? cv.education : [];
+  const allSkills =
+    cv.skills && cv.skills.length > 0 ? cv.skills.flatMap((s) => s.items).filter(Boolean) : [];
 
-  const nationality = cv.personal.nationality || '';
+  const statementText =
+    pageData?.showStatement !== undefined
+      ? pageData.showStatement
+        ? pageData.statementText || cv.personalStatement
+        : ''
+      : isFirstPage
+      ? cv.personalStatement
+      : '';
+
   const languagesText =
     cv.languages && cv.languages.length > 0
-      ? cv.languages.map((l) => (l.level ? `${l.name} (${l.level})` : l.name)).join(', ')
+      ? cv.languages.map((l) => (l.level ? `${l.name} (${l.level})` : l.name)).join(' · ')
       : '';
-  const interestsText = cv.interests && cv.interests.length > 0 ? cv.interests.join('; ') : '';
+  const interestsText = cv.interests && cv.interests.length > 0 ? cv.interests.join(' · ') : '';
+
+  const optionalPersonalMeta = formatOptionalPersonalMeta(cv);
+  const { projects, projectTitle, certifications, awards, customSections, references } =
+    resolvePaginatedOptionalData(cv, pageData, pageIndex, totalPages);
+
+  const contactItems = [email, phone, location, linkedin, website, ...optionalPersonalMeta].filter(
+    Boolean
+  );
+
+  const isCompletelyEmpty =
+    isFirstPage &&
+    !cv.personalStatement?.trim() &&
+    (!cv.experience || cv.experience.length === 0) &&
+    (!cv.education || cv.education.length === 0) &&
+    allSkills.length === 0 &&
+    !languagesText &&
+    !interestsText &&
+    (cv.projects || []).length === 0 &&
+    (cv.certifications || []).length === 0 &&
+    (cv.awards || []).length === 0 &&
+    (cv.customSections || []).length === 0 &&
+    !cv.references?.trim();
+
+  const sectionOrder = resolveTemplateSectionOrder(cv);
+
+  const renderSection = (key: string) => {
+    if (key === 'statement' && statementText?.trim()) {
+      return (
+        <section key="statement" className="grid grid-cols-[135px_1fr] gap-5 break-inside-avoid cv-section">
+          <h2 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.12em] pt-0.5">
+            Profile
+          </h2>
+          <p className="text-[10.5px] text-slate-700 leading-[1.6] whitespace-pre-line">
+            {statementText}
+          </p>
+        </section>
+      );
+    }
+
+    if (key === 'experience' && experiences && experiences.length > 0) {
+      return (
+        <section key="experience" className="space-y-3.5 break-inside-avoid cv-section">
+          <div className="border-b border-slate-100 pb-1">
+            <h2 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.12em]">
+              {pageData?.experienceTitle || 'Experience'}
+            </h2>
+          </div>
+          <div className="space-y-4">
+            {experiences.map((exp: any, idx: number) => {
+              const dateDisplay = [exp.startDate, exp.endDate].filter(Boolean).join(' – ');
+              return (
+                <div
+                  key={exp.id || idx}
+                  className="grid grid-cols-[135px_1fr] gap-5 break-inside-avoid cv-item"
+                >
+                  <div className="text-[10px] font-medium text-slate-400 tabular-nums pt-0.5">
+                    {dateDisplay}
+                  </div>
+                  <div>
+                    <div className="flex justify-between items-baseline gap-3">
+                      <span className="font-bold text-slate-900 text-[11.5px]">{exp.role}</span>
+                      {exp.location && (
+                        <span className="text-[10px] text-slate-400">{exp.location}</span>
+                      )}
+                    </div>
+                    <div style={{ color: accent }} className="text-[10.5px] font-semibold mb-1">
+                      {exp.company}
+                    </div>
+                    {exp.bullets && exp.bullets.length > 0 ? (
+                      <ul className="list-disc pl-3.5 space-y-0.5 text-[10px] text-slate-600 leading-[1.5]">
+                        {exp.bullets.map((b: string, bIdx: number) => (
+                          <li key={bIdx}>{b}</li>
+                        ))}
+                      </ul>
+                    ) : exp.description ? (
+                      <p className="text-[10px] text-slate-600 leading-[1.5] whitespace-pre-line">
+                        {exp.description}
+                      </p>
+                    ) : null}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      );
+    }
+
+    if (key === 'education' && educations && educations.length > 0) {
+      return (
+        <section key="education" className="space-y-3 break-inside-avoid cv-section">
+          <div className="border-b border-slate-100 pb-1">
+            <h2 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.12em]">
+              {pageData?.educationTitle || 'Education'}
+            </h2>
+          </div>
+          <div className="space-y-3">
+            {educations.map((edu: any, idx: number) => {
+              const dateDisplay = [edu.startDate, edu.endDate].filter(Boolean).join(' – ');
+              return (
+                <div
+                  key={edu.id || idx}
+                  className="grid grid-cols-[135px_1fr] gap-5 break-inside-avoid cv-item"
+                >
+                  <div className="text-[10px] font-medium text-slate-400 tabular-nums pt-0.5">
+                    {dateDisplay}
+                  </div>
+                  <div>
+                    <div className="flex justify-between items-baseline gap-3">
+                      <span className="font-bold text-slate-900 text-[11px]">
+                        {edu.qualification}
+                      </span>
+                      {edu.grade && (
+                        <span className="text-[10px] font-semibold text-slate-700">{edu.grade}</span>
+                      )}
+                    </div>
+                    <div style={{ color: accent }} className="text-[10.5px] font-medium">
+                      {edu.institution} {edu.location ? `· ${edu.location}` : ''}
+                    </div>
+                    {edu.bullets && edu.bullets.length > 0 ? (
+                      <ul className="list-disc pl-3.5 space-y-0.5 text-[10px] text-slate-500 mt-0.5 leading-snug">
+                        {edu.bullets.map((b: string, bIdx: number) => (
+                          <li key={bIdx}>{b}</li>
+                        ))}
+                      </ul>
+                    ) : edu.description ? (
+                      <p className="text-[10px] text-slate-500 mt-0.5 leading-snug">
+                        {edu.description}
+                      </p>
+                    ) : null}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      );
+    }
+
+    const shouldShowSkills = pageData ? Boolean(pageData.showSkills) : isFirstPage;
+    const shouldShowLanguages = pageData
+      ? Boolean(pageData.showLanguages)
+      : isLastPage || totalPages === 1;
+    const shouldShowInterests = pageData
+      ? Boolean(pageData.showInterests)
+      : isLastPage || totalPages === 1;
+
+    if (key === 'skills' && allSkills.length > 0 && shouldShowSkills) {
+      return (
+        <section key="skills" className="grid grid-cols-[135px_1fr] gap-5 pt-1 break-inside-avoid cv-section">
+          <h2 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.12em] pt-0.5">
+            Skills
+          </h2>
+          <p className="text-[10.5px] text-slate-700 leading-relaxed">
+            {allSkills.join(' · ')}
+          </p>
+        </section>
+      );
+    }
+
+    if (key === 'projects' && projects.length > 0) {
+      return (
+        <section key="projects" className="space-y-3 break-inside-avoid cv-section">
+          <div className="border-b border-slate-100 pb-1">
+            <h2 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.12em]">
+              {projectTitle}
+            </h2>
+          </div>
+          <div className="space-y-3">
+            {projects.map((proj, idx) => (
+              <div
+                key={proj.id || idx}
+                className="grid grid-cols-[135px_1fr] gap-5 break-inside-avoid cv-item"
+              >
+                <div className="text-[10px] font-medium text-slate-400 truncate pt-0.5">
+                  {proj.role || 'Project'}
+                </div>
+                <div>
+                  <div className="flex justify-between items-baseline gap-3">
+                    <span className="font-bold text-slate-900 text-[11px]">{proj.title}</span>
+                    {proj.link && (
+                      <span style={{ color: accent }} className="text-[9.5px] truncate max-w-[180px]">
+                        {proj.link}
+                      </span>
+                    )}
+                  </div>
+                  {proj.bullets && proj.bullets.length > 0 ? (
+                    <ul className="list-disc pl-3.5 space-y-0.5 text-[10px] text-slate-600 leading-[1.5] mt-0.5">
+                      {proj.bullets.map((b, bIdx) => (
+                        <li key={bIdx}>{b}</li>
+                      ))}
+                    </ul>
+                  ) : proj.description ? (
+                    <p className="text-[10px] text-slate-600 leading-[1.5] mt-0.5 whitespace-pre-line">
+                      {proj.description}
+                    </p>
+                  ) : null}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      );
+    }
+
+    if (key === 'certifications' && certifications.length > 0) {
+      return (
+        <section key="certifications" className="grid grid-cols-[135px_1fr] gap-5 break-inside-avoid cv-section">
+          <h2 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.12em] pt-0.5">
+            Certifications
+          </h2>
+          <p className="text-[10.5px] text-slate-700 leading-relaxed">
+            {certifications.join(' · ')}
+          </p>
+        </section>
+      );
+    }
+
+    if (key === 'languages' && languagesText && shouldShowLanguages) {
+      return (
+        <section key="languages" className="grid grid-cols-[135px_1fr] gap-5 break-inside-avoid cv-section">
+          <h2 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.12em] pt-0.5">
+            Languages
+          </h2>
+          <p className="text-[10.5px] text-slate-700">{languagesText}</p>
+        </section>
+      );
+    }
+
+    if (key === 'awards' && awards.length > 0) {
+      return (
+        <section key="awards" className="grid grid-cols-[135px_1fr] gap-5 break-inside-avoid cv-section">
+          <h2 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.12em] pt-0.5">
+            Awards
+          </h2>
+          <p className="text-[10.5px] text-slate-700 leading-relaxed">{awards.join(' · ')}</p>
+        </section>
+      );
+    }
+
+    if (key === 'interests' && interestsText && shouldShowInterests) {
+      return (
+        <section key="interests" className="grid grid-cols-[135px_1fr] gap-5 break-inside-avoid cv-section">
+          <h2 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.12em] pt-0.5">
+            Interests
+          </h2>
+          <p className="text-[10.5px] text-slate-700 leading-relaxed">{interestsText}</p>
+        </section>
+      );
+    }
+
+    if (key === 'custom' && customSections.length > 0) {
+      return (
+        <React.Fragment key="custom">
+          {customSections.map((sec) => (
+            <section
+              key={sec.id}
+              className="grid grid-cols-[135px_1fr] gap-5 break-inside-avoid cv-section"
+            >
+              <h2 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.12em] pt-0.5">
+                {sec.title}
+              </h2>
+              <div>
+                {sec.bullets && sec.bullets.length > 0 ? (
+                  <ul className="list-disc pl-3.5 space-y-0.5 text-[10px] text-slate-600 leading-[1.5]">
+                    {sec.bullets.map((b, bIdx) => (
+                      <li key={bIdx}>{b}</li>
+                    ))}
+                  </ul>
+                ) : sec.content ? (
+                  <p className="text-[10.5px] text-slate-700 leading-relaxed whitespace-pre-line">
+                    {sec.content}
+                  </p>
+                ) : null}
+              </div>
+            </section>
+          ))}
+        </React.Fragment>
+      );
+    }
+
+    if (key === 'references' && references.trim()) {
+      return (
+        <section key="references" className="grid grid-cols-[135px_1fr] gap-5 break-inside-avoid cv-section">
+          <h2 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.12em] pt-0.5">
+            References
+          </h2>
+          <p className="text-[10.5px] text-slate-700 leading-relaxed whitespace-pre-line">
+            {references}
+          </p>
+        </section>
+      );
+    }
+
+    return null;
+  };
 
   return (
     <div
-      className="w-[794px] h-[1123px] min-w-[794px] max-w-[794px] min-h-[1123px] max-h-[1123px] print:h-auto print:min-h-[297mm] print:max-h-none print:overflow-visible box-border px-12 py-10 text-[11px] leading-relaxed text-slate-800 bg-white flex flex-col justify-between overflow-hidden select-text"
+      className="w-[794px] h-[1123px] min-w-[794px] max-w-[794px] min-h-[1123px] max-h-[1123px] print:h-auto print:min-h-[297mm] print:max-h-none print:overflow-visible box-border px-12 py-11 text-[11px] leading-relaxed text-slate-800 bg-white flex flex-col justify-between overflow-hidden select-text"
       style={{
         width: `${A4_WIDTH_PX}px`,
         height: `${A4_HEIGHT_PX}px`,
-        fontFamily: 'var(--font-jakarta, var(--font-inter, sans-serif))',
+        fontFamily: 'inherit',
       }}
     >
       <div className="space-y-5">
-        {/* Minimal Clean Header */}
+        {/* Swiss Minimal Header */}
         {isFirstPage ? (
-          <header className="border-b border-slate-200 pb-4 break-inside-avoid">
-            <h1 className="text-2xl font-bold tracking-tight text-slate-950">
+          <header className="border-b border-slate-200 pb-5 break-inside-avoid">
+            <h1 className="text-[28px] font-bold tracking-tight text-slate-950 leading-none">
               {fullName}
             </h1>
-            <p style={{ color: accent }} className="text-xs font-semibold tracking-wide mt-0.5">
-              {jobTitle}
-            </p>
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[10.5px] text-slate-500 mt-2">
-              {email && <span>{email}</span>}
-              {phone && <span>• {phone}</span>}
-              {location && <span>• {location}</span>}
-              {linkedin && <span>• {linkedin}</span>}
-            </div>
+            {jobTitle && (
+              <p style={{ color: accent }} className="text-[13px] font-semibold tracking-wide mt-2">
+                {jobTitle}
+              </p>
+            )}
+            {contactItems.length > 0 && (
+              <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1 text-[10px] text-slate-500 mt-2.5">
+                {contactItems.map((item, idx) => (
+                  <React.Fragment key={idx}>
+                    {idx > 0 && <span className="text-slate-300">·</span>}
+                    <span>{item}</span>
+                  </React.Fragment>
+                ))}
+              </div>
+            )}
           </header>
         ) : (
-          <div className="flex justify-between items-baseline border-b border-slate-200 pb-2 mb-2 text-xs break-inside-avoid">
-            <span className="font-semibold text-slate-800">{fullName}</span>
-            <span className="text-[10px] text-slate-400">Page {pageIndex + 1}</span>
+          <div className="flex justify-between items-baseline border-b border-slate-200 pb-2 text-xs break-inside-avoid">
+            <span className="font-semibold text-slate-900">{fullName}</span>
+            <span className="text-[10px] text-slate-400 tabular-nums">Page {pageIndex + 1}</span>
           </div>
         )}
 
-        {/* Profile Statement */}
-        {isFirstPage && cv.personalStatement?.trim() && (
-          <section className="break-inside-avoid cv-section">
-            <h2 className="text-[11px] font-bold text-slate-900 uppercase tracking-widest mb-1.5">
-              Profile
-            </h2>
-            <p className="text-[10.5px] text-slate-600 leading-relaxed">
-              {cv.personalStatement}
-            </p>
-          </section>
-        )}
+        {sectionOrder.map((key) => renderSection(key))}
 
-        {/* Work Experience */}
-        {experiences && experiences.length > 0 && (
-          <section className="break-inside-avoid cv-section space-y-3">
-            <h2 className="text-[11px] font-bold text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-1">
-              Experience
-            </h2>
-            <div className="space-y-4">
-              {experiences.map((exp: any, idx: number) => {
-                const dateDisplay = [exp.startDate, exp.endDate].filter(Boolean).join(' – ');
-                return (
-                  <div key={exp.id || idx} className="grid grid-cols-[140px_1fr] gap-4 break-inside-avoid cv-item">
-                    <div className="text-[10.5px] font-medium text-slate-400">
-                      {dateDisplay}
-                    </div>
-                    <div>
-                      <div className="flex justify-between items-baseline">
-                        <span className="font-semibold text-slate-900">{exp.role}</span>
-                        <span className="text-[10px] text-slate-500">{exp.location}</span>
-                      </div>
-                      <div style={{ color: accent }} className="text-[10.5px] font-medium mb-1">
-                        {exp.company}
-                      </div>
-                      {exp.bullets && exp.bullets.length > 0 ? (
-                        <ul className="list-disc pl-3.5 space-y-0.5 text-[10px] text-slate-600 leading-snug">
-                          {exp.bullets.map((b: string, bIdx: number) => (
-                            <li key={bIdx}>{b}</li>
-                          ))}
-                        </ul>
-                      ) : exp.description ? (
-                        <p className="text-[10px] text-slate-600 leading-snug">{exp.description}</p>
-                      ) : null}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </section>
-        )}
-
-        {/* Education */}
-        {educations && educations.length > 0 && (
-          <section className="break-inside-avoid cv-section space-y-3">
-            <h2 className="text-[11px] font-bold text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-1">
-              Education
-            </h2>
-            <div className="space-y-3">
-              {educations.map((edu: any, idx: number) => {
-                const dateDisplay = [edu.startDate, edu.endDate].filter(Boolean).join(' – ');
-                return (
-                  <div key={edu.id || idx} className="grid grid-cols-[140px_1fr] gap-4 break-inside-avoid cv-item">
-                    <div className="text-[10.5px] font-medium text-slate-400">
-                      {dateDisplay}
-                    </div>
-                    <div>
-                      <div className="flex justify-between items-baseline">
-                        <span className="font-semibold text-slate-900">{edu.qualification}</span>
-                        {edu.grade && <span className="text-[10px] font-medium text-slate-600">{edu.grade}</span>}
-                      </div>
-                      <div style={{ color: accent }} className="text-[10.5px] font-medium">
-                        {edu.institution} {edu.location ? `• ${edu.location}` : ''}
-                      </div>
-                      {edu.description && (
-                        <p className="text-[10px] text-slate-500 mt-0.5">{edu.description}</p>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </section>
-        )}
-
-        {/* Skills */}
-        {allSkills.length > 0 && (
-          <section className="break-inside-avoid cv-section">
-            <h2 className="text-[11px] font-bold text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-1 mb-2">
-              Skills
-            </h2>
-            <p className="text-[10.5px] text-slate-600 leading-relaxed">
-              {allSkills.join(' • ')}
-            </p>
-          </section>
-        )}
-
-        {/* Additional Info */}
-        {(isLastPage || totalPages === 1) && (nationality || languagesText || interestsText) && (
-          <section className="break-inside-avoid cv-section pt-2">
-            <h2 className="text-[11px] font-bold text-slate-900 uppercase tracking-widest border-b border-slate-100 pb-1 mb-2">
-              Additional Details
-            </h2>
-            <div className="space-y-1 text-[10.5px] text-slate-600">
-              {languagesText && <div><strong className="text-slate-800">Languages:</strong> {languagesText}</div>}
-              {nationality && <div><strong className="text-slate-800">Nationality:</strong> {nationality}</div>}
-              {interestsText && <div><strong className="text-slate-800">Interests:</strong> {interestsText}</div>}
-            </div>
-          </section>
-        )}
+        {isCompletelyEmpty && <EmptyCvGuide accent={accent} />}
       </div>
 
       {totalPages > 1 && (
-        <div className="text-right text-[9px] text-slate-400 pt-2 border-t border-slate-100">
+        <div className="text-right text-[9px] text-slate-400 pt-2 border-t border-slate-100 tabular-nums">
           Page {pageIndex + 1} of {totalPages}
         </div>
       )}

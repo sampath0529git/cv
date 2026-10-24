@@ -9,18 +9,24 @@ interface CvPreviewProps {
   isLoading?: boolean;
   scale?: number;
   showControlsBar?: boolean;
+  onPagesChange?: (totalPages: number) => void;
 }
 
 export default function CvPreview({
   className = '',
-  isPrintMode = false,
   isLoading = false,
   scale,
   showControlsBar = false,
+  onPagesChange,
 }: CvPreviewProps) {
   return (
-    <div className={`w-full h-full flex flex-col items-center ${className}`}>
-      <UnifiedCvPreview showControlsBar={showControlsBar} scale={scale} isLoading={isLoading} />
+    <div className={`w-full flex flex-col items-center ${className}`}>
+      <UnifiedCvPreview
+        showControlsBar={showControlsBar}
+        scale={scale}
+        isLoading={isLoading}
+        onPagesChange={onPagesChange}
+      />
     </div>
   );
 }

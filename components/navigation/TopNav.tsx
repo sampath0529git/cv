@@ -1,10 +1,19 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
-import { ChevronDown, Menu, X, FileText } from 'lucide-react';
-
+import {
+  ChevronDown,
+  ChevronRight,
+  Menu,
+  X,
+  FilePenLine,
+  FileText,
+  Upload,
+  User,
+  LayoutGrid,
+  BookOpen,
+} from 'lucide-react';
 import Logo from '@/components/brand/Logo';
 
 export default function TopNav() {
@@ -14,311 +23,350 @@ export default function TopNav() {
   const [selectedLang, setSelectedLang] = useState('EN');
   const [accountModalOpen, setAccountModalOpen] = useState(false);
 
+  // Close mobile drawer on viewport resize to desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-slate-100/80">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-14 h-20 flex items-center justify-between">
-        {/* Left: Brand Logo from lib/config.ts */}
-        <div className="flex items-center gap-12">
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100/90">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-14 h-[60px] md:h-20 flex items-center justify-between gap-3">
+        {/* Zone 1: Brand Wordmark */}
+        <div className="flex items-center shrink-0">
           <Logo variant="dark" href="/" />
-
-          {/* Desktop Navigation Links matching exact screenshot */}
-          <nav className="hidden md:flex items-center gap-8" aria-label="Main Navigation">
-            {/* CV builder */}
-            <Link
-              href="/start"
-              className="flex items-center gap-2.5 text-[15px] font-medium text-slate-900 hover:text-[#4a4df2] transition-colors py-1 group"
-            >
-              {/* Exact folded document with pencil icon from screenshot */}
-              <svg
-                className="w-[18px] h-[18px] text-[#4a4df2] transition-transform group-hover:scale-105"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                <polyline points="14 2 14 8 20 8" />
-                <path d="M4 21l3.5-3.5 2 2L6 23z" />
-              </svg>
-              <span>CV builder</span>
-            </Link>
-
-            {/* Cover letter */}
-            <Link
-              href="#features-section"
-              className="flex items-center gap-2.5 text-[15px] font-medium text-slate-900 hover:text-[#4a4df2] transition-colors py-1 group"
-            >
-              {/* Exact document with dashed rows icon from screenshot */}
-              <svg
-                className="w-[18px] h-[18px] text-[#4a4df2] transition-transform group-hover:scale-105"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                <polyline points="14 2 14 8 20 8" />
-                <line x1="8" y1="15" x2="10" y2="15" />
-                <line x1="12" y1="15" x2="14" y2="15" />
-                <line x1="8" y1="18" x2="10" y2="18" />
-                <line x1="12" y1="18" x2="14" y2="18" />
-              </svg>
-              <span>Cover letter</span>
-            </Link>
-
-            {/* Features Dropdown */}
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setFeaturesDropdownOpen(!featuresDropdownOpen)}
-                onBlur={() => setTimeout(() => setFeaturesDropdownOpen(false), 200)}
-                className="flex items-center gap-1.5 text-[15px] font-medium text-slate-900 hover:text-[#4a4df2] transition-colors py-1 cursor-pointer"
-                aria-expanded={featuresDropdownOpen}
-              >
-                <span>Features</span>
-                <ChevronDown
-                  className={`w-3.5 h-3.5 text-slate-700 transition-transform duration-200 ${
-                    featuresDropdownOpen ? 'rotate-180' : ''
-                  }`}
-                />
-              </button>
-
-              {featuresDropdownOpen && (
-                <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-100 p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
-                  <Link
-                    href="#cv-builder-section"
-                    className="block px-3 py-2 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-[#4a4df2]"
-                  >
-                    CV Builder &amp; Editor
-                  </Link>
-                  <Link
-                    href="#templates-section"
-                    className="block px-3 py-2 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-[#4a4df2]"
-                  >
-                    Recruiter Templates
-                  </Link>
-                  <Link
-                    href="#seo-guide"
-                    className="block px-3 py-2 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-[#4a4df2]"
-                  >
-                    UK CV Guide 2026
-                  </Link>
-                </div>
-              )}
-            </div>
-          </nav>
         </div>
 
-        {/* Right Nav: Language selector and My account with exact styling from image_c32bf789.png */}
-        <div className="hidden md:flex items-center gap-3">
-          {/* Language selector dropdown */}
+        {/* Zone 2: Desktop Navigation Links */}
+        <nav className="hidden md:flex items-center gap-7 lg:gap-8" aria-label="Main Navigation">
+          <Link
+            href="/start"
+            className="flex items-center gap-2 text-[15px] font-medium text-slate-800 hover:text-[#4a4df2] transition-colors py-1 whitespace-nowrap shrink-0"
+          >
+            <FilePenLine className="w-[17px] h-[17px] text-[#4a4df2] shrink-0" />
+            <span>CV builder</span>
+          </Link>
+
+          <Link
+            href="#templates-section"
+            className="flex items-center gap-2 text-[15px] font-medium text-slate-800 hover:text-[#4a4df2] transition-colors py-1 whitespace-nowrap shrink-0"
+          >
+            <LayoutGrid className="w-[17px] h-[17px] text-[#4a4df2] shrink-0" />
+            <span>Templates</span>
+          </Link>
+
+          <Link
+            href="/import"
+            className="flex items-center gap-2 text-[15px] font-medium text-slate-800 hover:text-[#4a4df2] transition-colors py-1 whitespace-nowrap shrink-0"
+          >
+            <Upload className="w-[17px] h-[17px] text-[#4a4df2] shrink-0" />
+            <span>Import CV</span>
+          </Link>
+
+          {/* Features Dropdown */}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setFeaturesDropdownOpen(!featuresDropdownOpen)}
+              onBlur={() => setTimeout(() => setFeaturesDropdownOpen(false), 200)}
+              className="flex items-center gap-1.5 text-[15px] font-medium text-slate-800 hover:text-[#4a4df2] transition-colors py-1 cursor-pointer whitespace-nowrap shrink-0"
+              aria-expanded={featuresDropdownOpen}
+            >
+              <span>Features</span>
+              <ChevronDown
+                className={`w-3.5 h-3.5 text-slate-600 transition-transform duration-200 ${
+                  featuresDropdownOpen ? 'rotate-180' : ''
+                }`}
+              />
+            </button>
+
+            {featuresDropdownOpen && (
+              <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-100 p-2 z-50">
+                <Link
+                  href="#cv-builder-section"
+                  className="block px-3 py-2.5 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-[#4a4df2]"
+                >
+                  CV Builder &amp; Live Editor
+                </Link>
+                <Link
+                  href="#templates-section"
+                  className="block px-3 py-2.5 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-[#4a4df2]"
+                >
+                  Recruiter Templates
+                </Link>
+                <Link
+                  href="#seo-guide"
+                  className="block px-3 py-2.5 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-[#4a4df2]"
+                >
+                  UK CV Guide 2026
+                </Link>
+              </div>
+            )}
+          </div>
+        </nav>
+
+        {/* Zone 3: Desktop Language + Account Action */}
+        <div className="hidden md:flex items-center gap-3 shrink-0">
           <div className="relative">
             <button
               type="button"
               onClick={() => setLangDropdownOpen(!langDropdownOpen)}
               onBlur={() => setTimeout(() => setLangDropdownOpen(false), 200)}
-              className="h-[44px] px-3.5 rounded-xl border border-slate-200/90 hover:border-slate-300 text-[15px] font-medium text-[#0f172a] transition-all bg-white flex items-center gap-2 shadow-2xs hover:shadow-xs cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-slate-200"
+              className="h-[44px] px-3.5 rounded-xl border border-slate-200/90 hover:border-slate-300 text-sm font-medium text-[#0f172a] transition-all bg-white flex items-center gap-2 shadow-2xs hover:shadow-xs cursor-pointer whitespace-nowrap shrink-0"
               aria-label="Select language (Current: English UK)"
               aria-expanded={langDropdownOpen}
             >
-              {/* Razor-sharp official UK Union Jack Flag SVG */}
-              <svg className="w-[20px] h-[14px] rounded-[2px] shadow-2xs shrink-0" viewBox="0 0 60 30" aria-hidden="true">
-                <clipPath id="uk-clip-top">
-                  <path d="M0,0 v30 h60 v-30 z"/>
-                </clipPath>
-                <clipPath id="uk-diag-top">
-                  <path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/>
-                </clipPath>
-                <g clipPath="url(#uk-clip-top)">
-                  <path d="M0,0 v30 h60 v-30 z" fill="#012169"/>
-                  <path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" strokeWidth="6"/>
-                  <path d="M0,0 L60,30 M60,0 L0,30" clipPath="url(#uk-diag-top)" stroke="#C8102E" strokeWidth="4"/>
-                  <path d="M30,0 v30 M0,15 h60" stroke="#fff" strokeWidth="10"/>
-                  <path d="M30,0 v30 M0,15 h60" stroke="#C8102E" strokeWidth="6"/>
-                </g>
-              </svg>
               <span className="leading-none">{selectedLang}</span>
               <ChevronDown
                 className={`w-3.5 h-3.5 text-[#64748b] transition-transform duration-200 ${
                   langDropdownOpen ? 'rotate-180' : ''
                 }`}
-                strokeWidth={2}
               />
             </button>
 
-            {/* Language Selection Menu */}
             {langDropdownOpen && (
-              <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-100 p-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
-                <button
-                  type="button"
-                  onClick={() => { setSelectedLang('EN'); setLangDropdownOpen(false); }}
-                  className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-slate-800 hover:bg-slate-50"
-                >
-                  <span className="flex items-center gap-2">
-                    <span>🇬🇧</span> English (UK)
-                  </span>
-                  <span className="text-[#4a4df2] font-bold">✓</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { setSelectedLang('US'); setLangDropdownOpen(false); }}
-                  className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-slate-800 hover:bg-slate-50"
-                >
-                  <span className="flex items-center gap-2">
-                    <span>🇺🇸</span> English (US)
-                  </span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { setSelectedLang('FR'); setLangDropdownOpen(false); }}
-                  className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-slate-800 hover:bg-slate-50"
-                >
-                  <span className="flex items-center gap-2">
-                    <span>🇫🇷</span> Français
-                  </span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { setSelectedLang('DE'); setLangDropdownOpen(false); }}
-                  className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-slate-800 hover:bg-slate-50"
-                >
-                  <span className="flex items-center gap-2">
-                    <span>🇩🇪</span> Deutsch
-                  </span>
-                </button>
+              <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-100 p-1.5 z-50">
+                {[
+                  { code: 'EN', label: 'English (UK)' },
+                  { code: 'US', label: 'English (US)' },
+                  { code: 'FR', label: 'Français' },
+                  { code: 'DE', label: 'Deutsch' },
+                ].map((item) => (
+                  <button
+                    key={item.code}
+                    type="button"
+                    onClick={() => {
+                      setSelectedLang(item.code);
+                      setLangDropdownOpen(false);
+                    }}
+                    className="w-full min-h-[38px] flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-slate-800 hover:bg-slate-50 cursor-pointer"
+                  >
+                    <span>{item.label}</span>
+                    {selectedLang === item.code && (
+                      <span className="text-[#4a4df2] font-bold">✓</span>
+                    )}
+                  </button>
+                ))}
               </div>
             )}
           </div>
 
-          {/* My account button matching exact reference */}
           <button
             type="button"
             onClick={() => setAccountModalOpen(true)}
-            className="h-[44px] px-5 rounded-xl border border-slate-200/90 hover:border-slate-300 text-[15px] font-normal text-[#002447] hover:text-black transition-all bg-white flex items-center justify-center shadow-2xs hover:shadow-xs cursor-pointer focus:outline-hidden focus:ring-2 focus:ring-slate-200"
+            className="h-[44px] px-5 rounded-xl border border-slate-200/90 hover:border-slate-300 text-[15px] font-medium text-[#002447] hover:text-black transition-all bg-white flex items-center justify-center shadow-2xs hover:shadow-xs cursor-pointer whitespace-nowrap shrink-0"
           >
             My account
           </button>
         </div>
 
-        {/* Account Sign-In Modal */}
-        {accountModalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-4 animate-in fade-in duration-150">
-            <div className="bg-white rounded-2xl shadow-2xl border border-slate-100 max-w-md w-full p-6 sm:p-8 relative animate-in zoom-in-95 duration-150">
-              <button
-                type="button"
-                onClick={() => setAccountModalOpen(false)}
-                className="absolute top-5 right-5 text-slate-400 hover:text-slate-700 p-1 rounded-lg"
-                aria-label="Close modal"
-              >
-                <X className="w-5 h-5" />
-              </button>
-
-              <div className="text-center space-y-2 mb-6">
-                <div className="w-10 h-10 rounded-xl bg-[#4a4df2]/10 text-[#4a4df2] mx-auto flex items-center justify-center">
-                  <svg viewBox="0 0 24 24" className="w-5 h-5 fill-none stroke-current" strokeWidth="2">
-                    <circle cx="12" cy="8" r="4" />
-                    <path d="M6 20v-2a6 6 0 0 1 12 0v2" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-bold text-slate-900 tracking-tight">Sign in to MakeMyCV</h3>
-                <p className="text-xs text-slate-500">Access your saved CVs, tailored cover letters, and job applications.</p>
-              </div>
-
-              <form onSubmit={(e) => { e.preventDefault(); setAccountModalOpen(false); }} className="space-y-4">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Email address</label>
-                  <input
-                    type="email"
-                    placeholder="e.g. alex.smith@example.co.uk"
-                    required
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#4a4df2] focus:border-[#4a4df2]"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">Password</label>
-                  <input
-                    type="password"
-                    placeholder="••••••••"
-                    required
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#4a4df2] focus:border-[#4a4df2]"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="w-full py-3 rounded-xl bg-[#4a4df2] hover:bg-[#383be0] text-white font-semibold text-sm transition-all shadow-sm"
-                >
-                  Continue to my account
-                </button>
-              </form>
-            </div>
-          </div>
-        )}
-
-        {/* Mobile menu toggle */}
-        <div className="flex items-center gap-2 md:hidden">
+        {/* Mobile Actions: Primary CTA + 44x44px Hamburger Button */}
+        <div className="flex items-center gap-2 md:hidden shrink-0">
           <Link
-            href="#templates-section"
-            className="text-xs font-semibold px-3 py-2 rounded-lg bg-[#4a4df2] text-white"
+            href="/start"
+            className="min-h-[40px] px-3.5 py-2 rounded-xl bg-[#4a4df2] hover:bg-[#383be0] text-white text-xs font-semibold inline-flex items-center justify-center shadow-2xs active:scale-[0.98] transition-all whitespace-nowrap shrink-0"
           >
             Create CV
           </Link>
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 text-slate-700 hover:text-slate-900"
-            aria-label="Toggle navigation menu"
+            className="min-h-[44px] min-w-[44px] rounded-xl text-slate-700 hover:text-slate-900 hover:bg-slate-100/80 flex items-center justify-center transition-colors cursor-pointer"
+            aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            aria-expanded={mobileMenuOpen}
           >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Navigation Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-slate-100 bg-white px-4 pt-3 pb-6 shadow-xl animate-in fade-in slide-in-from-top-3">
-          <nav className="flex flex-col gap-2">
-            <Link
-              href="#cv-builder-section"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-800 hover:bg-slate-50"
-            >
-              <FileText className="w-4 h-4 text-[#4a4df2]" />
-              <span>CV builder</span>
-            </Link>
-            <Link
-              href="#features-section"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-800 hover:bg-slate-50"
-            >
-              <FileText className="w-4 h-4 text-[#4a4df2]" />
-              <span>Cover letter</span>
-            </Link>
-            <Link
-              href="/start"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-800 hover:bg-slate-50"
-            >
-              <span>Features &amp; Templates</span>
-            </Link>
-            <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-700 px-3">
-              <span>🇬🇧 United Kingdom (EN)</span>
-              <span className="font-semibold text-[#4a4df2]">My account</span>
+        <>
+          <div
+            className="fixed inset-0 top-[60px] bg-slate-900/25 backdrop-blur-[1px] z-40 md:hidden"
+            onClick={() => setMobileMenuOpen(false)}
+          />
+          <div className="relative z-50 md:hidden border-t border-slate-100 bg-white px-4 pt-3 pb-6 shadow-2xl rounded-b-3xl">
+            <nav className="flex flex-col divide-y divide-slate-100" aria-label="Mobile Navigation">
+              <Link
+                href="/builder"
+                onClick={() => setMobileMenuOpen(false)}
+                className="min-h-[52px] flex items-center justify-between px-2 py-3 text-sm font-semibold text-slate-900 active:bg-slate-50 rounded-xl"
+              >
+                <span className="flex items-center gap-3">
+                  <span className="w-9 h-9 rounded-xl bg-[#eef2ff] text-[#4a4df2] flex items-center justify-center shrink-0">
+                    <FilePenLine className="w-4 h-4" />
+                  </span>
+                  <span>CV Builder Studio</span>
+                </span>
+                <ChevronRight className="w-4 h-4 text-slate-400" />
+              </Link>
+
+              <Link
+                href="/import"
+                onClick={() => setMobileMenuOpen(false)}
+                className="min-h-[52px] flex items-center justify-between px-2 py-3 text-sm font-semibold text-slate-900 active:bg-slate-50 rounded-xl"
+              >
+                <span className="flex items-center gap-3">
+                  <span className="w-9 h-9 rounded-xl bg-[#eef2ff] text-[#4a4df2] flex items-center justify-center shrink-0">
+                    <Upload className="w-4 h-4" />
+                  </span>
+                  <span>Import Existing CV</span>
+                </span>
+                <ChevronRight className="w-4 h-4 text-slate-400" />
+              </Link>
+
+              <Link
+                href="#templates-section"
+                onClick={() => setMobileMenuOpen(false)}
+                className="min-h-[52px] flex items-center justify-between px-2 py-3 text-sm font-semibold text-slate-900 active:bg-slate-50 rounded-xl"
+              >
+                <span className="flex items-center gap-3">
+                  <span className="w-9 h-9 rounded-xl bg-[#eef2ff] text-[#4a4df2] flex items-center justify-center shrink-0">
+                    <LayoutGrid className="w-4 h-4" />
+                  </span>
+                  <span>Recruiter Templates</span>
+                </span>
+                <ChevronRight className="w-4 h-4 text-slate-400" />
+              </Link>
+
+              <Link
+                href="#features-section"
+                onClick={() => setMobileMenuOpen(false)}
+                className="min-h-[52px] flex items-center justify-between px-2 py-3 text-sm font-semibold text-slate-900 active:bg-slate-50 rounded-xl"
+              >
+                <span className="flex items-center gap-3">
+                  <span className="w-9 h-9 rounded-xl bg-[#eef2ff] text-[#4a4df2] flex items-center justify-center shrink-0">
+                    <FileText className="w-4 h-4" />
+                  </span>
+                  <span>Cover Letter &amp; Tools</span>
+                </span>
+                <ChevronRight className="w-4 h-4 text-slate-400" />
+              </Link>
+
+              <Link
+                href="#seo-guide"
+                onClick={() => setMobileMenuOpen(false)}
+                className="min-h-[52px] flex items-center justify-between px-2 py-3 text-sm font-semibold text-slate-900 active:bg-slate-50 rounded-xl"
+              >
+                <span className="flex items-center gap-3">
+                  <span className="w-9 h-9 rounded-xl bg-[#eef2ff] text-[#4a4df2] flex items-center justify-center shrink-0">
+                    <BookOpen className="w-4 h-4" />
+                  </span>
+                  <span>UK CV Guide 2026</span>
+                </span>
+                <ChevronRight className="w-4 h-4 text-slate-400" />
+              </Link>
+            </nav>
+
+            <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between gap-2 px-1">
+              <span className="text-xs text-slate-500 font-medium">United Kingdom ({selectedLang})</span>
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  setAccountModalOpen(true);
+                }}
+                className="min-h-[40px] px-3 py-1.5 rounded-lg text-xs font-semibold text-[#4a4df2] hover:bg-[#eef2ff] inline-flex items-center gap-1.5 cursor-pointer"
+              >
+                <User className="w-3.5 h-3.5" />
+                <span>My account</span>
+              </button>
             </div>
-            <Link
-              href="/start"
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full text-center mt-3 py-3 rounded-lg bg-[#4a4df2] text-white font-semibold text-sm shadow-sm"
+
+            <div className="mt-3 grid grid-cols-2 gap-2.5">
+              <Link
+                href="/start"
+                onClick={() => setMobileMenuOpen(false)}
+                className="min-h-[46px] rounded-xl bg-[#4a4df2] hover:bg-[#383be0] text-white font-semibold text-sm flex items-center justify-center shadow-sm active:scale-[0.99] whitespace-nowrap"
+              >
+                Create my CV
+              </Link>
+              <Link
+                href="/import"
+                onClick={() => setMobileMenuOpen(false)}
+                className="min-h-[46px] rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-900 font-semibold text-sm flex items-center justify-center active:scale-[0.99] whitespace-nowrap"
+              >
+                Import CV
+              </Link>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Account Sign-In Modal */}
+      {accountModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/45 backdrop-blur-xs p-0 sm:p-4"
+          onClick={() => setAccountModalOpen(false)}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl border border-slate-100 max-w-md w-full p-6 sm:p-8 relative pb-[max(1.5rem,env(safe-area-inset-bottom))]"
+          >
+            <button
+              type="button"
+              onClick={() => setAccountModalOpen(false)}
+              className="absolute top-4 right-4 min-h-[40px] min-w-[40px] flex items-center justify-center text-slate-400 hover:text-slate-700 rounded-xl hover:bg-slate-100 cursor-pointer"
+              aria-label="Close modal"
             >
-              Create my CV
-            </Link>
-          </nav>
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="text-center space-y-2 mb-6">
+              <div className="w-10 h-10 rounded-xl bg-[#4a4df2]/10 text-[#4a4df2] mx-auto flex items-center justify-center">
+                <User className="w-5 h-5" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 tracking-tight">Sign in to MakeMyCV</h3>
+              <p className="text-xs sm:text-sm text-slate-500">
+                Access your saved CVs, tailored cover letters, and job applications.
+              </p>
+            </div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                setAccountModalOpen(false);
+              }}
+              className="space-y-4"
+            >
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Email address
+                </label>
+                <input
+                  type="email"
+                  inputMode="email"
+                  placeholder="e.g. alex.smith@example.co.uk"
+                  required
+                  className="w-full min-h-[46px] px-3.5 py-2.5 rounded-xl border border-slate-200 text-base sm:text-sm focus:outline-hidden focus:ring-2 focus:ring-[#4a4df2] focus:border-[#4a4df2]"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">Password</label>
+                <input
+                  type="password"
+                  placeholder="••••••••"
+                  required
+                  className="w-full min-h-[46px] px-3.5 py-2.5 rounded-xl border border-slate-200 text-base sm:text-sm focus:outline-hidden focus:ring-2 focus:ring-[#4a4df2] focus:border-[#4a4df2]"
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full min-h-[48px] py-3 rounded-xl bg-[#4a4df2] hover:bg-[#383be0] text-white font-semibold text-sm transition-all shadow-sm cursor-pointer"
+              >
+                Continue to my account
+              </button>
+            </form>
+          </div>
         </div>
       )}
     </header>
   );
 }
-

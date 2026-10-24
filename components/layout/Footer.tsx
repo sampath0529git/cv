@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { PersonStanding, X } from 'lucide-react';
 import Logo from '@/components/brand/Logo';
 
 export default function Footer() {
@@ -9,111 +10,103 @@ export default function Footer() {
 
   return (
     <>
-      <footer className="bg-white border-t border-slate-100 text-slate-600 text-xs sm:text-sm py-16">
+      <footer className="bg-white border-t border-slate-100 text-slate-600 text-xs sm:text-sm pt-10 pb-20 sm:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-10 lg:gap-16 text-left">
-            {/* Left: Brand Logo & Disclaimer */}
-            <div className="md:col-span-5 space-y-4">
+          <div className="grid grid-cols-2 md:grid-cols-12 gap-8 sm:gap-10 lg:gap-16 text-left">
+            {/* Left: Brand Logo & Disclaimer (Full width on mobile, 5 cols on md+) */}
+            <div className="col-span-2 md:col-span-5 space-y-3.5">
               <Logo variant="dark" href="/" />
 
               <p className="text-[11px] text-slate-400 leading-relaxed max-w-sm">
-                *The names and logos of the companies mentioned above are registered trademarks belonging to their respective owners. Unless otherwise noted, these references in no way aim to suggest an affiliation or association with MakeMyCV.
+                *The names and logos of the companies mentioned above are registered trademarks belonging to their respective owners. Unless otherwise noted, these references do not imply affiliation with MakeMyCV.
               </p>
             </div>
 
-            {/* Column 2: All Features */}
-            <div className="md:col-span-4 space-y-3">
+            {/* Column 2: All Features (1 col on mobile so links sit cleanly side-by-side with About!) */}
+            <div className="col-span-1 md:col-span-4 space-y-2.5">
               <div className="font-bold text-slate-900 text-xs tracking-wider uppercase">
-                All features
+                Tools &amp; Builder
               </div>
-              <ul className="space-y-2 text-xs text-slate-500">
+              <ul className="space-y-1 text-xs text-slate-500">
                 <li>
-                  <Link href="#cv-builder-section" className="hover:text-slate-900 transition-colors">
-                    CV builder
+                  <Link
+                    href="/builder"
+                    className="inline-block py-1.5 hover:text-slate-900 transition-colors"
+                  >
+                    CV builder studio
                   </Link>
                 </li>
                 <li>
-                  <Link href="#features-section" className="hover:text-slate-900 transition-colors">
+                  <Link
+                    href="/start"
+                    className="inline-block py-1.5 hover:text-slate-900 transition-colors"
+                  >
+                    Start from template
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/import"
+                    className="inline-block py-1.5 hover:text-slate-900 transition-colors"
+                  >
+                    Import existing CV
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="#features-section"
+                    className="inline-block py-1.5 hover:text-slate-900 transition-colors"
+                  >
                     Cover letter builder
                   </Link>
                 </li>
                 <li>
-                  <Link href="#features-section" className="hover:text-slate-900 transition-colors">
-                    Resume checker
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#features-section" className="hover:text-slate-900 transition-colors">
-                    Resignation letter builder
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#features-section" className="hover:text-slate-900 transition-colors">
-                    Headshot pro
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#features-section" className="hover:text-slate-900 transition-colors">
-                    Career test
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#features-section" className="hover:text-slate-900 transition-colors">
-                    Remote job
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#features-section" className="hover:text-slate-900 transition-colors">
-                    CV skills generator
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#features-section" className="hover:text-slate-900 transition-colors">
-                    CV summary generator
+                  <Link
+                    href="#templates-section"
+                    className="inline-block py-1.5 hover:text-slate-900 transition-colors"
+                  >
+                    ATS CV templates
                   </Link>
                 </li>
               </ul>
             </div>
 
             {/* Column 3: About */}
-            <div className="md:col-span-3 space-y-3">
+            <div className="col-span-1 md:col-span-3 space-y-2.5">
               <div className="font-bold text-slate-900 text-xs tracking-wider uppercase">
-                About
+                Resources
               </div>
-              <ul className="space-y-2 text-xs text-slate-500">
+              <ul className="space-y-1 text-xs text-slate-500">
                 <li>
-                  <Link href="#seo-guide" className="hover:text-slate-900 transition-colors">
-                    Contact us
+                  <Link
+                    href="#seo-guide"
+                    className="inline-block py-1.5 hover:text-slate-900 transition-colors"
+                  >
+                    UK CV Guide 2026
                   </Link>
                 </li>
                 <li>
-                  <Link href="#seo-guide" className="hover:text-slate-900 transition-colors">
-                    FAQ
+                  <Link
+                    href="#steps-section"
+                    className="inline-block py-1.5 hover:text-slate-900 transition-colors"
+                  >
+                    How it works
                   </Link>
                 </li>
                 <li>
-                  <Link href="#account" className="hover:text-slate-900 transition-colors">
-                    Unsubscribe
+                  <Link
+                    href="#templates-section"
+                    className="inline-block py-1.5 hover:text-slate-900 transition-colors"
+                  >
+                    Template gallery
                   </Link>
                 </li>
                 <li>
-                  <Link href="#templates-section" className="hover:text-slate-900 transition-colors">
-                    Pricing
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#terms" className="hover:text-slate-900 transition-colors">
-                    General terms and conditions of sale
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#privacy" className="hover:text-slate-900 transition-colors">
-                    Privacy policy
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#notice" className="hover:text-slate-900 transition-colors">
-                    Notice
+                  <Link
+                    href="#seo-guide"
+                    className="inline-block py-1.5 hover:text-slate-900 transition-colors"
+                  >
+                    FAQ &amp; formatting
                   </Link>
                 </li>
               </ul>
@@ -122,34 +115,32 @@ export default function Footer() {
         </div>
       </footer>
 
-      {/* Floating Accessibility Trigger at Bottom Left (matching circular icon in screenshot) */}
-      <div className="fixed bottom-4 left-4 z-40">
+      {/* Floating Accessibility Trigger at Bottom Left (44x44px hitbox + safe-area inset) */}
+      <div className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-4 z-40">
         <button
           type="button"
           onClick={() => setAccessibilityModalOpen(!accessibilityModalOpen)}
-          className="w-10 h-10 rounded-full bg-[#0c112b] text-white flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-transform"
+          className="w-11 h-11 rounded-full bg-[#0c112b] text-white flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-transform cursor-pointer"
           aria-label="Accessibility options"
         >
-          {/* Wheelchair / Accessibility Symbol */}
-          <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 2a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-1 6v6h2v-6h-2zm-3.5 1.5l1.42 1.42L10.34 9.5 9 8.08 7.5 9.5zM16.5 9.5l1.42-1.42L16.5 6.66 15.08 8.08l1.42 1.42zM12 15a4 4 0 1 0 4 4h-2a2 2 0 1 1-2-2v-2z" />
-          </svg>
+          <PersonStanding className="w-5 h-5" />
         </button>
 
         {accessibilityModalOpen && (
-          <div className="absolute bottom-12 left-0 w-64 bg-white rounded-xl shadow-2xl border border-slate-200 p-3 text-slate-800 text-xs space-y-2 animate-in fade-in slide-in-from-bottom-2">
+          <div className="absolute bottom-13 left-0 w-68 max-w-[calc(100vw-32px)] bg-white rounded-2xl shadow-2xl border border-slate-200 p-3.5 text-slate-800 text-xs space-y-2">
             <div className="font-bold text-slate-900 border-b border-slate-100 pb-1.5 flex justify-between items-center">
               <span>Accessibility Assistance</span>
               <button
                 type="button"
                 onClick={() => setAccessibilityModalOpen(false)}
-                className="text-slate-400 hover:text-slate-700 font-bold"
+                aria-label="Close accessibility info"
+                className="min-h-[28px] min-w-[28px] flex items-center justify-center text-slate-400 hover:text-slate-700 rounded-lg cursor-pointer"
               >
-                &times;
+                <X className="w-4 h-4" />
               </button>
             </div>
-            <p className="text-[11px] text-slate-500 leading-normal">
-              ukcvmaker is optimized for screen readers and high contrast. Press Tab to navigate.
+            <p className="text-[11.5px] text-slate-500 leading-relaxed">
+              MakeMyCV supports keyboard navigation, high-contrast legibility, and 44px+ mobile touch controls across all steps.
             </p>
           </div>
         )}

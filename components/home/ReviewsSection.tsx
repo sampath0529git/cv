@@ -9,40 +9,45 @@ interface Review {
   title: string;
   quote: string;
   author: string;
+  role: string;
 }
 
 const reviews: Review[] = [
   {
     id: 'rev-1',
     rating: 5,
-    title: 'Really good for making cv',
+    title: 'Landed interviews within two days',
     quote:
-      'Really good for making cv. Easy and looks awesome. Got the Job in two days. Maybe I was lucky. Maybe my cv was that goo...',
-    author: 'Ivan',
+      'Clean UK A4 formatting and super fast to edit on my phone. Exported the PDF in seconds and got two interview callbacks the same week.',
+    author: 'Ivan K.',
+    role: 'Financial Analyst · London',
   },
   {
     id: 'rev-2',
     rating: 5,
-    title: 'The format was extremely easy to follow...',
+    title: 'Extremely easy to organise',
     quote:
-      'The format was extremely easy to follow and organised. The AI suggestions were very helpful in guiding my content.',
+      'The step-by-step layout made structuring my work history effortless. Switching between corporate templates kept every bullet aligned.',
     author: 'Ally Fox',
+    role: 'Operations Manager · Manchester',
   },
   {
     id: 'rev-3',
     rating: 5,
-    title: 'User friendly',
+    title: 'Mobile friendly and straightforward',
     quote:
-      'Very easy to use, the best way to complete your key to search your way for the profession of your life',
+      'Updated my CV on the train from my phone, shared a preview link for feedback, and downloaded the final A4 PDF without any layout issues.',
     author: 'Rocco Giordano',
+    role: 'Product Designer · Bristol',
   },
   {
     id: 'rev-4',
     rating: 5,
-    title: 'Easy and excellent...',
+    title: 'Crisp templates that recruiters love',
     quote:
-      'Easy and straightforward to create your CV, clean templates and great suggestions needed in minutes.',
-    author: 'Lorenzo',
+      'Straightforward to build, zero clutter, and the Hopkins and Oxford templates look far sharper than standard Word documents.',
+    author: 'Lorenzo M.',
+    role: 'Graduate Consultant · Edinburgh',
   },
 ];
 
@@ -57,48 +62,59 @@ export default function ReviewsSection() {
     setStartIndex((prev) => (prev < reviews.length - 1 ? prev + 1 : 0));
   };
 
+  // Rotate reviews based on active carousel index so Prev/Next works on all screen sizes
+  const orderedReviews = reviews.map(
+    (_, offset) => reviews[(startIndex + offset) % reviews.length]
+  );
+
   return (
-    <section className="py-16 md:py-24 bg-white border-t border-slate-100">
+    <section className="py-12 sm:py-18 md:py-24 bg-white border-t border-slate-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header with Title and Trustpilot */}
-        <div className="text-center max-w-xl mx-auto space-y-3 mb-8">
-          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+        {/* Header with Title and Rating */}
+        <div className="text-center max-w-xl mx-auto space-y-3 mb-7 sm:mb-10">
+          <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight tabular-nums">
             +1 million satisfied users
           </h2>
 
           <div className="flex items-center justify-center gap-2 flex-wrap text-xs">
-            <span className="font-bold tracking-wider text-slate-900 uppercase">
-              EXCELLENT
-            </span>
+            <span className="font-bold tracking-wider text-slate-900">EXCELLENT</span>
             <div className="flex items-center gap-0.5">
               {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="w-4 h-4 bg-[#00b67a] flex items-center justify-center rounded-[1px]">
+                <div
+                  key={i}
+                  className="w-4 h-4 bg-[#00b67a] flex items-center justify-center rounded-[1px]"
+                >
                   <Star className="w-2.5 h-2.5 fill-white text-white" />
                 </div>
               ))}
             </div>
-            <div className="flex items-center gap-1 text-slate-600 font-medium">
+            <div className="flex items-center gap-1 text-slate-600 font-medium tabular-nums">
               <span>on</span>
               <span className="font-bold text-slate-900">★ Trustpilot</span>
-              <span className="text-slate-300 mx-1">|</span>
-              <span className="text-slate-500">Based on 3000+ reviews</span>
+              <span className="text-slate-300 mx-1">·</span>
+              <span className="text-slate-500">3,000+ reviews</span>
             </div>
           </div>
 
-          {/* Carousel Arrows */}
-          <div className="flex items-center justify-center gap-3 pt-2">
+          {/* 44x44px Touch-Friendly Carousel Controls + Mobile Counter */}
+          <div className="flex items-center justify-center gap-3 pt-1">
             <button
               type="button"
               onClick={handlePrev}
-              className="w-8 h-8 rounded-full border border-slate-200 text-slate-600 hover:text-slate-900 hover:border-slate-400 flex items-center justify-center transition-colors"
+              className="w-11 h-11 rounded-full border border-slate-200 text-slate-700 hover:text-slate-900 hover:border-slate-400 active:scale-95 flex items-center justify-center transition-all cursor-pointer"
               aria-label="Previous review"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
+
+            <span className="sm:hidden text-xs font-mono font-semibold text-slate-500 tabular-nums min-w-[42px]">
+              {startIndex + 1} / {reviews.length}
+            </span>
+
             <button
               type="button"
               onClick={handleNext}
-              className="w-8 h-8 rounded-full border border-slate-200 text-slate-600 hover:text-slate-900 hover:border-slate-400 flex items-center justify-center transition-colors"
+              className="w-11 h-11 rounded-full border border-slate-200 text-slate-700 hover:text-slate-900 hover:border-slate-400 active:scale-95 flex items-center justify-center transition-all cursor-pointer"
               aria-label="Next review"
             >
               <ChevronRight className="w-4 h-4" />
@@ -106,34 +122,44 @@ export default function ReviewsSection() {
           </div>
         </div>
 
-        {/* 4 Review Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 text-left">
-          {reviews.map((rev) => (
+        {/* Review Cards: 1 focused card on mobile (<sm) to avoid vertical wall of text, 2 on sm, 4 on lg */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 text-left">
+          {orderedReviews.map((rev, idx) => (
             <div
               key={rev.id}
-              className="rounded-xl bg-[#fbfbfb] border border-slate-200/80 p-5 flex flex-col justify-between hover:bg-slate-50 transition-colors shadow-2xs"
+              className={`rounded-2xl bg-[#fbfcff] border border-slate-200/85 p-5 flex-col justify-between hover:bg-slate-50 transition-colors shadow-2xs ${
+                idx === 0
+                  ? 'flex'
+                  : idx === 1
+                  ? 'hidden sm:flex'
+                  : 'hidden lg:flex'
+              }`}
             >
               <div className="space-y-2.5">
-                {/* 5 Green Star Blocks */}
                 <div className="flex items-center gap-0.5">
                   {[...Array(rev.rating)].map((_, i) => (
-                    <div key={i} className="w-3.5 h-3.5 bg-[#00b67a] flex items-center justify-center rounded-[1px]">
+                    <div
+                      key={i}
+                      className="w-3.5 h-3.5 bg-[#00b67a] flex items-center justify-center rounded-[1px]"
+                    >
                       <Star className="w-2 h-2 fill-white text-white" />
                     </div>
                   ))}
                 </div>
 
-                <h3 className="font-bold text-slate-900 text-sm leading-snug">
+                <h3 className="font-bold text-slate-900 text-sm sm:text-[15px] leading-snug">
                   {rev.title}
                 </h3>
 
-                <p className="text-xs text-slate-500 leading-relaxed">
+                <p className="text-xs sm:text-[13px] text-slate-600 leading-relaxed">
                   {rev.quote}
                 </p>
               </div>
 
-              <div className="pt-4 text-xs font-semibold text-slate-700">
-                {rev.author}
+              <div className="pt-4 mt-2 border-t border-slate-100 text-xs">
+                <span className="font-semibold text-slate-900">{rev.author}</span>
+                <span className="text-slate-300 mx-1.5">·</span>
+                <span className="text-slate-500">{rev.role}</span>
               </div>
             </div>
           ))}

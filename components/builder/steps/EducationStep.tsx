@@ -216,7 +216,7 @@ export default function EducationStep({ mode = 'form' }: EducationStepProps) {
 
       {/* Education Modal */}
       <EducationModal
-        key={editingEducation?.id || (isModalOpen ? 'open-new' : 'closed')}
+        key={isModalOpen ? editingEducation?.id || 'open-new' : 'closed'}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSave={handleSaveModalEducation}

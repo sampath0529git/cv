@@ -1,5 +1,10 @@
 import React from 'react';
 import { CV, A4_WIDTH_PX, A4_HEIGHT_PX } from '@/types/cv';
+import EmptyCvGuide from './shared/EmptyCvGuide';
+import {
+  resolveTemplateSectionOrder,
+  resolvePaginatedOptionalData,
+} from './shared/templateHelpers';
 
 interface UkTraditionalTemplateProps {
   cv: CV;
@@ -14,25 +19,31 @@ export default function UkTraditionalTemplate({
   pageIndex = 0,
   totalPages = 1,
 }: UkTraditionalTemplateProps) {
-  // Format Name: Forename SURNAME
-  const rawFullName = cv.personal.fullName || 'Forename Surname';
+  const accent = cv.settings.accentColor || '#000000';
+  const rawFullName = cv.personal.fullName || 'Your Name';
   const nameParts = rawFullName.trim().split(/\s+/);
   const forename = nameParts.length > 1 ? nameParts.slice(0, -1).join(' ') : nameParts[0];
   const surname = nameParts.length > 1 ? nameParts[nameParts.length - 1].toUpperCase() : '';
 
+  const jobTitle = cv.personal.jobTitle || '';
   const email = cv.personal.email || '';
   const phone = cv.personal.phone || '';
   const location = cv.personal.location || '';
+  const linkedin = cv.personal.linkedin || '';
+  const website = cv.personal.website || '';
+  const dateOfBirth = cv.personal.dateOfBirth || '';
+  const nationality = cv.personal.nationality || '';
+  const drivingLicence = cv.personal.drivingLicence || '';
 
   const isFirstPage = pageIndex === 0;
   const isLastPage = pageIndex === totalPages - 1;
 
-  // Resolve paginated data if present, otherwise full cv data
-  const educations = pageData?.educations !== undefined ? pageData.educations : (isFirstPage ? cv.education : []);
+  const educations =
+    pageData?.educations !== undefined ? pageData.educations : isFirstPage ? cv.education : [];
   const experiences = pageData?.experiences !== undefined ? pageData.experiences : cv.experience;
 
-  // Format nationality & languages
-  const nationality = cv.personal.nationality || '';
+  const { projects, projectTitle, certifications, awards, customSections, references } =
+    resolvePaginatedOptionalData(cv, pageData, pageIndex, totalPages);
 
   const languagesText =
     cv.languages && cv.languages.length > 0
@@ -40,24 +51,38 @@ export default function UkTraditionalTemplate({
       : '';
 
   const interestsText =
-    cv.interests && cv.interests.length > 0
-      ? cv.interests.join('; ')
-      : '';
+    cv.interests && cv.interests.length > 0 ? cv.interests.join('; ') : '';
 
-  const achievementsList =
-    cv.awards && cv.awards.length > 0
-      ? cv.awards
-      : [];
+  const allSkills =
+    cv.skills && cv.skills.length > 0 ? cv.skills.flatMap((s) => s.items).filter(Boolean) : [];
 
-  const allSkills = cv.skills && cv.skills.length > 0 ? cv.skills.flatMap((s) => s.items).filter(Boolean) : [];
+  const sectionOrder = resolveTemplateSectionOrder(cv, [
+    'statement',
+    'education',
+    'experience',
+    'skills',
+    'projects',
+    'certifications',
+    'languages',
+    'awards',
+    'interests',
+    'custom',
+    'references',
+  ]);
 
-  const hasAdditionalInfo = Boolean(
-    nationality ||
-    languagesText ||
-    interestsText ||
-    achievementsList.length > 0 ||
-    allSkills.length > 0
-  );
+  const isCompletelyEmpty =
+    isFirstPage &&
+    !cv.personalStatement?.trim() &&
+    (!cv.experience || cv.experience.length === 0) &&
+    (!cv.education || cv.education.length === 0) &&
+    allSkills.length === 0 &&
+    projects.length === 0 &&
+    certifications.length === 0 &&
+    awards.length === 0 &&
+    customSections.length === 0 &&
+    !references &&
+    !languagesText &&
+    !interestsText;
 
   return (
     <div
@@ -65,27 +90,30 @@ export default function UkTraditionalTemplate({
       style={{
         width: `${A4_WIDTH_PX}px`,
         height: `${A4_HEIGHT_PX}px`,
-        fontFamily: 'Georgia, Cambria, "Times New Roman", Times, serif',
+        fontFamily: 'inherit',
       }}
     >
       <div className="space-y-3.5">
-        {/* ========================================================= */}
-        {/* HEADER: Forename SURNAME (Centered on Page 1)             */}
-        {/* ========================================================= */}
+        {/* HEADER: Forename SURNAME (Centered on Page 1) */}
         {isFirstPage ? (
-          <header className="text-center pb-1 break-inside-avoid">
-            <h1 className="text-[20px] font-bold tracking-normal text-black leading-tight">
+          <header className="text-center pb-2 break-inside-avoid">
+            <h1 className="text-[22px] font-bold tracking-normal text-black leading-tight">
               <span>{forename} </span>
               {surname && <span className="uppercase">{surname}</span>}
             </h1>
-            <div className="text-[11px] text-black mt-1 flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
+            {jobTitle && (
+              <div style={{ color: accent }} className="text-[11.5px] font-semibold mt-0.5">
+                {jobTitle}
+              </div>
+            )}
+            <div className="text-[10.5px] text-neutral-800 mt-1.5 flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
               {email && (
                 <span>
                   <strong className="font-semibold">e-mail:</strong> {email}
                 </span>
               )}
               {phone && (
-                <span>
+                <span className="tabular-nums">
                   <strong className="font-semibold">tel:</strong> {phone}
                 </span>
               )}
@@ -94,14 +122,38 @@ export default function UkTraditionalTemplate({
                   <strong className="font-semibold">location:</strong> {location}
                 </span>
               )}
-              {!email && !phone && !location && (
-                <span className="italic text-neutral-500">Contact details will appear here</span>
+              {linkedin && (
+                <span>
+                  <strong className="font-semibold">linkedin:</strong> {linkedin}
+                </span>
+              )}
+              {website && (
+                <span>
+                  <strong className="font-semibold">web:</strong> {website}
+                </span>
+              )}
+              {dateOfBirth && (
+                <span className="tabular-nums">
+                  <strong className="font-semibold">DOB:</strong> {dateOfBirth}
+                </span>
+              )}
+              {nationality && (
+                <span>
+                  <strong className="font-semibold">nationality:</strong> {nationality}
+                </span>
+              )}
+              {drivingLicence && (
+                <span>
+                  <strong className="font-semibold">licence:</strong> {drivingLicence}
+                </span>
               )}
             </div>
           </header>
         ) : (
-          /* Continuation Header for Page 2+ */
-          <div className="flex justify-between items-baseline border-b border-black pb-1 mb-2 break-inside-avoid">
+          <div
+            style={{ borderBottomColor: accent }}
+            className="flex justify-between items-baseline border-b pb-1 mb-2 break-inside-avoid"
+          >
             <span className="font-bold text-black text-[12px]">
               {forename} {surname}
             </span>
@@ -111,32 +163,74 @@ export default function UkTraditionalTemplate({
           </div>
         )}
 
-        {/* Dynamic Sections mapped from cv.settings.sectionOrder */}
-        {(cv.settings.sectionOrder || ['education', 'experience', 'skills', 'languages', 'interests']).map((secKey) => {
+        {/* Dynamic Sections */}
+        {sectionOrder.map((secKey) => {
+          if (secKey === 'statement') {
+            const shouldShowStatement = pageData ? Boolean(pageData.showStatement) : isFirstPage;
+            if (!cv.personalStatement?.trim() || !shouldShowStatement) return null;
+            return (
+              <section
+                key="statement"
+                style={{ borderTopColor: accent }}
+                className="border-t pt-2 break-inside-avoid cv-section"
+              >
+                <h2
+                  style={{ color: accent }}
+                  className="text-[11.5px] font-bold uppercase tracking-wider mb-1.5 break-after-avoid"
+                >
+                  Professional Summary
+                </h2>
+                <p className="text-[10.5px] text-neutral-900 leading-[1.55] whitespace-pre-line">
+                  {pageData?.statementText || cv.personalStatement}
+                </p>
+              </section>
+            );
+          }
+
           if (secKey === 'education') {
             if (!educations || educations.length === 0) return null;
             return (
-              <section key="education" className="border-t border-black pt-1.5 break-inside-avoid cv-section">
-                <h2 className="text-[12px] font-bold text-black mb-2 break-after-avoid">Education and Qualifications</h2>
+              <section
+                key="education"
+                style={{ borderTopColor: accent }}
+                className="border-t pt-2 break-inside-avoid cv-section"
+              >
+                <h2
+                  style={{ color: accent }}
+                  className="text-[11.5px] font-bold uppercase tracking-wider mb-2 break-after-avoid"
+                >
+                  {pageData?.educationTitle || 'Education and Qualifications'}
+                </h2>
                 <div className="space-y-3">
                   {educations.map((edu: any, idx: number) => {
-                    const dateDisplay = [edu.startDate, edu.endDate].filter(Boolean).join('–');
+                    const dateDisplay = [edu.startDate, edu.endDate].filter(Boolean).join(' – ');
                     return (
-                      <div key={edu.id || idx} className="grid grid-cols-[130px_1fr] gap-4 break-inside-avoid cv-item">
-                        <div className="font-bold text-black text-[11px] whitespace-nowrap">{dateDisplay || 'Date'}</div>
+                      <div
+                        key={edu.id || idx}
+                        className="grid grid-cols-[125px_1fr] gap-4 break-inside-avoid cv-item"
+                      >
+                        <div className="font-bold text-neutral-800 text-[10.5px] whitespace-nowrap tabular-nums">
+                          {dateDisplay}
+                        </div>
                         <div>
                           <div className="flex justify-between items-baseline gap-2">
-                            <span className="font-bold text-black">{edu.institution || 'University / Institution'}</span>
-                            <span className="font-bold text-black text-right">{edu.qualification || 'Degree / Qualification'}</span>
+                            <span className="font-bold text-black">
+                              {edu.institution || 'University / Institution'}
+                            </span>
+                            <span className="font-semibold text-black text-right">
+                              {edu.qualification || 'Degree / Qualification'}
+                            </span>
                           </div>
                           {(edu.location || edu.grade) && (
-                            <div className="flex justify-between items-baseline text-[10.5px] text-neutral-800 mt-0.5">
-                              <span>{edu.location ? `Location: ${edu.location}` : ''}</span>
-                              <span>{edu.grade || ''}</span>
+                            <div className="flex justify-between items-baseline text-[10px] text-neutral-700 mt-0.5">
+                              <span>{edu.location || ''}</span>
+                              <span className="font-medium">{edu.grade || ''}</span>
                             </div>
                           )}
                           {edu.description && (
-                            <p className="text-[10.5px] text-neutral-800 mt-1 leading-normal whitespace-pre-line">{edu.description}</p>
+                            <p className="text-[10px] text-neutral-800 mt-1 leading-normal whitespace-pre-line">
+                              {edu.description}
+                            </p>
                           )}
                         </div>
                       </div>
@@ -150,28 +244,52 @@ export default function UkTraditionalTemplate({
           if (secKey === 'experience') {
             if (!experiences || experiences.length === 0) return null;
             return (
-              <section key="experience" className="border-t border-black pt-1.5 break-inside-avoid cv-section">
-                <h2 className="text-[12px] font-bold text-black mb-2 break-after-avoid">Work Experience</h2>
+              <section
+                key="experience"
+                style={{ borderTopColor: accent }}
+                className="border-t pt-2 break-inside-avoid cv-section"
+              >
+                <h2
+                  style={{ color: accent }}
+                  className="text-[11.5px] font-bold uppercase tracking-wider mb-2 break-after-avoid"
+                >
+                  {pageData?.experienceTitle || 'Work Experience'}
+                </h2>
                 <div className="space-y-3.5">
                   {experiences.map((exp: any, idx: number) => {
                     const dateDisplay = [exp.startDate, exp.endDate].filter(Boolean).join(' – ');
                     return (
-                      <div key={exp.id || idx} className="grid grid-cols-[130px_1fr] gap-4 break-inside-avoid cv-item">
-                        <div className="font-bold text-black text-[11px] whitespace-nowrap">{dateDisplay || 'Dates'}</div>
+                      <div
+                        key={exp.id || idx}
+                        className="grid grid-cols-[125px_1fr] gap-4 break-inside-avoid cv-item"
+                      >
+                        <div className="font-bold text-neutral-800 text-[10.5px] whitespace-nowrap tabular-nums">
+                          {dateDisplay}
+                        </div>
                         <div>
                           <div className="flex justify-between items-baseline gap-2">
-                            <span className="font-bold text-black">{exp.company || 'Company Name'}</span>
-                            {exp.location && <span className="text-black text-[10.5px]">{exp.location}</span>}
+                            <span className="font-bold text-black">
+                              {exp.company || 'Company Name'}
+                            </span>
+                            {exp.location && (
+                              <span className="text-neutral-700 text-[10px]">{exp.location}</span>
+                            )}
                           </div>
-                          <div className="italic text-neutral-900 text-[10.5px] mt-0.5 mb-1">{exp.role || 'Job Title'}</div>
+                          <div className="italic font-medium text-neutral-900 text-[10.5px] mt-0.5 mb-1">
+                            {exp.role || 'Job Title'}
+                          </div>
                           {exp.bullets && exp.bullets.length > 0 ? (
-                            <ul className="list-disc pl-4 space-y-0.5 text-[10.5px] text-black">
+                            <ul className="list-disc pl-4 space-y-0.5 text-[10px] text-neutral-900">
                               {exp.bullets.map((b: string, bIdx: number) => (
-                                <li key={bIdx} className="leading-snug break-inside-avoid">{b}</li>
+                                <li key={bIdx} className="leading-snug break-inside-avoid">
+                                  {b}
+                                </li>
                               ))}
                             </ul>
                           ) : exp.description ? (
-                            <p className="text-[10.5px] text-black leading-snug whitespace-pre-line break-inside-avoid">{exp.description}</p>
+                            <p className="text-[10px] text-neutral-900 leading-snug whitespace-pre-line break-inside-avoid">
+                              {exp.description}
+                            </p>
                           ) : null}
                         </div>
                       </div>
@@ -182,30 +300,95 @@ export default function UkTraditionalTemplate({
             );
           }
 
-          if (secKey === 'summary') {
-            if (!cv.personalStatement) return null;
+          if (secKey === 'projects') {
+            if (projects.length === 0) return null;
             return (
-              <section key="summary" className="border-t border-black pt-1.5 break-inside-avoid cv-section">
-                <h2 className="text-[12px] font-bold text-black mb-1.5 break-after-avoid">Professional Summary</h2>
-                <p className="text-[10.5px] text-black leading-normal whitespace-pre-line">{cv.personalStatement}</p>
+              <section
+                key="projects"
+                style={{ borderTopColor: accent }}
+                className="border-t pt-2 break-inside-avoid cv-section"
+              >
+                <h2
+                  style={{ color: accent }}
+                  className="text-[11.5px] font-bold uppercase tracking-wider mb-2 break-after-avoid"
+                >
+                  {projectTitle}
+                </h2>
+                <div className="space-y-2.5">
+                  {projects.map((proj, idx) => (
+                    <div
+                      key={proj.id || idx}
+                      className="grid grid-cols-[125px_1fr] gap-4 break-inside-avoid cv-item"
+                    >
+                      <div className="font-bold text-neutral-800 text-[10px] truncate">
+                        {proj.role || 'Project'}
+                      </div>
+                      <div>
+                        <div className="flex justify-between items-baseline gap-2">
+                          <span className="font-bold text-black">{proj.title}</span>
+                          {proj.link && (
+                            <span className="text-neutral-700 text-[10px]">{proj.link}</span>
+                          )}
+                        </div>
+                        {proj.bullets && proj.bullets.length > 0 ? (
+                          <ul className="list-disc pl-4 space-y-0.5 text-[10px] text-neutral-900 mt-0.5">
+                            {proj.bullets.map((b, bIdx) => (
+                              <li key={bIdx} className="leading-snug">
+                                {b}
+                              </li>
+                            ))}
+                          </ul>
+                        ) : proj.description ? (
+                          <p className="text-[10px] text-neutral-900 leading-snug whitespace-pre-line mt-0.5">
+                            {proj.description}
+                          </p>
+                        ) : null}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </section>
             );
           }
 
-          if ((secKey === 'skills' || secKey === 'languages' || secKey === 'interests') && (isLastPage || totalPages === 1)) {
+          if (secKey === 'skills' || secKey === 'languages' || secKey === 'interests') {
+            const shouldShow =
+              secKey === 'skills'
+                ? pageData
+                  ? Boolean(pageData.showSkills)
+                  : isLastPage || totalPages === 1
+                : secKey === 'languages'
+                ? pageData
+                  ? Boolean(pageData.showLanguages)
+                  : isLastPage || totalPages === 1
+                : pageData
+                ? Boolean(pageData.showInterests)
+                : isLastPage || totalPages === 1;
+
             const hasContent =
               (secKey === 'skills' && allSkills.length > 0) ||
               (secKey === 'languages' && languagesText) ||
               (secKey === 'interests' && interestsText);
-            if (!hasContent) return null;
+            if (!shouldShow || !hasContent) return null;
 
             return (
-              <section key={secKey} className="border-t border-black pt-1.5 break-inside-avoid cv-section">
-                <h2 className="text-[12px] font-bold text-black mb-2 break-after-avoid">
-                  {secKey === 'skills' ? 'Key Skills' : secKey === 'languages' ? 'Languages' : 'Interests'}
+              <section
+                key={secKey}
+                style={{ borderTopColor: accent }}
+                className="border-t pt-2 break-inside-avoid cv-section"
+              >
+                <h2
+                  style={{ color: accent }}
+                  className="text-[11.5px] font-bold uppercase tracking-wider mb-1.5 break-after-avoid"
+                >
+                  {secKey === 'skills'
+                    ? 'Key Skills'
+                    : secKey === 'languages'
+                    ? 'Languages'
+                    : 'Interests'}
                 </h2>
-                <div className="text-[10.5px] text-black">
-                  {secKey === 'skills' && allSkills.length > 0 && <p>{allSkills.join(', ')}</p>}
+                <div className="text-[10.5px] text-neutral-900">
+                  {secKey === 'skills' && allSkills.length > 0 && <p>{allSkills.join(' · ')}</p>}
                   {secKey === 'languages' && languagesText && <p>{languagesText}</p>}
                   {secKey === 'interests' && interestsText && <p>{interestsText}</p>}
                 </div>
@@ -213,13 +396,107 @@ export default function UkTraditionalTemplate({
             );
           }
 
+          if (secKey === 'certifications') {
+            if (certifications.length === 0) return null;
+            return (
+              <section
+                key="certifications"
+                style={{ borderTopColor: accent }}
+                className="border-t pt-2 break-inside-avoid cv-section"
+              >
+                <h2
+                  style={{ color: accent }}
+                  className="text-[11.5px] font-bold uppercase tracking-wider mb-1.5 break-after-avoid"
+                >
+                  Certifications and Licences
+                </h2>
+                <p className="text-[10.5px] text-neutral-900">{certifications.join('; ')}</p>
+              </section>
+            );
+          }
+
+          if (secKey === 'awards') {
+            if (awards.length === 0) return null;
+            return (
+              <section
+                key="awards"
+                style={{ borderTopColor: accent }}
+                className="border-t pt-2 break-inside-avoid cv-section"
+              >
+                <h2
+                  style={{ color: accent }}
+                  className="text-[11.5px] font-bold uppercase tracking-wider mb-1.5 break-after-avoid"
+                >
+                  Honours and Awards
+                </h2>
+                <p className="text-[10.5px] text-neutral-900">{awards.join('; ')}</p>
+              </section>
+            );
+          }
+
+          if (secKey === 'custom') {
+            if (customSections.length === 0) return null;
+            return (
+              <React.Fragment key="custom">
+                {customSections.map((sec) => (
+                  <section
+                    key={sec.id}
+                    style={{ borderTopColor: accent }}
+                    className="border-t pt-2 break-inside-avoid cv-section"
+                  >
+                    <h2
+                      style={{ color: accent }}
+                      className="text-[11.5px] font-bold uppercase tracking-wider mb-1.5 break-after-avoid"
+                    >
+                      {sec.title || 'Additional Details'}
+                    </h2>
+                    {sec.bullets && sec.bullets.length > 0 ? (
+                      <ul className="list-disc pl-4 space-y-0.5 text-[10px] text-neutral-900">
+                        {sec.bullets.map((b, bIdx) => (
+                          <li key={bIdx} className="leading-snug">
+                            {b}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-[10.5px] text-neutral-900 whitespace-pre-line">
+                        {sec.content}
+                      </p>
+                    )}
+                  </section>
+                ))}
+              </React.Fragment>
+            );
+          }
+
+          if (secKey === 'references') {
+            if (!references) return null;
+            return (
+              <section
+                key="references"
+                style={{ borderTopColor: accent }}
+                className="border-t pt-2 break-inside-avoid cv-section"
+              >
+                <h2
+                  style={{ color: accent }}
+                  className="text-[11.5px] font-bold uppercase tracking-wider mb-1.5 break-after-avoid"
+                >
+                  References
+                </h2>
+                <p className="text-[10.5px] text-neutral-900 whitespace-pre-line">{references}</p>
+              </section>
+            );
+          }
+
           return null;
         })}
+
+        {isCompletelyEmpty && <EmptyCvGuide accent={accent} />}
       </div>
 
       {/* Pagination Footer */}
       {totalPages > 1 && (
-        <div className="text-right text-[9px] text-neutral-500 font-sans pt-2">
+        <div className="text-right text-[9px] text-neutral-500 pt-2 tabular-nums">
           Page {pageIndex + 1} of {totalPages}
         </div>
       )}

@@ -45,13 +45,13 @@ export default function EducationModal({
 }: EducationModalProps) {
   const [modalStep, setModalStep] = useState<1 | 2>(1);
 
-  const [degree, setDegree] = useState(initialEducation?.degree || '');
-  const [school, setSchool] = useState(initialEducation?.school || '');
-  const [city, setCity] = useState(initialEducation?.city || '');
-  const [startDate, setStartDate] = useState(initialEducation?.startDate || '');
-  const [endDate, setEndDate] = useState(initialEducation?.endDate || '');
-  const [grade, setGrade] = useState(initialEducation?.grade || '');
-  const [description, setDescription] = useState(initialEducation?.description || '');
+  const [degree, setDegree] = useState(initialEducation?.degree ?? '');
+  const [school, setSchool] = useState(initialEducation?.school ?? '');
+  const [city, setCity] = useState(initialEducation?.city ?? '');
+  const [startDate, setStartDate] = useState(initialEducation?.startDate ?? '');
+  const [endDate, setEndDate] = useState(initialEducation?.endDate ?? '');
+  const [grade, setGrade] = useState(initialEducation?.grade ?? '');
+  const [description, setDescription] = useState(initialEducation?.description ?? '');
 
   const [hasAttemptedNext, setHasAttemptedNext] = useState(false);
 

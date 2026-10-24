@@ -51,12 +51,16 @@ export interface SkillGroup {
   items: string[];
 }
 
+export type SkillProficiency = 'Beginner' | 'Intermediate' | 'Advanced' | 'Expert';
+
 export interface ProjectItem {
   id?: string;
   title: string;
+  role?: string;
   description: string;
   link?: string;
   technologies?: string[];
+  bullets?: string[];
 }
 
 export interface LanguageItem {
@@ -94,6 +98,7 @@ export interface CV {
   experience: ExperienceItem[];
   education: EducationItem[];
   skills: SkillGroup[];
+  skillLevels?: Record<string, SkillProficiency>;
   certifications: string[];
   projects: ProjectItem[];
   languages: LanguageItem[];
@@ -101,7 +106,7 @@ export interface CV {
   interests: string[];
   awards?: string[];
   customSections?: CustomSectionItem[];
-  references: string; // Default: "References available on request"
+  references: string; // Empty when hidden, or e.g. "References available on request"
   settings: CvSettings;
 }
 

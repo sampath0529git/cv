@@ -3,7 +3,8 @@
 
 import React, { useState, useRef } from 'react';
 import { useCvStore } from '@/store/useCvStore';
-import { ChevronDown, Plus, User, Trash2, Check } from 'lucide-react';
+import { ChevronDown, Plus, User, Trash2, Check, Linkedin } from 'lucide-react';
+import LinkedInImportModal from '@/components/builder/LinkedInImportModal';
 
 export default function ContactStep() {
   const contact = useCvStore((state) => state.contact);
@@ -12,6 +13,7 @@ export default function ContactStep() {
   const removePhoto = useCvStore((state) => state.removePhoto);
 
   const [isAccordionOpen, setIsAccordionOpen] = useState(false);
+  const [isLinkedInModalOpen, setIsLinkedInModalOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,6 +41,29 @@ export default function ContactStep() {
         </p>
       </div>
 
+      {/* LinkedIn Quick Import */}
+      <div className="p-4 rounded-2xl border border-[#DCE3F7] bg-[#FAFBFD] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-10 h-10 rounded-xl bg-[#0A66C2]/10 text-[#0A66C2] flex items-center justify-center shrink-0">
+            <Linkedin className="w-5 h-5" />
+          </div>
+          <div className="min-w-0">
+            <h2 className="text-sm font-bold text-[#0F1B4D]">Import from LinkedIn</h2>
+            <p className="text-xs text-slate-500">
+              Authenticate with LinkedIn to pre-fill your profile details and career history.
+            </p>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={() => setIsLinkedInModalOpen(true)}
+          className="min-h-[42px] px-4 py-2 rounded-xl bg-[#0A66C2] hover:bg-[#004182] text-white text-xs sm:text-sm font-semibold inline-flex items-center justify-center gap-2 transition-colors cursor-pointer whitespace-nowrap shrink-0"
+        >
+          <Linkedin className="w-4 h-4 shrink-0" />
+          <span>Import from LinkedIn</span>
+        </button>
+      </div>
+
       {/* 2. Form Grid (2 Columns) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
         {/* First name */}
@@ -49,12 +74,12 @@ export default function ContactStep() {
           <div className="relative">
             <input
               type="text"
-              value={contact.firstName}
+              value={contact.firstName ?? ''}
               onChange={(e) => updateContact({ firstName: e.target.value })}
               placeholder="e.g. Elsa"
               className="w-full h-[56px] pl-4 pr-11 rounded-xl border border-[#E3E6F0] bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#4B4DED] focus:ring-2 focus:ring-[#4B4DED]/10 transition-all text-sm sm:text-base shadow-2xs"
             />
-            {contact.firstName.trim().length > 0 && (
+            {(contact.firstName ?? '').trim().length > 0 && (
               <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#00C26D] flex items-center justify-center">
                 <Check className="w-5 h-5 stroke-[2.5]" />
               </div>
@@ -70,12 +95,12 @@ export default function ContactStep() {
           <div className="relative">
             <input
               type="text"
-              value={contact.lastName}
+              value={contact.lastName ?? ''}
               onChange={(e) => updateContact({ lastName: e.target.value })}
               placeholder="e.g. Manet"
               className="w-full h-[56px] pl-4 pr-11 rounded-xl border border-[#E3E6F0] bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#4B4DED] focus:ring-2 focus:ring-[#4B4DED]/10 transition-all text-sm sm:text-base shadow-2xs"
             />
-            {contact.lastName.trim().length > 0 && (
+            {(contact.lastName ?? '').trim().length > 0 && (
               <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#00C26D] flex items-center justify-center">
                 <Check className="w-5 h-5 stroke-[2.5]" />
               </div>
@@ -91,12 +116,12 @@ export default function ContactStep() {
           <div className="relative">
             <input
               type="text"
-              value={contact.jobTitle}
+              value={contact.jobTitle ?? ''}
               onChange={(e) => updateContact({ jobTitle: e.target.value })}
               placeholder="e.g. Experienced Sales Advisor"
               className="w-full h-[56px] pl-4 pr-11 rounded-xl border border-[#E3E6F0] bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#4B4DED] focus:ring-2 focus:ring-[#4B4DED]/10 transition-all text-sm sm:text-base shadow-2xs"
             />
-            {contact.jobTitle.trim().length > 0 && (
+            {(contact.jobTitle ?? '').trim().length > 0 && (
               <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#00C26D] flex items-center justify-center">
                 <Check className="w-5 h-5 stroke-[2.5]" />
               </div>
@@ -167,12 +192,12 @@ export default function ContactStep() {
             <input
               id="contact-email"
               type="email"
-              value={contact.email}
+              value={contact.email ?? ''}
               onChange={(e) => updateContact({ email: e.target.value })}
               placeholder="e.g. elsa.manet@gmail.com"
               className="w-full h-[56px] pl-4 pr-11 rounded-xl border border-[#E3E6F0] bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#4B4DED] focus:ring-2 focus:ring-[#4B4DED]/10 transition-all text-sm sm:text-base shadow-2xs"
             />
-            {contact.email.trim().length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact.email.trim()) && (
+            {(contact.email ?? '').trim().length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((contact.email ?? '').trim()) && (
               <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#00C26D] flex items-center justify-center">
                 <Check className="w-5 h-5 stroke-[2.5]" />
               </div>
@@ -189,12 +214,12 @@ export default function ContactStep() {
             <input
               id="contact-phone"
               type="tel"
-              value={contact.phone}
+              value={contact.phone ?? ''}
               onChange={(e) => updateContact({ phone: e.target.value })}
               placeholder="e.g. (020) 1234 5678"
               className="w-full h-[56px] pl-4 pr-11 rounded-xl border border-[#E3E6F0] bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#4B4DED] focus:ring-2 focus:ring-[#4B4DED]/10 transition-all text-sm sm:text-base shadow-2xs"
             />
-            {contact.phone.trim().length > 0 && (
+            {(contact.phone ?? '').trim().length > 0 && (
               <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#00C26D] flex items-center justify-center">
                 <Check className="w-5 h-5 stroke-[2.5]" />
               </div>
@@ -210,12 +235,12 @@ export default function ContactStep() {
           <div className="relative">
             <input
               type="text"
-              value={contact.postalCode}
+              value={contact.postalCode ?? ''}
               onChange={(e) => updateContact({ postalCode: e.target.value })}
               placeholder="e.g. SW1A 1AA"
               className="w-full h-[56px] pl-4 pr-11 rounded-xl border border-[#E3E6F0] bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#4B4DED] focus:ring-2 focus:ring-[#4B4DED]/10 transition-all text-sm sm:text-base shadow-2xs"
             />
-            {contact.postalCode.trim().length > 0 && (
+            {(contact.postalCode ?? '').trim().length > 0 && (
               <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#00C26D] flex items-center justify-center">
                 <Check className="w-5 h-5 stroke-[2.5]" />
               </div>
@@ -231,12 +256,12 @@ export default function ContactStep() {
           <div className="relative">
             <input
               type="text"
-              value={contact.city}
+              value={contact.city ?? ''}
               onChange={(e) => updateContact({ city: e.target.value })}
               placeholder="e.g. London"
               className="w-full h-[56px] pl-4 pr-11 rounded-xl border border-[#E3E6F0] bg-white text-slate-900 placeholder-slate-400 focus:outline-none focus:border-[#4B4DED] focus:ring-2 focus:ring-[#4B4DED]/10 transition-all text-sm sm:text-base shadow-2xs"
             />
-            {contact.city.trim().length > 0 && (
+            {(contact.city ?? '').trim().length > 0 && (
               <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-[#00C26D] flex items-center justify-center">
                 <Check className="w-5 h-5 stroke-[2.5]" />
               </div>
@@ -270,12 +295,12 @@ export default function ContactStep() {
               <div className="relative">
                 <input
                   type="text"
-                  value={contact.dateOfBirth}
+                  value={contact.dateOfBirth ?? ''}
                   onChange={(e) => updateContact({ dateOfBirth: e.target.value })}
                   placeholder="e.g. 14 May 1996"
                   className="w-full h-[48px] pl-3.5 pr-10 rounded-lg border border-[#E3E6F0] text-sm text-slate-900 focus:outline-none focus:border-[#4B4DED]"
                 />
-                {contact.dateOfBirth?.trim().length > 0 && (
+                {(contact.dateOfBirth ?? '').trim().length > 0 && (
                   <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[#00C26D]">
                     <Check className="w-4 h-4 stroke-[2.5]" />
                   </div>
@@ -291,12 +316,12 @@ export default function ContactStep() {
               <div className="relative">
                 <input
                   type="text"
-                  value={contact.nationality}
+                  value={contact.nationality ?? ''}
                   onChange={(e) => updateContact({ nationality: e.target.value })}
                   placeholder="e.g. British"
                   className="w-full h-[48px] pl-3.5 pr-10 rounded-lg border border-[#E3E6F0] text-sm text-slate-900 focus:outline-none focus:border-[#4B4DED]"
                 />
-                {contact.nationality?.trim().length > 0 && (
+                {(contact.nationality ?? '').trim().length > 0 && (
                   <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[#00C26D]">
                     <Check className="w-4 h-4 stroke-[2.5]" />
                   </div>
@@ -312,12 +337,12 @@ export default function ContactStep() {
               <div className="relative">
                 <input
                   type="text"
-                  value={contact.linkedin}
+                  value={contact.linkedin ?? ''}
                   onChange={(e) => updateContact({ linkedin: e.target.value })}
                   placeholder="e.g. linkedin.com/in/elsa-manet"
                   className="w-full h-[48px] pl-3.5 pr-10 rounded-lg border border-[#E3E6F0] text-sm text-slate-900 focus:outline-none focus:border-[#4B4DED]"
                 />
-                {contact.linkedin?.trim().length > 0 && (
+                {(contact.linkedin ?? '').trim().length > 0 && (
                   <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[#00C26D]">
                     <Check className="w-4 h-4 stroke-[2.5]" />
                   </div>
@@ -333,12 +358,12 @@ export default function ContactStep() {
               <div className="relative">
                 <input
                   type="text"
-                  value={contact.website}
+                  value={contact.website ?? ''}
                   onChange={(e) => updateContact({ website: e.target.value })}
                   placeholder="e.g. elsamanet.co.uk"
                   className="w-full h-[48px] pl-3.5 pr-10 rounded-lg border border-[#E3E6F0] text-sm text-slate-900 focus:outline-none focus:border-[#4B4DED]"
                 />
-                {contact.website?.trim().length > 0 && (
+                {(contact.website ?? '').trim().length > 0 && (
                   <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[#00C26D]">
                     <Check className="w-4 h-4 stroke-[2.5]" />
                   </div>
@@ -354,12 +379,12 @@ export default function ContactStep() {
               <div className="relative">
                 <input
                   type="text"
-                  value={contact.drivingLicence}
+                  value={contact.drivingLicence ?? ''}
                   onChange={(e) => updateContact({ drivingLicence: e.target.value })}
                   placeholder="e.g. Full UK Driving Licence (Clean)"
                   className="w-full h-[48px] pl-3.5 pr-10 rounded-lg border border-[#E3E6F0] text-sm text-slate-900 focus:outline-none focus:border-[#4B4DED]"
                 />
-                {contact.drivingLicence?.trim().length > 0 && (
+                {(contact.drivingLicence ?? '').trim().length > 0 && (
                   <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-[#00C26D]">
                     <Check className="w-4 h-4 stroke-[2.5]" />
                   </div>
@@ -369,6 +394,13 @@ export default function ContactStep() {
           </div>
         )}
       </div>
+
+      {isLinkedInModalOpen && (
+        <LinkedInImportModal
+          isOpen={isLinkedInModalOpen}
+          onClose={() => setIsLinkedInModalOpen(false)}
+        />
+      )}
     </div>
   );
 }

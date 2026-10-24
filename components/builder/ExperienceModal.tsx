@@ -90,12 +90,14 @@ export default function ExperienceModal({
   const [modalStep, setModalStep] = useState<1 | 2>(1);
 
   // Form Fields initialized directly from initialExperience
-  const [jobTitle, setJobTitle] = useState(initialExperience?.jobTitle || '');
-  const [companyName, setCompanyName] = useState(initialExperience?.employer || '');
-  const [city, setCity] = useState(initialExperience?.city || '');
-  const [startDate, setStartDate] = useState(initialExperience?.startDate || '');
-  const [endDate, setEndDate] = useState(initialExperience?.endDate || '');
-  const [description, setDescription] = useState(initialExperience?.description || '');
+  const [jobTitle, setJobTitle] = useState(initialExperience?.jobTitle ?? '');
+  const [companyName, setCompanyName] = useState(initialExperience?.employer ?? '');
+  const [city, setCity] = useState(initialExperience?.city ?? '');
+  const [startDate, setStartDate] = useState(initialExperience?.startDate ?? '');
+  const [endDate, setEndDate] = useState(
+    initialExperience?.isCurrent ? 'Present' : initialExperience?.endDate ?? ''
+  );
+  const [description, setDescription] = useState(initialExperience?.description ?? '');
 
   // Validation
   const [hasAttemptedNext, setHasAttemptedNext] = useState(false);
