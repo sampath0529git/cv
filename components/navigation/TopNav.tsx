@@ -22,6 +22,17 @@ export default function TopNav() {
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [selectedLang, setSelectedLang] = useState('EN');
   const [accountModalOpen, setAccountModalOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // Scroll listener for sticky glassmorphism elevation
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 8);
+    };
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Close mobile drawer on viewport resize to desktop
   useEffect(() => {
@@ -35,15 +46,21 @@ export default function TopNav() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100/90">
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-14 h-[60px] md:h-20 flex items-center justify-between gap-3">
+    <header
+      className={`sticky top-0 z-50 transition-all duration-200 ease-out ${
+        isScrolled
+          ? 'bg-white/90 backdrop-blur-[12px] border-b border-slate-200/80 shadow-[0_4px_20px_rgba(15,23,42,0.05)]'
+          : 'bg-white/95 backdrop-blur-md border-b border-slate-100 shadow-2xs'
+      }`}
+    >
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 h-[64px] md:h-[72px] flex items-center justify-between gap-4">
         {/* Zone 1: Brand Wordmark */}
         <div className="flex items-center shrink-0">
           <Logo variant="dark" href="/" />
         </div>
 
         {/* Zone 2: Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center gap-7 lg:gap-8" aria-label="Main Navigation">
+        <nav className="hidden md:flex items-center gap-6 lg:gap-7" aria-label="Main Navigation">
           <Link
             href="/start"
             className="flex items-center gap-2 text-[15px] font-medium text-slate-800 hover:text-[#4a4df2] transition-colors py-1 whitespace-nowrap shrink-0"
@@ -126,7 +143,7 @@ export default function TopNav() {
           <button
             type="button"
             onClick={() => setAccountModalOpen(true)}
-            className="h-[44px] px-5 rounded-xl border border-slate-200/90 hover:border-slate-300 text-[15px] font-medium text-[#002447] hover:text-black transition-all bg-white flex items-center justify-center shadow-2xs hover:shadow-xs cursor-pointer whitespace-nowrap shrink-0"
+            className="h-[44px] px-5 rounded-xl border border-slate-200/90 hover:border-slate-300 text-[15px] font-medium text-[#002447] hover:text-black transition-all duration-300 ease-out hover:-translate-y-0.5 active:translate-y-0 bg-white flex items-center justify-center shadow-2xs hover:shadow-xs cursor-pointer whitespace-nowrap shrink-0"
           >
             My account
           </button>
@@ -136,7 +153,7 @@ export default function TopNav() {
         <div className="flex items-center gap-2 md:hidden shrink-0">
           <Link
             href="/start"
-            className="min-h-[40px] px-3.5 py-2 rounded-xl bg-[#4a4df2] hover:bg-[#383be0] text-white text-xs font-semibold inline-flex items-center justify-center shadow-2xs active:scale-[0.98] transition-all whitespace-nowrap shrink-0"
+            className="min-h-[40px] px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#4a4df2] to-[#6366f1] hover:from-[#383be0] hover:to-[#4f46e5] text-white text-xs font-semibold inline-flex items-center justify-center shadow-2xs hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-300 ease-out whitespace-nowrap shrink-0"
           >
             Create CV
           </Link>

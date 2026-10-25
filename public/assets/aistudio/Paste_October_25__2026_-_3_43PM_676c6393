@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MakeMyCV — Executive British ATS Resume &amp; CV Builder</title>
+<!-- Fonts: Plus Jakarta Sans & Inter for immaculate executive typography -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&amp;family=Inter:wght@300;400;500;600;700&amp;family=Playfair+Display:ital,wght@0,600;1,600&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 CDN with forms & container queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Custom Config according to Executive British Corporate tokens -->
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            body: ['Inter', 'sans-serif']
+          },
+          colors: {
+            oxford: {
+              50: '#f0f3fa',
+              100: '#dde4f4',
+              200: '#c2cfea',
+              300: '#99b2dc',
+              400: '#698ecb',
+              500: '#466db9',
+              600: '#3455a1',
+              700: '#2a4483',
+              800: '#1e315f',
+              900: '#172548',
+              950: '#0d162d'
+            },
+            sapphire: {
+              50: '#edf2ff',
+              100: '#dbe5ff',
+              200: '#c0d1ff',
+              300: '#94b3ff',
+              400: '#618aff',
+              500: '#395ffb',
+              600: '#1733dd',
+              700: '#1225ba',
+              800: '#152197',
+              900: '#172076',
+              950: '#000c61'
+            },
+            british: {
+              cream: '#FAF9F6',
+              stone: '#F4F4F2',
+              charcoal: '#1B1E23',
+              slate: '#363E4A'
+            }
+          },
+          boxShadow: {
+            'executive': '0 25px 60px -15px rgba(13, 22, 45, 0.12)',
+            'paper': '0 12px 36px -8px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.03)',
+            'subtle-border': '0 0 0 1px rgba(23, 37, 72, 0.08)'
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-utilities">
+    /* Subtle Bank of England / Canary Wharf architectural grid */
+    .bg-fine-grid {
+      background-size: 24px 24px;
+      background-image: 
+        linear-gradient(to right, rgba(23, 37, 72, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(23, 37, 72, 0.04) 1px, transparent 1px);
+    }
+    
+    /* Authentic crop of professional woman from original snapshot */
+    .hero-woman-crop {
+      background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDqnpyOEIAVPdjP1NzgpVF2SQnVeCTgxHeuY8WPs7_-7UK1n-xfkUCRz_qRL-i1KVhasJsYALvxKuITT6xAPv_kDjl6Y_paDpuKx97epPDGp8-MK_JVANfI_DMGVvBGizLIK72OhB-3dU6Q7fsA9aqkx8LT30FP2qq5sYswyolT31AmcWFIdIA7g-6p3sFckMpcdi7OPD7rAEw-pgbAYkdF1S95oBwhB7EO6Mykt0gG3JOF12ryZCd2Mg');
+      background-position: 63% 1.25%;
+      background-size: 340% auto;
+      background-repeat: no-repeat;
+    }
+
+    /* Arched executive top crop */
+    .arch-frame {
+      border-radius: 240px 240px 24px 24px;
+    }
+</style>
+</head>
+<body class="font-sans bg-[#FBFBFC] text-oxford-950 antialiased selection:bg-sapphire-600 selection:text-white">
+<!-- BEGIN: Executive Top Bar -->
+<div class="bg-oxford-950 text-slate-300 text-[11px] font-medium tracking-wide py-2 border-b border-oxford-900">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="inline-block w-2 h-2 rounded-full bg-emerald-400"></span>
+<span>Accredited for British &amp; European Applicant Tracking Systems (ATS ISO-A4)</span>
+</div>
+<div class="hidden md:flex items-center gap-6 text-slate-400">
+<span>Canary Wharf • City of London • Mayfair</span>
+<span>Official Recruiter Verified Format</span>
+<span class="text-white font-semibold flex items-center gap-1">
+        🇬🇧 Standard UK English (BS 5750)
+      </span>
+</div>
+</div>
+</div>
+<!-- END: Executive Top Bar -->
+<!-- BEGIN: SiteHeader -->
+<header class="sticky top-0 z-50 backdrop-blur-md bg-white/95 border-b border-slate-200/90 transition-all duration-200">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+<!-- Corporate Monogram Logo -->
+<a class="flex items-center gap-3.5 group" data-purpose="site-logo" href="#">
+<div class="w-10 h-10 rounded-lg bg-oxford-950 text-white flex items-center justify-center font-serif text-lg font-bold border border-oxford-800 shadow-sm group-hover:bg-sapphire-600 transition-colors">
+        M
+      </div>
+<div class="flex flex-col">
+<span class="text-lg font-extrabold tracking-tight text-oxford-950">MakeMy<span class="text-sapphire-600">CV</span></span>
+<span class="text-[9px] font-bold tracking-widest uppercase text-slate-400">Executive British Standards</span>
+</div>
+</a>
+<!-- Minimalist Desktop Navigation -->
+<nav class="hidden lg:flex items-center gap-8" data-purpose="main-nav">
+<a class="text-xs uppercase tracking-wider font-semibold text-oxford-950 hover:text-sapphire-600 transition-colors py-1 border-b-2 border-sapphire-600" href="#builder">Studio Builder</a>
+<a class="text-xs uppercase tracking-wider font-semibold text-slate-600 hover:text-oxford-950 transition-colors" href="#templates">Executive Templates</a>
+<a class="text-xs uppercase tracking-wider font-semibold text-slate-600 hover:text-oxford-950 transition-colors" href="#how-it-works">Recruiter Framework</a>
+<a class="text-xs uppercase tracking-wider font-semibold text-slate-600 hover:text-oxford-950 transition-colors" href="#features">ATS Audit</a>
+<a class="text-xs uppercase tracking-wider font-semibold text-slate-600 hover:text-oxford-950 transition-colors" href="#reviews">Director Reviews</a>
+</nav>
+<!-- Header Actions -->
+<div class="flex items-center gap-3">
+<a class="hidden sm:inline-flex text-xs uppercase tracking-wider font-bold text-slate-700 hover:text-oxford-950 px-3 py-2 transition-colors" href="#login">
+        Client Login
+      </a>
+<a class="inline-flex items-center justify-center gap-2 bg-oxford-950 hover:bg-sapphire-600 text-white font-semibold text-xs uppercase tracking-wider px-5 py-3 rounded-md shadow-sm transition-all" href="#builder">
+<span>Build Your CV</span>
+<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</a>
+</div>
+</div>
+</header>
+<!-- END: SiteHeader -->
+<!-- BEGIN: Split Hero Section (Ivy League / Canary Wharf Refinement) -->
+<section class="relative pt-12 pb-20 overflow-hidden bg-[#FAF9F6] bg-fine-grid border-b border-slate-200">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
+<!-- Left Column: Commanding Typographic Hierarchy & Statistics -->
+<div class="lg:col-span-6 space-y-6 text-left">
+<!-- Recruiter Validation Badge -->
+<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded bg-white border border-slate-200 shadow-xs">
+<span class="inline-block w-2 h-2 rounded-full bg-emerald-600"></span>
+<span class="text-xs font-semibold text-oxford-900 tracking-wide uppercase">Standard British ISO-A4 • Recruiter Certified</span>
+<span class="text-slate-300">|</span>
+<span class="text-xs font-bold text-slate-800 flex items-center gap-1">
+<span class="text-amber-500">★</span> 4.9/5 Trustpilot
+          </span>
+</div>
+<!-- Main Headline: Editorial & Prestigious -->
+<h1 class="text-4xl sm:text-5xl lg:text-[54px] font-extrabold tracking-tight text-oxford-950 leading-[1.12]">
+          The Executive CV Builder for <span class="text-sapphire-600 font-serif italic">High-Calibre</span> Careers.
+        </h1>
+<!-- Subtitle -->
+<p class="text-base sm:text-lg text-slate-700 leading-relaxed font-normal max-w-xl">
+          Engineered for investment banking, legal counsel, strategy consulting, and FTSE 100 leadership. Formatted to pass rigorous Taleo, Workday, and Greenhouse filters on first pass.
+        </p>
+<!-- Recruiter Metric Callout Card -->
+<div class="p-4 rounded-xl bg-white border border-slate-200/90 shadow-paper flex items-center justify-between gap-4">
+<div class="border-r border-slate-200 pr-5">
+<div class="text-2xl font-black text-oxford-950">83%</div>
+<div class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">More Callbacks within 48h</div>
+</div>
+<div class="border-r border-slate-200 pr-5">
+<div class="text-2xl font-black text-emerald-700">99.4%</div>
+<div class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">ATS Parsing Index</div>
+</div>
+<div>
+<div class="text-2xl font-black text-oxford-950">1.2M+</div>
+<div class="text-[11px] font-semibold uppercase tracking-wider text-slate-500">Applications Created</div>
+</div>
+</div>
+<!-- Dual CTAs -->
+<div class="flex flex-col sm:flex-row gap-3 pt-2">
+<a class="inline-flex items-center justify-center gap-3 bg-oxford-950 hover:bg-sapphire-600 text-white font-bold text-sm px-7 py-4 rounded-lg shadow-md transition-all group" href="#builder">
+<span>Create Your Executive CV</span>
+<svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</a>
+<a class="inline-flex items-center justify-center gap-2.5 bg-white hover:bg-slate-50 text-oxford-950 font-bold text-sm px-6 py-4 rounded-lg border border-slate-300 shadow-xs transition-all" href="#templates">
+<svg class="w-4 h-4 text-sapphire-600" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Review Canary Wharf Templates</span>
+</a>
+</div>
+<!-- Security & Standard Assurance -->
+<div class="flex items-center gap-6 pt-1 text-xs text-slate-500 font-medium">
+<div class="flex items-center gap-1.5">
+<span class="text-emerald-700 font-bold">✓</span>
+<span>GDPR &amp; ISO 27001 Data Privacy</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="text-emerald-700 font-bold">✓</span>
+<span>Zero Unwanted Subscription Lock-in</span>
+</div>
+</div>
+</div>
+<!-- Right Column: Professional Woman inside Arched Frame + Authentic Floating A4 CV -->
+<div class="lg:col-span-6 relative flex justify-center items-center">
+<!-- Structural Background Panel -->
+<div class="relative w-full max-w-[500px] h-[550px] bg-slate-100 rounded-3xl p-4 border border-slate-200/90 shadow-executive flex items-end justify-center overflow-visible">
+<!-- Elegant Arched Portrait Portal -->
+<div class="relative w-72 h-[450px] arch-frame bg-gradient-to-b from-oxford-800 to-oxford-950 border-4 border-white shadow-xl overflow-hidden mb-2 z-10">
+<!-- Exact Original Crop from DataStore / Screenshot reference -->
+<div class="w-full h-full hero-woman-crop filter contrast-[1.03]"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-oxford-950/60 via-transparent to-transparent"></div>
+<!-- Subtitle Badge at bottom of Portrait -->
+<div class="absolute bottom-4 inset-x-4 bg-white/95 backdrop-blur-sm p-2.5 rounded-lg border border-slate-200 text-center shadow-md">
+<p class="text-xs font-black text-oxford-950">Elsa Manet</p>
+<p class="text-[10px] font-semibold text-sapphire-700 uppercase tracking-wide">Managing Director • London</p>
+</div>
+</div>
+<!-- Authentic Floating UK A4 Document Preview -->
+<div class="absolute -left-6 sm:-left-8 top-12 z-20 w-[240px] bg-white rounded-lg p-4 shadow-2xl border border-slate-300 font-sans transform -rotate-2 hover:rotate-0 transition-transform duration-300">
+<div class="border-b-2 border-oxford-950 pb-2 mb-2">
+<span class="text-[8px] uppercase tracking-wider font-bold text-sapphire-700">Curriculum Vitae</span>
+<h4 class="text-xs font-black text-oxford-950 tracking-tight">Elsa Manet, MSc</h4>
+<p class="text-[8px] text-slate-500">London, UK • Commercial Director</p>
+</div>
+<div class="space-y-2">
+<div>
+<p class="text-[7px] font-black uppercase text-oxford-900 tracking-wider">Executive Experience</p>
+<div class="h-1 bg-slate-200 rounded w-full mt-1"></div>
+<div class="h-1 bg-slate-200 rounded w-4/5 mt-1"></div>
+</div>
+<div>
+<p class="text-[7px] font-black uppercase text-oxford-900 tracking-wider">Education &amp; Credentials</p>
+<div class="text-[7px] text-slate-700 mt-0.5">BSc International Business (1st Class)</div>
+<div class="text-[7px] text-slate-500">University of Warwick</div>
+</div>
+</div>
+<div class="mt-3 pt-1 border-t border-slate-100 flex justify-between items-center text-[7px] text-slate-400">
+<span class="font-mono">ATS Check: Passed</span>
+<span class="text-emerald-600 font-bold">100%</span>
+</div>
+</div>
+<!-- Bottom Right Floating Indicator Card: ATS Verified -->
+<div class="absolute -right-4 -bottom-4 z-20 bg-oxford-950 text-white p-4 rounded-xl shadow-xl border border-oxford-800 max-w-[210px] space-y-2">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs">
+                ✓
+              </div>
+<div class="text-left">
+<div class="text-xs font-bold text-white leading-tight">ISO-A4 Certified</div>
+<div class="text-[9px] text-slate-400">Pre-screened for FTSE 100</div>
+</div>
+</div>
+<div class="w-full bg-oxford-800 h-1.5 rounded-full overflow-hidden">
+<div class="bg-emerald-400 h-full w-[98%]"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Split Hero Section -->
+<!-- BEGIN: Prestigious Employers Bar -->
+<section class="py-8 bg-white border-b border-slate-200" data-purpose="social-proof-logos">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+<p class="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+      Executive alumni secured interviews &amp; senior appointments at
+    </p>
+<div class="flex flex-wrap items-center justify-center gap-10 sm:gap-14 md:gap-20 opacity-80 grayscale hover:grayscale-0 transition-all duration-300">
+<span class="font-extrabold text-lg tracking-tighter text-oxford-950">Google</span>
+<span class="font-extrabold text-lg tracking-tight text-oxford-950">amazon</span>
+<span class="font-semibold text-lg tracking-tight text-oxford-950">Microsoft</span>
+<span class="font-black text-lg tracking-widest text-oxford-950">TESCO</span>
+<span class="font-serif font-black text-lg tracking-widest text-oxford-950">B B C</span>
+<span class="font-serif font-bold text-lg text-oxford-950">Unilever</span>
+<span class="font-black text-lg tracking-tight text-oxford-950">asos</span>
+<span class="font-bold text-lg tracking-tight text-oxford-950">ocado</span>
+</div>
+</div>
+</section>
+<!-- END: Prestigious Employers Bar -->
+<!-- BEGIN: 4-Step Connected Timeline -->
+<section class="py-16 bg-[#FBFBFC] border-b border-slate-200" id="how-it-works">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+<div class="text-center max-w-2xl mx-auto space-y-2">
+<div class="inline-block px-3 py-1 rounded bg-oxford-100 text-oxford-900 text-[10px] font-bold uppercase tracking-widest">
+        The 4-Stage Executive Protocol
+      </div>
+<h2 class="text-2xl sm:text-3xl font-extrabold text-oxford-950 tracking-tight">
+        From Raw Experience to Boardroom-Ready CV
+      </h2>
+<p class="text-slate-600 text-sm">
+        A structured, compliant process benchmarked against standard UK recruitment practices.
+      </p>
+</div>
+<!-- Connected Step Progress Bar -->
+<div class="relative grid grid-cols-1 md:grid-cols-4 gap-6">
+<!-- Connecting Line across items on desktop -->
+<div class="hidden md:block absolute top-7 left-12 right-12 h-0.5 bg-slate-200 -z-0"></div>
+<!-- Step 1 -->
+<div class="relative bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between z-10 hover:border-oxford-800 transition-colors">
+<div class="space-y-4">
+<div class="w-12 h-12 rounded-lg bg-oxford-950 text-white font-serif font-bold text-lg flex items-center justify-center shadow-sm">
+            01
+          </div>
+<div>
+<h3 class="font-bold text-sm text-oxford-950 uppercase tracking-wide">1. Upload or Start</h3>
+<p class="text-xs text-slate-600 mt-2 leading-relaxed">
+              Import your existing CV or LinkedIn profile. Our parser maps sections into approved ISO-A4 hierarchy instantly.
+            </p>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-slate-100 text-[10px] text-slate-400 font-mono">
+          PDF, Word, or Clean Slate
+        </div>
+</div>
+<!-- Step 2 -->
+<div class="relative bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between z-10 hover:border-oxford-800 transition-colors">
+<div class="space-y-4">
+<div class="w-12 h-12 rounded-lg bg-sapphire-600 text-white font-serif font-bold text-lg flex items-center justify-center shadow-sm">
+            02
+          </div>
+<div>
+<h3 class="font-bold text-sm text-oxford-950 uppercase tracking-wide">2. AI Pre-written Phrases</h3>
+<p class="text-xs text-slate-600 mt-2 leading-relaxed">
+              Enhance task descriptions into measurable leadership metrics with 4,000+ recruiter-calibrated action verbs.
+            </p>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-slate-100 text-[10px] text-slate-400 font-mono">
+          P&amp;L, Commercial, Tech bullets
+        </div>
+</div>
+<!-- Step 3 -->
+<div class="relative bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between z-10 hover:border-oxford-800 transition-colors">
+<div class="space-y-4">
+<div class="w-12 h-12 rounded-lg bg-oxford-950 text-white font-serif font-bold text-lg flex items-center justify-center shadow-sm">
+            03
+          </div>
+<div>
+<h3 class="font-bold text-sm text-oxford-950 uppercase tracking-wide">3. ATS Optimization</h3>
+<p class="text-xs text-slate-600 mt-2 leading-relaxed">
+              Real-time semantic checker matches your profile against target job descriptions and removes formatting errors.
+            </p>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-slate-100 text-[10px] text-slate-400 font-mono">
+          Workday &amp; Taleo safe
+        </div>
+</div>
+<!-- Step 4 -->
+<div class="relative bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between z-10 hover:border-oxford-800 transition-colors">
+<div class="space-y-4">
+<div class="w-12 h-12 rounded-lg bg-emerald-700 text-white font-serif font-bold text-lg flex items-center justify-center shadow-sm">
+            04
+          </div>
+<div>
+<h3 class="font-bold text-sm text-oxford-950 uppercase tracking-wide">4. 1-Click Export</h3>
+<p class="text-xs text-slate-600 mt-2 leading-relaxed">
+              Export high-precision vector A4 PDFs with selectable text layers, or create private passworded headhunter links.
+            </p>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-slate-100 text-[10px] text-slate-400 font-mono">
+          Standard 210 x 297mm
+        </div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: 4-Step Connected Timeline -->
+<!-- BEGIN: CV Builder Studio Showcase -->
+<section class="py-20 bg-white" data-purpose="builder-studio-preview" id="builder">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+<!-- Studio Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-slate-200 pb-6">
+<div class="space-y-2">
+<div class="text-xs font-bold text-sapphire-600 uppercase tracking-wider">High-Contrast Studio Environment</div>
+<h2 class="text-3xl font-extrabold text-oxford-950 tracking-tight">The Executive CV Engineering Suite</h2>
+<p class="text-slate-600 text-sm max-w-xl">Real-time live A4 rendering engine paired with instant ATS verification and recruiter feedback telemetry.</p>
+</div>
+<div class="flex items-center gap-3">
+<span class="inline-flex items-center gap-1.5 text-xs text-emerald-700 font-semibold bg-emerald-50 px-3 py-1.5 rounded border border-emerald-200">
+<span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+          ATS Parser Standard: 99.4%
+        </span>
+<button class="bg-oxford-950 hover:bg-sapphire-600 text-white text-xs uppercase tracking-wider font-bold px-4 py-2 rounded transition-colors">
+          Start Live Editor
+        </button>
+</div>
+</div>
+<!-- Dual-Pane Mockup: High Contrast Dark Controls + Pure White ISO-A4 Canvas -->
+<div class="rounded-2xl border border-slate-200 bg-oxford-950 p-4 sm:p-6 shadow-2xl overflow-hidden">
+<!-- Studio Header Controls -->
+<div class="flex items-center justify-between pb-4 mb-4 border-b border-oxford-800 text-xs text-slate-400">
+<div class="flex items-center gap-3">
+<div class="flex gap-1.5">
+<span class="w-2.5 h-2.5 rounded-full bg-rose-500/80"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-amber-500/80"></span>
+<span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></span>
+</div>
+<span class="font-mono text-slate-200 text-xs hidden sm:inline">Hopkins_Executive_Elsa_Manet_v2.0_UK_A4.pdf</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-emerald-400 text-xs font-medium flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Synced
+          </span>
+<span class="text-slate-400 text-xs">Vector Print Engine</span>
+<button class="px-3.5 py-1.5 rounded bg-sapphire-600 hover:bg-sapphire-500 text-white font-bold text-xs">
+            Export Vector PDF
+          </button>
+</div>
+</div>
+<!-- Studio Body -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+<!-- Left Panel: Formatting & Telemetry -->
+<div class="lg:col-span-5 bg-oxford-900 rounded-xl p-5 text-slate-300 space-y-6 flex flex-col justify-between border border-oxford-800">
+<div class="space-y-5">
+<div class="flex justify-between items-center border-b border-oxford-800 pb-3">
+<span class="text-xs font-bold text-white uppercase tracking-wider">Typography &amp; Grid</span>
+<span class="text-[10px] bg-oxford-800 text-slate-300 px-2 py-0.5 rounded font-mono">210 × 297mm</span>
+</div>
+<!-- Oxford Navy / Palette Switcher -->
+<div class="space-y-2">
+<label class="text-xs font-semibold text-slate-300">Executive Rule &amp; Accent Tint</label>
+<div class="flex items-center gap-3">
+<button class="w-6 h-6 rounded bg-oxford-950 ring-2 ring-white" title="Oxford Navy"></button>
+<button class="w-6 h-6 rounded bg-sapphire-600 hover:scale-105 transition-transform" title="Sapphire"></button>
+<button class="w-6 h-6 rounded bg-emerald-800 hover:scale-105 transition-transform" title="British Racing Green"></button>
+<button class="w-6 h-6 rounded bg-slate-700 hover:scale-105 transition-transform" title="Charcoal"></button>
+<button class="w-6 h-6 rounded bg-[#6A1A24] hover:scale-105 transition-transform" title="Claret Burgundy"></button>
+</div>
+</div>
+<!-- Font Family Selection -->
+<div class="space-y-2 text-xs">
+<div class="flex justify-between text-slate-300">
+<span>Body Typeface</span>
+<span class="text-white font-semibold">Plus Jakarta Sans • 9.5pt</span>
+</div>
+<div class="flex justify-between text-slate-300">
+<span>Heading Typography</span>
+<span class="text-white font-semibold">Playfair Display • Bold</span>
+</div>
+<div class="flex justify-between text-slate-300">
+<span>Margin Tolerance</span>
+<span class="text-sapphire-400 font-mono">18mm (Canary Wharf Standard)</span>
+</div>
+</div>
+<!-- Section Reordering -->
+<div class="space-y-2 pt-2">
+<label class="text-xs font-semibold text-slate-300">Active Modular Sections</label>
+<div class="space-y-1.5 text-xs">
+<div class="p-2 rounded bg-oxford-950/80 border border-oxford-800 flex items-center justify-between">
+<span class="text-slate-200">⠿ Executive Board Profile</span>
+<span class="text-emerald-400 text-[10px] font-mono">Verified</span>
+</div>
+<div class="p-2 rounded bg-oxford-950/80 border border-oxford-800 flex items-center justify-between">
+<span class="text-slate-200">⠿ Selected Commercial Transactions</span>
+<span class="text-emerald-400 text-[10px] font-mono">Verified</span>
+</div>
+<div class="p-2 rounded bg-oxford-950/80 border border-oxford-800 flex items-center justify-between">
+<span class="text-slate-200">⠿ Education &amp; Oxford/CFA Credentials</span>
+<span class="text-emerald-400 text-[10px] font-mono">Verified</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Recruiter Feedback Loop Callout -->
+<div class="p-3.5 rounded-lg bg-oxford-950 border border-oxford-800 text-xs space-y-1.5">
+<div class="text-sapphire-400 font-bold flex items-center gap-1.5 text-[11px] uppercase tracking-wide">
+<span>⚡</span> Recruiter Feedback Loop
+            </div>
+<p class="text-slate-300 text-[11px] leading-relaxed">
+              "Action verb ‘Spearheaded’ paired with quantifiable outcome (£14.8M net-new ARR) meets high-ranking percentile for UK Headhunter keyword searches."
+            </p>
+</div>
+</div>
+<!-- Right Panel: Genuine Pure White A4 Document Preview -->
+<div class="lg:col-span-7 bg-white rounded-xl p-8 sm:p-10 text-oxford-950 shadow-xl min-h-[540px] flex flex-col justify-between font-sans">
+<div class="space-y-5">
+<!-- Document Header: Executive A4 British Standard -->
+<div class="border-b-2 border-oxford-950 pb-4 flex justify-between items-start">
+<div>
+<h4 class="text-2xl font-serif font-black text-oxford-950 tracking-tight">Elsa Manet</h4>
+<p class="text-xs font-bold text-sapphire-700 uppercase tracking-widest mt-0.5">Commercial &amp; Growth Director</p>
+<div class="text-[11px] text-slate-500 mt-1 flex flex-wrap gap-x-2">
+<span>London, SW1Y 4PE</span>
+<span>•</span>
+<span>elsa.manet@consulting.co.uk</span>
+<span>•</span>
+<span>+44 20 7946 0912</span>
+</div>
+</div>
+<div class="text-right">
+<span class="text-[9px] font-mono uppercase bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-bold">
+                  ISO-A4 STANDARD
+                </span>
+</div>
+</div>
+<!-- Executive Summary -->
+<div class="space-y-1">
+<h5 class="text-[10px] font-bold uppercase tracking-wider text-oxford-950 border-b border-slate-200 pb-0.5">Executive Profile</h5>
+<p class="text-xs text-slate-700 leading-relaxed font-normal">
+                Commercially astute executive with 9+ years directing multi-territory P&amp;L growth, programmatic revenue funnels, and corporate expansion across the UK and Continental Europe. Proven track record of scaling portfolio valuation and institutional stakeholder engagement.
+              </p>
+</div>
+<!-- Experience -->
+<div class="space-y-3">
+<h5 class="text-[10px] font-bold uppercase tracking-wider text-oxford-950 border-b border-slate-200 pb-0.5">Professional Leadership</h5>
+<div class="space-y-1">
+<div class="flex justify-between items-baseline text-xs">
+<span class="font-bold text-oxford-950">Director of Commercial Growth • Vektor Technologies plc</span>
+<span class="text-[10px] text-slate-500 font-mono">2021 — Present</span>
+</div>
+<ul class="list-disc pl-4 text-xs text-slate-700 space-y-1">
+<li>Direct 14-person acquisition unit delivering £14.8M net-new recurring revenue within FY2023.</li>
+<li>Restructured customer acquisition spend, reducing blended CAC by 27% across European hubs.</li>
+<li>Authored board-level go-to-market memos presented directly to non-executive directors.</li>
+</ul>
+</div>
+<div class="space-y-1">
+<div class="flex justify-between items-baseline text-xs">
+<span class="font-bold text-oxford-950">Senior Growth Lead • Apex Commerce UK</span>
+<span class="text-[10px] text-slate-500 font-mono">2018 — 2021</span>
+</div>
+<ul class="list-disc pl-4 text-xs text-slate-700 space-y-0.5">
+<li>Scaled lead volume from 15,000 to 120,000 monthly qualified accounts with 99.2% retention.</li>
+</ul>
+</div>
+</div>
+<!-- Credentials Grid -->
+<div class="grid grid-cols-2 gap-4 pt-2 border-t border-slate-200">
+<div>
+<h6 class="text-[9px] font-bold text-oxford-950 uppercase tracking-wider">Education</h6>
+<p class="text-[11px] text-slate-700 mt-0.5 font-medium">BSc (Hons) International Management (First Class)</p>
+<p class="text-[10px] text-slate-500">University of Warwick • 2014 — 2017</p>
+</div>
+<div>
+<h6 class="text-[9px] font-bold text-oxford-950 uppercase tracking-wider">Board &amp; Core Competencies</h6>
+<p class="text-[11px] text-slate-700 mt-0.5">M&amp;A Advisory, P&amp;L Directorship, Governance, SQL, Tableau</p>
+</div>
+</div>
+</div>
+<!-- Document Footer -->
+<div class="mt-6 pt-3 border-t border-slate-100 flex justify-between items-center text-[9px] text-slate-400 font-mono">
+<span>ATS Format Calibrated for Workday • Taleo • Greenhouse</span>
+<span>Page 1 of 1</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: CV Builder Studio Showcase -->
+<!-- BEGIN: Template Gallery Showcase -->
+<section class="py-20 bg-oxford-950 text-white relative" id="templates">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+<!-- Header -->
+<div class="text-center max-w-3xl mx-auto space-y-3">
+<div class="inline-block px-3 py-1 rounded bg-oxford-900 border border-oxford-800 text-sapphire-400 text-xs font-bold uppercase tracking-widest">
+        Editorial Showcase • 4 Executive Layouts
+      </div>
+<h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">
+        Curated Templates for British &amp; International Leadership
+      </h2>
+<p class="text-slate-400 text-sm sm:text-base">
+        Calibrated to the exact typography and spacing demands of top London and international search firms.
+      </p>
+</div>
+<!-- Editorial Tabs -->
+<div class="flex flex-wrap items-center justify-center gap-2">
+<button class="px-5 py-2.5 rounded text-xs uppercase tracking-wider font-bold bg-white text-oxford-950 shadow-md">
+        Hopkins Executive
+      </button>
+<button class="px-5 py-2.5 rounded text-xs uppercase tracking-wider font-semibold bg-oxford-900 text-slate-300 hover:text-white border border-oxford-800 transition-colors">
+        Oxford Minimal
+      </button>
+<button class="px-5 py-2.5 rounded text-xs uppercase tracking-wider font-semibold bg-oxford-900 text-slate-300 hover:text-white border border-oxford-800 transition-colors">
+        Westminster Classic
+      </button>
+<button class="px-5 py-2.5 rounded text-xs uppercase tracking-wider font-semibold bg-oxford-900 text-slate-300 hover:text-white border border-oxford-800 transition-colors">
+        Cambridge Graduate
+      </button>
+</div>
+<!-- Spotlight Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pt-4">
+<!-- Real Paper Preview: Oliver Harrington (Banking / Analyst) -->
+<div class="lg:col-span-7 bg-white text-oxford-950 rounded-xl p-8 sm:p-10 shadow-2xl space-y-4">
+<div class="border-b-2 border-oxford-900 pb-3">
+<div class="flex justify-between items-baseline">
+<h3 class="text-xl font-serif font-black text-oxford-950">Oliver Harrington</h3>
+<span class="text-[9px] font-mono text-slate-500 font-bold">OXFORD MINIMAL / A4</span>
+</div>
+<p class="text-xs font-bold text-sapphire-700 uppercase tracking-widest">Investment Analyst • Private Equity</p>
+<p class="text-[11px] text-slate-500">London, United Kingdom • oliver.harrington@oxon.org • linkedin.com/in/oliver-harrington</p>
+</div>
+<div class="space-y-3">
+<h4 class="text-[10px] font-bold uppercase tracking-wider text-oxford-950 border-b border-slate-200 pb-1">
+            Transaction &amp; Modeling History
+          </h4>
+<div class="text-xs space-y-1">
+<div class="flex justify-between font-bold text-oxford-950">
+<span>Fintech Infrastructure Acquisition (£240M)</span>
+<span class="text-slate-500 font-normal text-[10px]">Q3 2023</span>
+</div>
+<p class="text-[11px] text-slate-600 leading-relaxed">
+              Constructed full 3-statement LBO and DCF models assessing sensitivity across 5 debt tranches. Co-authored final investment committee memorandum.
+            </p>
+</div>
+<div class="text-xs space-y-1">
+<div class="flex justify-between font-bold text-oxford-950">
+<span>Green Infrastructure Syndicated Facility (£120M)</span>
+<span class="text-slate-500 font-normal text-[10px]">Q1 2023</span>
+</div>
+<p class="text-[11px] text-slate-600 leading-relaxed">
+              Prepared offering memoranda and attended syndicate diligence sessions with UK institutional debt syndicates.
+            </p>
+</div>
+</div>
+<div class="space-y-1 pt-2 border-t border-slate-200">
+<h4 class="text-[10px] font-bold uppercase tracking-wider text-oxford-950">Academic Credentials</h4>
+<p class="text-xs font-bold text-oxford-900">MSc Financial Economics (Distinction) • University of Oxford</p>
+<p class="text-[11px] text-slate-600">CFA Level II Candidate • First Class BA Economics, UCL</p>
+</div>
+</div>
+<!-- Right Description -->
+<div class="lg:col-span-5 space-y-5">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded bg-emerald-950 text-emerald-400 border border-emerald-800 text-xs font-semibold">
+<span>✓ Recruiter Verified Format</span>
+<span>•</span>
+<span>Canary Wharf Standard</span>
+</div>
+<h3 class="text-3xl font-serif font-extrabold text-white">Hopkins Executive</h3>
+<p class="text-slate-300 text-sm leading-relaxed">
+          Clean typographic hierarchy prioritizing quantitative impact, deal size, and leadership accountability. Designed without distracting sidebars so parsing algorithms can index chronological milestones with zero error.
+        </p>
+<div class="space-y-2 text-xs text-slate-300">
+<div class="flex items-start gap-2.5">
+<span class="text-emerald-400 font-bold">✓</span>
+<div><strong class="text-white">Strict Single-Column Flow:</strong> Prevents ATS text scramble experienced in complex multi-column resumes.</div>
+</div>
+<div class="flex items-start gap-2.5">
+<span class="text-emerald-400 font-bold">✓</span>
+<div><strong class="text-white">Pure Vector Output:</strong> Text retains crisp vector clarity when printed by senior hiring managers.</div>
+</div>
+<div class="flex items-start gap-2.5">
+<span class="text-emerald-400 font-bold">✓</span>
+<div><strong class="text-white">British Standard Spelling:</strong> Integrated British dictionary ensures consistent -ise / -our orthography.</div>
+</div>
+</div>
+<div class="pt-2">
+<a class="inline-flex items-center gap-2 bg-sapphire-600 hover:bg-sapphire-500 text-white font-bold text-xs uppercase tracking-wider px-6 py-3.5 rounded transition-all" href="#builder">
+<span>Select Hopkins Template</span>
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Template Gallery Showcase -->
+<!-- BEGIN: 6 Reasons Feature Grid -->
+<section class="py-20 bg-white" id="features">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+<div class="text-center max-w-2xl mx-auto space-y-2">
+<div class="inline-block px-3 py-1 rounded bg-slate-100 text-oxford-950 text-[10px] font-bold uppercase tracking-widest">
+        Recruiter-Approved Precision
+      </div>
+<h2 class="text-2xl sm:text-3xl font-extrabold text-oxford-950 tracking-tight">
+        Why Leading UK Executives Choose MakeMyCV
+      </h2>
+<p class="text-slate-600 text-sm">
+        Eliminate friction and presentation flaws that cause qualified candidates to be filtered out.
+      </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- 1 -->
+<div class="p-6 rounded-xl bg-[#FAF9F6] border border-slate-200 hover:border-oxford-900 transition-colors space-y-3">
+<div class="text-xs font-mono font-bold text-sapphire-700">01 / ARCHITECTURE</div>
+<h3 class="text-base font-bold text-oxford-950">Pristine A4 Formatting</h3>
+<p class="text-xs text-slate-600 leading-relaxed">
+          Calibrated strictly to British and European 210 × 297mm dimensions, preventing awkward PDF page overflows and cut-off headers.
+        </p>
+</div>
+<!-- 2 -->
+<div class="p-6 rounded-xl bg-[#FAF9F6] border border-slate-200 hover:border-oxford-900 transition-colors space-y-3">
+<div class="text-xs font-mono font-bold text-sapphire-700">02 / INTELLIGENCE</div>
+<h3 class="text-base font-bold text-oxford-950">Pre-Written Boardroom Verbs</h3>
+<p class="text-xs text-slate-600 leading-relaxed">
+          Access thousands of metric-driven bullet points tailored specifically for senior management, engineering leads, and finance specialists.
+        </p>
+</div>
+<!-- 3 -->
+<div class="p-6 rounded-xl bg-[#FAF9F6] border border-slate-200 hover:border-oxford-900 transition-colors space-y-3">
+<div class="text-xs font-mono font-bold text-sapphire-700">03 / COMPLIANCE</div>
+<h3 class="text-base font-bold text-oxford-950">ATS Guarantee: &gt;98% Pass Rate</h3>
+<p class="text-xs text-slate-600 leading-relaxed">
+          Every template is audited against Taleo, Workday, and Greenhouse to prevent unreadable tables, graphics, or script blocks.
+        </p>
+</div>
+<!-- 4 -->
+<div class="p-6 rounded-xl bg-[#FAF9F6] border border-slate-200 hover:border-oxford-900 transition-colors space-y-3">
+<div class="text-xs font-mono font-bold text-sapphire-700">04 / PRIVACY</div>
+<h3 class="text-base font-bold text-oxford-950">ISO 27001 &amp; GDPR Compliant</h3>
+<p class="text-xs text-slate-600 leading-relaxed">
+          Your personal employment data is strictly encrypted and never indexed into public LLM training datasets or sold to data brokers.
+        </p>
+</div>
+<!-- 5 -->
+<div class="p-6 rounded-xl bg-[#FAF9F6] border border-slate-200 hover:border-oxford-900 transition-colors space-y-3">
+<div class="text-xs font-mono font-bold text-sapphire-700">05 / DISTRIBUTION</div>
+<h3 class="text-base font-bold text-oxford-950">Secure Recruiter Web Links</h3>
+<p class="text-xs text-slate-600 leading-relaxed">
+          Share private, password-protected web versions of your CV with headhunters and receive read receipts when viewed.
+        </p>
+</div>
+<!-- 6 -->
+<div class="p-6 rounded-xl bg-[#FAF9F6] border border-slate-200 hover:border-oxford-900 transition-colors space-y-3">
+<div class="text-xs font-mono font-bold text-sapphire-700">06 / FLEXIBILITY</div>
+<h3 class="text-base font-bold text-oxford-950">Dual US &amp; UK Localization</h3>
+<p class="text-xs text-slate-600 leading-relaxed">
+          Toggle seamlessly between UK English (CV) and US English (Resume) with automatic date and spelling adaptation.
+        </p>
+</div>
+</div>
+</div>
+</section>
+<!-- END: 6 Reasons Feature Grid -->
+<!-- BEGIN: Executive Testimonials with Company Tags -->
+<section class="py-20 bg-[#FAF9F6] border-y border-slate-200" id="reviews">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+<div class="text-center max-w-2xl mx-auto space-y-2">
+<div class="text-amber-500 text-sm tracking-widest font-bold">★★★★★</div>
+<h2 class="text-2xl sm:text-3xl font-extrabold text-oxford-950 tracking-tight">
+        Trusted by Over 1 Million Professionals
+      </h2>
+<p class="text-slate-600 text-sm">
+        Authentic reviews from senior candidates appointed across major UK and global enterprises.
+      </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Review 1 -->
+<div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between space-y-4">
+<div class="space-y-2">
+<div class="flex items-center justify-between">
+<span class="text-amber-500 text-xs">★★★★★</span>
+<span class="text-[10px] font-bold uppercase tracking-wider text-slate-500 bg-slate-100 px-2 py-0.5 rounded">Hired at Google</span>
+</div>
+<h4 class="font-bold text-xs text-oxford-950">"Invited to 3 partner interviews"</h4>
+<p class="text-xs text-slate-600 leading-relaxed">
+            "The Hopkins Executive layout gave my CV the precise gravitas needed. The live preview helped me cut fluff and emphasize measurable ROI."
+          </p>
+</div>
+<div class="pt-3 border-t border-slate-100 text-[11px]">
+<div class="font-bold text-oxford-950">Ivan K.</div>
+<div class="text-slate-500">Commercial Finance Lead • London</div>
+</div>
+</div>
+<!-- Review 2 -->
+<div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between space-y-4">
+<div class="space-y-2">
+<div class="flex items-center justify-between">
+<span class="text-amber-500 text-xs">★★★★★</span>
+<span class="text-[10px] font-bold uppercase tracking-wider text-slate-500 bg-slate-100 px-2 py-0.5 rounded">Hired at Tesco HQ</span>
+</div>
+<h4 class="font-bold text-xs text-oxford-950">"Passed ATS immediately"</h4>
+<p class="text-xs text-slate-600 leading-relaxed">
+            "I used to get automated rejections within 24 hours. Switched to MakeMyCV's ISO-A4 format and secured callbacks that very same week."
+          </p>
+</div>
+<div class="pt-3 border-t border-slate-100 text-[11px]">
+<div class="font-bold text-oxford-950">Ally Fox</div>
+<div class="text-slate-500">Operations Director • Manchester</div>
+</div>
+</div>
+<!-- Review 3 -->
+<div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between space-y-4">
+<div class="space-y-2">
+<div class="flex items-center justify-between">
+<span class="text-amber-500 text-xs">★★★★★</span>
+<span class="text-[10px] font-bold uppercase tracking-wider text-slate-500 bg-slate-100 px-2 py-0.5 rounded">Hired at BBC Media</span>
+</div>
+<h4 class="font-bold text-xs text-oxford-950">"Pristine mobile editor"</h4>
+<p class="text-xs text-slate-600 leading-relaxed">
+            "Polished my summary on the commute, reviewed the PDF export on my iPad, and sent it to an executive search firm in Mayfair without issues."
+          </p>
+</div>
+<div class="pt-3 border-t border-slate-100 text-[11px]">
+<div class="font-bold text-oxford-950">Rocco Giordano</div>
+<div class="text-slate-500">Senior UX Lead • Bristol</div>
+</div>
+</div>
+<!-- Review 4 -->
+<div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between space-y-4">
+<div class="space-y-2">
+<div class="flex items-center justify-between">
+<span class="text-amber-500 text-xs">★★★★★</span>
+<span class="text-[10px] font-bold uppercase tracking-wider text-slate-500 bg-slate-100 px-2 py-0.5 rounded">Hired at Unilever</span>
+</div>
+<h4 class="font-bold text-xs text-oxford-950">"Head and shoulders above Word"</h4>
+<p class="text-xs text-slate-600 leading-relaxed">
+            "No formatting shifting or margins breaking. Truly an immaculate, Ivy League standard tool that takes the stress out of CV preparation."
+          </p>
+</div>
+<div class="pt-3 border-t border-slate-100 text-[11px]">
+<div class="font-bold text-oxford-950">Lorena M.</div>
+<div class="text-slate-500">Management Consultant • Edinburgh</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Executive Testimonials -->
+<!-- BEGIN: Executive Final Banner -->
+<section class="py-16 bg-white" data-purpose="final-conversion">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="bg-oxford-950 rounded-2xl p-8 sm:p-12 text-white border border-oxford-900 shadow-2xl flex flex-col lg:flex-row items-center justify-between gap-8">
+<div class="space-y-3 max-w-2xl text-left">
+<div class="text-xs font-mono uppercase tracking-widest text-sapphire-400">Boardroom Quality • 100% Free to Start</div>
+<h2 class="text-3xl sm:text-4xl font-serif font-bold tracking-tight">
+          Ready to Craft an Unrivalled Executive CV?
+        </h2>
+<p class="text-slate-300 text-sm leading-relaxed">
+          Join more than 1.2 million professionals. Deploy recruiter-approved typography, instant ATS score checks, and high-resolution PDF exports today.
+        </p>
+</div>
+<div class="flex flex-col sm:flex-row items-center gap-4">
+<a class="inline-flex items-center gap-2.5 bg-white hover:bg-slate-100 text-oxford-950 font-bold text-xs uppercase tracking-wider px-7 py-4 rounded transition-all shadow-md" href="#builder">
+<span>Start Building Free</span>
+<svg class="w-4 h-4 text-sapphire-600" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</a>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Executive Final Banner -->
+<!-- BEGIN: SiteFooter -->
+<footer class="bg-[#111622] text-slate-400 text-xs py-14 border-t border-oxford-900">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+<!-- Col 1 -->
+<div class="col-span-2 space-y-4">
+<a class="flex items-center gap-3 text-white font-serif font-bold text-lg" href="#">
+<span class="w-8 h-8 rounded bg-oxford-900 text-white flex items-center justify-center text-xs font-bold border border-oxford-800">M</span>
+<span>MakeMy<span class="text-sapphire-400">CV</span></span>
+</a>
+<p class="text-xs text-slate-400 max-w-sm leading-relaxed">
+          The distinguished British CV engineering platform. Fully aligned with UK Employment Agency standards and European HR applicant tracking algorithms.
+        </p>
+<p class="text-[10px] text-slate-500 font-mono">
+          © 2025 MakeMyCV Ltd. Registered in England &amp; Wales. Company trademarks referenced are property of their respective holders.
+        </p>
+</div>
+<!-- Col 2 -->
+<div class="space-y-3">
+<h4 class="font-bold text-white uppercase tracking-wider text-[11px]">Builder Services</h4>
+<ul class="space-y-2 text-[11px]">
+<li><a class="hover:text-white transition-colors" href="#">Executive CV Builder</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Canary Wharf Layouts</a></li>
+<li><a class="hover:text-white transition-colors" href="#">ATS Syntax Checker</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Import LinkedIn Data</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Cover Letter Engine</a></li>
+</ul>
+</div>
+<!-- Col 3 -->
+<div class="space-y-3">
+<h4 class="font-bold text-white uppercase tracking-wider text-[11px]">Standards &amp; Guides</h4>
+<ul class="space-y-2 text-[11px]">
+<li><a class="hover:text-white transition-colors" href="#">British A4 Format Guide</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Investment Banking CVs</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Boardroom Summaries</a></li>
+<li><a class="hover:text-white transition-colors" href="#">GDPR Candidate Rights</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Executive Salary Insights</a></li>
+</ul>
+</div>
+<!-- Col 4 -->
+<div class="space-y-3">
+<h4 class="font-bold text-white uppercase tracking-wider text-[11px]">Governance</h4>
+<ul class="space-y-2 text-[11px]">
+<li><a class="hover:text-white transition-colors" href="#">Privacy Governance</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Terms &amp; Conditions</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Information Security</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Cookie Declarations</a></li>
+<li><a class="hover:text-white transition-colors" href="#">Contact Advisory</a></li>
+</ul>
+</div>
+</div>
+<!-- Bottom Bar -->
+<div class="pt-8 border-t border-oxford-900/60 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500">
+<div>Canary Wharf Standard • BS 5750 Compatible • Strict A4 Dimensions</div>
+<div class="flex gap-4">
+<a class="hover:text-white" href="#">System Status: 100% Operational</a>
+<a class="hover:text-white" href="#">Data Encryption: AES-256</a>
+</div>
+</div>
+</div>
+</footer>
+<!-- END: SiteFooter -->
+<!-- BEGIN: Interactive Smooth Anchor -->
+<script data-purpose="smooth-interaction">
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      const targetId = this.getAttribute('href');
+      if (targetId && targetId !== '#') {
+        const targetElem = document.querySelector(targetId);
+        if (targetElem) {
+          e.preventDefault();
+          targetElem.scrollIntoView({
+            behavior: 'smooth'
+          });
+        }
+      }
+    });
+  });
+</script>
+<!-- END: Interactive Smooth Anchor -->
+</body></html>

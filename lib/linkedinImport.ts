@@ -43,7 +43,7 @@ export interface LinkedInParsedProject {
 }
 
 export interface LinkedInImportPayload {
-  source: 'linkedin-oauth' | 'linkedin-pdf' | 'linkedin-text' | 'linkedin-hybrid';
+  source: 'linkedin-oauth' | 'linkedin-pdf' | 'linkedin-text' | 'linkedin-hybrid' | 'cv-upload';
   oauthConnected?: boolean;
   limitedScopeNotice?: boolean;
   firstName?: string;
@@ -65,6 +65,15 @@ export interface LinkedInImportPayload {
   projects?: LinkedInParsedProject[];
   awards?: string[];
   interests?: string[];
+  suggestedTemplate?: string;
+  templateConfidence?: 'High' | 'Medium';
+  matchReason?: string;
+  layoutCharacteristics?: {
+    columns?: number;
+    hasSidebar?: boolean;
+    headerStyle?: string;
+    layoutType?: string;
+  };
 }
 
 function makeId(prefix: string, idx: number): string {
@@ -315,6 +324,9 @@ export function mapLinkedInPayloadToCvStore(
     interestsList: nextInterests,
     importedFileName: 'LinkedIn Profile',
     showPhoto: nextContact.photoUrl ? true : currentState.showPhoto,
+    ...(payload.suggestedTemplate
+      ? { activeTemplate: payload.suggestedTemplate as any }
+      : {}),
   };
 
   partialUpdate.sectionOrder = normalizeSectionOrder(currentState.sectionOrder, {

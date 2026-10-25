@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Type } from '@google/genai';
+import mammoth from 'mammoth';
 import { CV_PARSE_MODEL, getGeminiClient } from '@/lib/gemini';
 import { LinkedInImportPayload } from '@/lib/linkedinImport';
 
 interface ParseLinkedInBody {
   pdfBase64?: string;
+  fileBase64?: string;
+  fileType?: string;
   fileName?: string;
   profileText?: string;
   oauthProfile?: Partial<LinkedInImportPayload>;
@@ -133,6 +136,28 @@ const LINKEDIN_SCHEMA = {
       type: Type.ARRAY,
       items: { type: Type.STRING },
     },
+    suggestedTemplate: {
+      type: Type.STRING,
+      description:
+        'Matched template ID based on document layout: "toronto" (2-column sidebar layout), "hopkins" (executive header band with corporate hierarchy), "classic-corporate" (formal City of London single-column), "minimal-clean" (Swiss typographic layout with date column), "yale" (technical engineering dense stack), "graduate-starter" (education-first graduate CV), "uk-traditional" (traditional academic/civil service serif)',
+    },
+    templateConfidence: {
+      type: Type.STRING,
+      description: '"High" or "Medium"',
+    },
+    matchReason: {
+      type: Type.STRING,
+      description: 'One concise sentence explaining why this template best matches the uploaded CV layout',
+    },
+    layoutCharacteristics: {
+      type: Type.OBJECT,
+      properties: {
+        columns: { type: Type.INTEGER, description: '1 or 2 columns' },
+        hasSidebar: { type: Type.BOOLEAN, description: 'True if a distinct sidebar exists' },
+        headerStyle: { type: Type.STRING, description: 'e.g. banner, centered, left' },
+        layoutType: { type: Type.STRING, description: 'e.g. modern-sidebar, executive-header, classic-single-column' },
+      },
+    },
   },
 };
 
@@ -157,16 +182,18 @@ function stripDataUrlPrefix(input: string): { mimeType: string; base64: string }
 export async function POST(req: NextRequest) {
   try {
     const body = (await req.json()) as ParseLinkedInBody;
-    const rawPdf = (body.pdfBase64 || '').trim();
+    const rawFile = (body.fileBase64 || body.pdfBase64 || '').trim();
     const profileText = (body.profileText || '').trim();
     const oauthProfile = body.oauthProfile || undefined;
     const language = (body.language || 'English (UK)').trim();
+    const fileName = (body.fileName || '').toLowerCase();
+    const fileType = (body.fileType || '').toLowerCase();
 
-    if (!rawPdf && !profileText) {
+    if (!rawFile && !profileText) {
       return NextResponse.json(
         {
           error:
-            'Upload your LinkedIn profile PDF ("Save to PDF") or paste your LinkedIn profile text to parse.',
+            'Upload your CV (PDF, Word .docx, or text) to scan and extract your details into the builder.',
         },
         { status: 400 }
       );
@@ -178,20 +205,47 @@ export async function POST(req: NextRequest) {
       { text: string } | { inlineData: { mimeType: string; data: string } }
     > = [];
 
-    if (rawPdf) {
-      const { mimeType, base64 } = stripDataUrlPrefix(rawPdf);
-      if (base64.length > 11_500_000) {
-        return NextResponse.json(
-          { error: 'The uploaded PDF exceeds the 8MB size limit.' },
-          { status: 400 }
-        );
+    let extractedDocxText = '';
+
+    if (rawFile) {
+      const { mimeType, base64 } = stripDataUrlPrefix(rawFile);
+      const isDocx =
+        fileName.endsWith('.docx') ||
+        fileName.endsWith('.doc') ||
+        mimeType.includes('wordprocessingml') ||
+        mimeType.includes('officedocument') ||
+        fileType.includes('word') ||
+        fileType === 'docx';
+
+      if (isDocx) {
+        try {
+          const docxBuffer = Buffer.from(base64, 'base64');
+          const mammothResult = await mammoth.extractRawText({ buffer: docxBuffer });
+          extractedDocxText = (mammothResult.value || '').trim();
+        } catch (docxErr) {
+          console.warn('Mammoth docx extraction warning, fallback to text/buffer:', docxErr);
+        }
       }
-      parts.push({
-        inlineData: {
-          mimeType: mimeType || 'application/pdf',
-          data: base64,
-        },
-      });
+
+      if (extractedDocxText) {
+        parts.push({
+          text: `[Uploaded Word Document Content from "${body.fileName || 'CV.docx'}"]:\n"""\n${extractedDocxText.slice(0, 35000)}\n"""`,
+        });
+      } else {
+        // PDF or multimodal document
+        if (base64.length > 11_500_000) {
+          return NextResponse.json(
+            { error: 'The uploaded file exceeds the 8MB size limit.' },
+            { status: 400 }
+          );
+        }
+        parts.push({
+          inlineData: {
+            mimeType: mimeType || 'application/pdf',
+            data: base64,
+          },
+        });
+      }
     }
 
     const oauthContext =
@@ -208,18 +262,26 @@ export async function POST(req: NextRequest) {
         : '';
 
     const instructionText = [
-      'Extract and structure the candidate’s LinkedIn profile / CV data into clean JSON matching the response schema.',
+      'You are an executive CV parser, layout analyzer, and ATS optimization system.',
+      'Your task is twofold:',
+      '1. EXTRACT and structure all candidate information (contact, summary, work history, education, skills, certifications, languages, projects, awards).',
+      '2. ANALYZE THE VISUAL LAYOUT & STRUCTURE of the uploaded CV to match the closest builder template:',
+      '   - "toronto": Matched if the CV has a distinct 2-column layout or sidebar (contact info, skills, education on one side and main timeline on the other).',
+      '   - "hopkins": Matched if the CV features an executive top header band, bold corporate hierarchy, or prominent executive profile.',
+      '   - "classic-corporate": Matched if the CV is a traditional City of London / corporate single-column format with formal horizontal divider rules.',
+      '   - "minimal-clean": Matched if the CV has minimalist Swiss typography, generous whitespace, or clean date-column alignments.',
+      '   - "yale": Matched if the CV is dense with technical stacks, engineering projects, programming tools, or GitHub repositories.',
+      '   - "graduate-starter": Matched if education is placed first at the top, highlighting university degrees, modules, or early-career projects.',
+      '   - "uk-traditional": Matched if the CV uses traditional serif typography, formal academic/civil service structure.',
       language.toLowerCase().includes('us')
-        ? 'Use clean American English spelling where polishing bullet phrasing.'
-        : 'Use clean British English spelling where polishing bullet phrasing.',
+        ? 'Use clean American English spelling.'
+        : 'Use clean British English spelling (e.g. optimised, organised).',
       'Strict accuracy rules:',
-      '- Extract ONLY factual roles, employers, dates, qualifications, skills, certifications, languages, projects, and awards present in the input.',
-      '- Never invent employers, degrees, dates, or fabricated metrics.',
-      '- Convert LinkedIn role paragraphs into crisp, scannable CV bullet points while preserving all factual substance.',
-      '- Clean LinkedIn URLs to the form "linkedin.com/in/handle" without noisy tracking query parameters.',
-      '- Order experiences and educations in reverse-chronological order (most recent first).',
+      '- Extract ONLY factual roles, employers, dates, qualifications, and skills present in the input.',
+      '- Convert narrative role descriptions into clean, results-oriented bullet points.',
+      '- Ensure suggestedTemplate is one of: "hopkins", "toronto", "classic-corporate", "minimal-clean", "yale", "graduate-starter", "uk-traditional".',
       oauthContext,
-      profileText ? `\nPasted LinkedIn Profile Content:\n"""\n${profileText}\n"""` : '',
+      profileText ? `\nPasted CV / Profile Content:\n"""\n${profileText}\n"""` : '',
     ]
       .filter(Boolean)
       .join('\n');
@@ -239,7 +301,7 @@ export async function POST(req: NextRequest) {
     const rawJsonText = (response.text || '').trim();
     if (!rawJsonText) {
       return NextResponse.json(
-        { error: 'Could not extract structured data from the provided LinkedIn profile.' },
+        { error: 'Could not extract structured data from the provided document.' },
         { status: 502 }
       );
     }
@@ -248,8 +310,8 @@ export async function POST(req: NextRequest) {
 
     const sourceType: LinkedInImportPayload['source'] = oauthProfile?.oauthConnected
       ? 'linkedin-hybrid'
-      : rawPdf
-      ? 'linkedin-pdf'
+      : rawFile
+      ? 'cv-upload'
       : 'linkedin-text';
 
     const mergedPayload: LinkedInImportPayload = {
@@ -284,15 +346,27 @@ export async function POST(req: NextRequest) {
       projects: parsed.projects || [],
       awards: parsed.awards || [],
       interests: parsed.interests || [],
+      // Layout matching properties
+      suggestedTemplate: parsed.suggestedTemplate || 'hopkins',
+      templateConfidence: parsed.templateConfidence || 'High',
+      matchReason:
+        parsed.matchReason ||
+        'Layout geometry and section hierarchy matched to our executive templates.',
+      layoutCharacteristics: parsed.layoutCharacteristics || {
+        columns: 1,
+        hasSidebar: false,
+        headerStyle: 'standard',
+        layoutType: 'corporate-single-column',
+      },
     };
 
     return NextResponse.json({ payload: mergedPayload });
   } catch (err: unknown) {
-    console.error('LinkedIn profile parse error:', err);
+    console.error('CV / LinkedIn parse error:', err);
     const message =
       err instanceof Error && err.message
         ? err.message
-        : 'Unable to parse LinkedIn profile right now. Please try again.';
+        : 'Unable to parse document right now. Please try again.';
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

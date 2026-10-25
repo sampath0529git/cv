@@ -8,6 +8,8 @@ import CvPreview from '@/components/builder/CvPreview';
 import TemplateModal from '@/components/builder/TemplateModal';
 import ShareModal from '@/components/builder/ShareModal';
 import LinkedInImportModal from '@/components/builder/LinkedInImportModal';
+import AiAssistantDrawer from '@/components/builder/AiAssistantDrawer';
+import ImportStatusBanner from '@/components/builder/ImportStatusBanner';
 import SaveToast from '@/components/common/SaveToast';
 import WordCountBadge from '@/components/common/WordCountBadge';
 import PdfDownloadButton from '@/components/builder/PdfDownloadButton';
@@ -44,6 +46,7 @@ import {
   AlertCircle,
   FileText,
   Linkedin,
+  FileCheck2,
 } from 'lucide-react';
 import { downloadCvPdf, triggerBrowserPrint } from '@/lib/pdfGenerator';
 import { downloadCvDocx } from '@/lib/docxGenerator';
@@ -235,6 +238,8 @@ export default function BuilderPage() {
   const [isShareModalOpen, setIsShareModalOpen] = useState<boolean>(false);
   const [isLinkedInModalOpen, setIsLinkedInModalOpen] = useState<boolean>(false);
   const [linkedInImportedNotice, setLinkedInImportedNotice] = useState<boolean>(false);
+  const [revertToast, setRevertToast] = useState<string | null>(null);
+  const [isAiAssistantOpen, setIsAiAssistantOpen] = useState<boolean>(false);
 
   const {
     isRewriting: isRewritingSummary,
@@ -466,6 +471,12 @@ export default function BuilderPage() {
     setTimeout(() => setLinkedInImportedNotice(false), 4500);
   };
 
+  const handleRevertImport = () => {
+    store.revertLastImport();
+    setRevertToast('CV import successfully reverted to your previous draft.');
+    setTimeout(() => setRevertToast(null), 4500);
+  };
+
   const handleLoadSampleData = () => {
     const storeUpdates = cvToCvStore(SAMPLE_UK_CV);
     store.loadParsedCvData(storeUpdates as any);
@@ -653,54 +664,66 @@ export default function BuilderPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#F4F7FE] text-slate-900 font-sans pb-[66px] lg:pb-0">
-      {/* Compact Sticky Top App Bar (56px mobile height to preserve >=85% viewport content space) */}
+      {/* Compact Sticky Top App Bar */}
       <header className="w-full bg-white/95 backdrop-blur-md border-b border-[#E8EAF5] sticky top-0 z-40">
-        <div className="max-w-[1560px] mx-auto px-3.5 sm:px-6 lg:px-10 h-14 sm:h-16 flex items-center justify-between gap-2.5 sm:gap-4">
-          {/* Left: Brand Logo */}
+        <div className="max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-2.5 sm:gap-4">
+          {/* Left: Brand Logo + Document Badge */}
           <div className="flex items-center gap-3 min-w-0 shrink-0">
             <Logo variant="dark" href="/" />
+            <div className="hidden xl:flex items-center gap-2 pl-3.5 border-l border-slate-200">
+              <span className="text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200/80 px-2.5 py-1 rounded-lg flex items-center gap-1.5 transition-colors">
+                <FileText className="w-3.5 h-3.5 text-[#4a4df2]" />
+                <span className="truncate max-w-[140px]">
+                  {contact.firstName ? `${contact.firstName} ${contact.lastName || ''}`.trim() + ' CV' : 'My Professional CV'}
+                </span>
+              </span>
+              <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/80">
+                <Check className="w-3 h-3 text-emerald-600 stroke-[2.5]" />
+                <span>ATS Ready</span>
+              </span>
+            </div>
           </div>
 
           {/* Center (Desktop lg+): Content | Design Segmented Switch */}
-          <div className="hidden lg:flex items-center bg-[#F2F5FF] p-1 rounded-xl border border-[#E0E5FA]">
+          <div className="hidden lg:flex items-center bg-[#F1F4FD] p-1 rounded-xl border border-[#DCE3F7] shadow-inner">
             <button
               type="button"
               onClick={() => handleSwitchDesktopTab('content')}
-              className={`min-h-[36px] px-5 py-1.5 rounded-lg text-sm font-semibold transition-all cursor-pointer whitespace-nowrap flex items-center gap-2 ${
+              className={`min-h-[38px] px-5 py-1.5 rounded-lg text-xs xl:text-sm font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-2 ${
                 editorTab === 'content'
-                  ? 'bg-[#4B4DED] text-white shadow-xs'
-                  : 'text-[#0F1B4D]/75 hover:text-[#0F1B4D]'
+                  ? 'bg-gradient-to-r from-[#4a4df2] to-[#6366f1] text-white shadow-sm shadow-[#4a4df2]/20'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
               }`}
             >
-              <FileEdit className="w-3.5 h-3.5" />
-              <span>Content</span>
+              <FileEdit className="w-4 h-4" />
+              <span>Content Studio</span>
             </button>
             <button
               type="button"
               onClick={() => handleSwitchDesktopTab('design')}
-              className={`min-h-[36px] px-5 py-1.5 rounded-lg text-sm font-semibold transition-all cursor-pointer whitespace-nowrap flex items-center gap-2 ${
+              className={`min-h-[38px] px-5 py-1.5 rounded-lg text-xs xl:text-sm font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-2 ${
                 editorTab === 'design'
-                  ? 'bg-[#4B4DED] text-white shadow-xs'
-                  : 'text-[#0F1B4D]/75 hover:text-[#0F1B4D]'
+                  ? 'bg-gradient-to-r from-[#4a4df2] to-[#6366f1] text-white shadow-sm shadow-[#4a4df2]/20'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
               }`}
             >
-              <Palette className="w-3.5 h-3.5" />
-              <span>Design</span>
+              <Palette className="w-4 h-4" />
+              <span>Design &amp; Layout</span>
             </button>
           </div>
 
           {/* Right: Save Status + Desktop Progress + Download CTA */}
-          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             {renderAutoSaveStatus(true)}
 
-            <div className="hidden xl:flex items-center gap-2.5">
-              <div className="w-24 bg-[#EEF1FF] h-2 rounded-full overflow-hidden">
+            <div className="hidden xl:flex items-center gap-2 bg-slate-50 border border-slate-200/80 px-2.5 py-1.5 rounded-xl">
+              <div className="w-20 bg-slate-200 h-2 rounded-full overflow-hidden">
                 <div
-                  className="bg-[#4B4DED] h-full rounded-full transition-all duration-300"
+                  className="bg-gradient-to-r from-[#4a4df2] to-[#6366f1] h-full rounded-full transition-all duration-300"
                   style={{ width: `${progressPercent}%` }}
                 />
               </div>
-              <span className="text-xs font-bold text-[#0F1B4D] tabular-nums">
+              <span className="text-[11px] font-bold text-slate-700 tabular-nums">
                 {progressPercent}%
               </span>
             </div>
@@ -709,7 +732,7 @@ export default function BuilderPage() {
               <a
                 href={readyPdfBlob.blobUrl}
                 download={readyPdfBlob.fileName}
-                className="hidden md:inline-flex items-center gap-1 text-xs font-semibold text-[#4B4DED] hover:underline whitespace-nowrap"
+                className="hidden md:inline-flex items-center gap-1 text-xs font-semibold text-[#4a4df2] hover:underline whitespace-nowrap"
                 title={`Save ${readyPdfBlob.fileName}`}
               >
                 <span>Save copy</span>
@@ -719,20 +742,30 @@ export default function BuilderPage() {
             <button
               type="button"
               onClick={handleOpenLinkedInModal}
-              className="hidden md:flex min-h-[40px] sm:min-h-[42px] items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl border border-[#DCE3F7] bg-white hover:bg-[#0A66C2]/6 hover:border-[#0A66C2]/50 text-[#0F1B4D] text-xs sm:text-sm font-semibold transition-all cursor-pointer active:scale-[0.98] whitespace-nowrap shrink-0"
+              className="hidden md:flex min-h-[40px] sm:min-h-[42px] items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200/90 bg-white hover:bg-[#0A66C2]/6 hover:border-[#0A66C2]/50 text-slate-700 hover:text-slate-900 text-xs sm:text-[13px] font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xs cursor-pointer whitespace-nowrap shrink-0"
               title="Authenticate and import profile data from LinkedIn"
             >
               <Linkedin className="w-4 h-4 text-[#0A66C2] shrink-0" />
-              <span>Import LinkedIn</span>
+              <span>LinkedIn</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setIsAiAssistantOpen(true)}
+              className="min-h-[40px] sm:min-h-[42px] flex items-center justify-center gap-1.5 px-3 sm:px-3.5 py-2 rounded-xl bg-gradient-to-r from-indigo-600 via-[#4a4df2] to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white text-xs sm:text-[13px] font-bold shadow-xs hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 cursor-pointer whitespace-nowrap shrink-0"
+              title="Open AI Assistant for bullet suggestions, executive summary & ATS skills"
+            >
+              <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-300 shrink-0" />
+              <span>AI Assistant</span>
             </button>
 
             <button
               type="button"
               onClick={handleOpenShareModal}
-              className="min-h-[40px] sm:min-h-[42px] flex items-center justify-center gap-1.5 px-2.5 sm:px-3.5 py-2 rounded-xl border border-[#DCE3F7] bg-white hover:bg-[#EEF1FF]/70 hover:border-[#4B4DED]/60 text-[#0F1B4D] text-xs sm:text-sm font-semibold transition-all cursor-pointer active:scale-[0.98] whitespace-nowrap shrink-0"
+              className="min-h-[40px] sm:min-h-[42px] flex items-center justify-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-xl border border-slate-200/90 bg-white hover:bg-slate-50 hover:border-slate-300 text-slate-700 hover:text-slate-900 text-xs sm:text-[13px] font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xs cursor-pointer whitespace-nowrap shrink-0"
               title="Generate a temporary public preview link"
             >
-              <Share2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#4B4DED] shrink-0" />
+              <Share2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#4a4df2] shrink-0" />
               <span className="hidden sm:inline">Share</span>
             </button>
 
@@ -740,16 +773,16 @@ export default function BuilderPage() {
               type="button"
               onClick={handleDownloadDocx}
               disabled={isDownloadingDocx}
-              className={`min-h-[40px] sm:min-h-[42px] flex items-center justify-center gap-1.5 px-2.5 sm:px-3.5 py-2 rounded-xl border text-xs sm:text-sm font-semibold transition-all cursor-pointer active:scale-[0.98] disabled:opacity-70 whitespace-nowrap shrink-0 ${
+              className={`min-h-[40px] sm:min-h-[42px] flex items-center justify-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-xl border text-xs sm:text-[13px] font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xs cursor-pointer disabled:opacity-70 whitespace-nowrap shrink-0 ${
                 docxDownloadDone
                   ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
-                  : 'border-[#DCE3F7] bg-white hover:bg-[#EEF1FF]/70 hover:border-[#4B4DED]/60 text-[#0F1B4D]'
+                  : 'border-slate-200/90 bg-white hover:bg-slate-50 hover:border-slate-300 text-slate-700'
               }`}
               title="Export editable Microsoft Word (.docx)"
             >
               {isDownloadingDocx ? (
                 <>
-                  <Loader2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-spin text-[#4B4DED] shrink-0" />
+                  <Loader2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-spin text-[#4a4df2] shrink-0" />
                   <span>DOCX...</span>
                 </>
               ) : docxDownloadDone ? (
@@ -759,9 +792,9 @@ export default function BuilderPage() {
                 </>
               ) : (
                 <>
-                  <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#4B4DED] shrink-0" />
+                  <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#4a4df2] shrink-0" />
                   <span className="sm:hidden">DOCX</span>
-                  <span className="hidden sm:inline">Word (.docx)</span>
+                  <span className="hidden sm:inline">Word</span>
                 </>
               )}
             </button>
@@ -778,27 +811,96 @@ export default function BuilderPage() {
         {/* Hairline Step Progress Track */}
         <div className="w-full h-[2.5px] bg-[#EEF1FF] overflow-hidden">
           <div
-            className="h-full bg-[#4B4DED] transition-all duration-300"
+            className="h-full bg-gradient-to-r from-[#4a4df2] to-[#6366f1] transition-all duration-300"
             style={{ width: `${progressPercent}%` }}
           />
         </div>
       </header>
 
       {/* Main Responsive Studio Workspace */}
-      <main className="flex-1 max-w-[1560px] w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-start">
+      <main className="flex-1 max-w-[1600px] w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-7 xl:gap-8 items-start">
         {/* Left Panel: Content Editor or Design Studio (Hidden on mobile ONLY when Preview mode is active) */}
         <div
-          className={`lg:col-span-6 bg-white rounded-2xl sm:rounded-3xl border border-[#E8EAF5] shadow-[0_4px_24px_rgba(15,27,77,0.04)] p-4 sm:p-7 lg:p-9 ${
+          className={`lg:col-span-6 bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 shadow-[0_4px_24px_rgba(15,27,77,0.05)] p-4 sm:p-7 lg:p-8 ${
             mobileMode === 'preview' ? 'hidden lg:block' : 'block'
           }`}
         >
           {editorTab === 'content' ? (
             <div className="space-y-5 sm:space-y-6">
+              {/* Import Status Indicator Banner */}
+              {store.detectedImportStats ? (
+                <ImportStatusBanner
+                  stats={store.detectedImportStats}
+                  fileName={store.importedFileName}
+                  onRevert={handleRevertImport}
+                  onDismiss={() => store.clearImportStatus()}
+                />
+              ) : store.lastImportBackup ? (
+                <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-indigo-50/90 to-blue-50/80 border border-indigo-200/90 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+                  <div className="flex items-start sm:items-center gap-3 min-w-0">
+                    <div className="w-8 h-8 rounded-xl bg-[#4a4df2] text-white flex items-center justify-center shrink-0 shadow-xs">
+                      <FileCheck2 className="w-4 h-4" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-xs sm:text-sm font-bold text-[#0F1B4D] truncate">
+                        CV imported {store.importedFileName ? `(${store.importedFileName})` : ''}
+                      </p>
+                      <p className="text-[11px] sm:text-xs text-slate-500">
+                        Want to undo? You can quickly revert the import if any sections were merged incorrectly.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
+                    <button
+                      type="button"
+                      onClick={handleRevertImport}
+                      className="px-3.5 py-1.5 rounded-xl bg-white border border-indigo-200 text-[#4a4df2] hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5 cursor-pointer hover:scale-[1.02] active:scale-98"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" />
+                      <span>Revert Import</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => store.dismissRevertImport()}
+                      className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-white/60 transition-colors cursor-pointer"
+                      title="Dismiss notice"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              ) : null}
+
+              {revertToast && (
+                <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs sm:text-sm flex items-center justify-between gap-2 shadow-2xs animate-toast-slide-up animate-in fade-in slide-in-from-bottom-2 duration-300">
+                  <div className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-emerald-600 shrink-0 stroke-[2.5]" />
+                    <span>{revertToast}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setRevertToast(null)}
+                    className="p-1 text-emerald-600 hover:text-emerald-800 cursor-pointer"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              )}
+
               {/* Auto-Centering Horizontal Step Navigation Strip */}
               <div className="flex items-center gap-1.5 overflow-x-auto pb-2.5 -mx-1 px-1 scrollbar-none border-b border-slate-100">
                 {STEPS.map((step) => {
                   const isActive = currentStep === step.id;
                   const isDone = currentStep > step.id || isStepPopulated(step.id);
+                  const isAutoDetected = Boolean(
+                    store.detectedImportStats &&
+                      ((step.id === 1 && store.detectedImportStats.hasContact) ||
+                        (step.id === 2 && store.detectedImportStats.experienceCount > 0) ||
+                        (step.id === 3 && store.detectedImportStats.educationCount > 0) ||
+                        (step.id === 4 && store.detectedImportStats.skillCount > 0) ||
+                        (step.id === 5 && store.detectedImportStats.hasSummary) ||
+                        (step.id === 6 && store.detectedImportStats.languageCount > 0))
+                  );
                   return (
                     <button
                       key={step.id}
@@ -807,26 +909,34 @@ export default function BuilderPage() {
                       }}
                       type="button"
                       onClick={() => handleSelectStep(step.id)}
-                      className={`min-h-[40px] px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer whitespace-nowrap shrink-0 flex items-center gap-1.5 ${
+                      className={`min-h-[40px] px-3 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 hover:-translate-y-0.5 cursor-pointer whitespace-nowrap shrink-0 flex items-center gap-1.5 relative ${
                         isActive
-                          ? 'bg-[#EEF1FF] text-[#4B4DED] ring-1 ring-[#4B4DED]/20'
+                          ? 'bg-gradient-to-r from-[#4a4df2] to-[#6366f1] text-white shadow-sm shadow-[#4a4df2]/25 ring-2 ring-[#4a4df2]/20'
                           : isDone
-                          ? 'text-[#0F1B4D] hover:bg-slate-50'
-                          : 'text-slate-400 hover:text-slate-700 hover:bg-slate-50'
+                          ? 'bg-[#EEF1FF] text-[#4a4df2] hover:bg-[#E0E5FA]'
+                          : 'bg-slate-50 text-slate-500 hover:text-slate-800 hover:bg-slate-100 border border-slate-200/60'
                       }`}
                     >
                       <span
                         className={`w-5 h-5 rounded-full text-[10px] flex items-center justify-center tabular-nums font-bold shrink-0 ${
                           isActive
-                            ? 'bg-[#4B4DED] text-white'
+                            ? 'bg-white/25 text-white'
                             : isDone
-                            ? 'bg-[#4B4DED]/15 text-[#4B4DED]'
-                            : 'bg-slate-100 text-slate-500'
+                            ? 'bg-[#4a4df2]/15 text-[#4a4df2]'
+                            : 'bg-slate-200 text-slate-600'
                         }`}
                       >
                         {isDone && !isActive ? '✓' : step.id}
                       </span>
                       <span>{step.short}</span>
+                      {isAutoDetected && (
+                        <span
+                          className={`w-1.5 h-1.5 rounded-full ${
+                            isActive ? 'bg-emerald-300' : 'bg-emerald-500'
+                          }`}
+                          title="Auto-detected from scanned CV"
+                        />
+                      )}
                     </button>
                   );
                 })}
@@ -835,15 +945,22 @@ export default function BuilderPage() {
               {/* Step Heading + Quick Sample Loader (if empty) + Auto-Save */}
               <div className="border-b border-slate-100 pb-4">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs font-semibold text-[#4B4DED] tabular-nums">
-                    Step {currentStep} of {STEPS.length}
-                  </span>
+                  <div className="flex items-center gap-2.5">
+                    <span className="w-6 h-6 rounded-full bg-gradient-to-r from-[#4a4df2] to-[#6366f1] text-white text-[11px] font-bold flex items-center justify-center shadow-xs">
+                      {currentStep}
+                    </span>
+                    <div>
+                      <h2 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight leading-snug">
+                        {STEPS[currentStep - 1]?.label}
+                      </h2>
+                    </div>
+                  </div>
                   <div className="flex items-center gap-3">
                     {isCvEmpty && currentStep === 1 && (
                       <button
                         type="button"
                         onClick={handleLoadSampleData}
-                        className="inline-flex items-center gap-1 text-xs font-semibold text-[#4B4DED] hover:text-[#3D3FC9] cursor-pointer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#EEF1FF] hover:bg-[#E0E5FA] text-[#4a4df2] text-xs font-bold transition-colors cursor-pointer"
                       >
                         <Sparkles className="w-3.5 h-3.5" />
                         <span>Try sample CV</span>
@@ -852,10 +969,7 @@ export default function BuilderPage() {
                     {renderAutoSaveStatus(false)}
                   </div>
                 </div>
-                <h1 className="text-xl sm:text-[26px] font-bold text-[#0F1B4D] tracking-tight mt-1">
-                  {STEPS[currentStep - 1].label}
-                </h1>
-                <p className="text-xs sm:text-sm text-slate-500 mt-1 leading-relaxed">
+                <p className="text-xs sm:text-[13px] text-slate-500 mt-1.5 pl-8 leading-relaxed">
                   {currentStep === 1 &&
                     'How employers can reach you. Your target role tailors the header of your CV.'}
                   {currentStep === 2 &&
@@ -2985,10 +3099,10 @@ export default function BuilderPage() {
                         type="button"
                         key={tmpl.id}
                         onClick={() => store.setTemplate(tmpl.id as any)}
-                        className={`group relative rounded-2xl p-2 sm:p-2.5 bg-white border text-left cursor-pointer transition-all ${
+                        className={`group relative rounded-2xl p-2 sm:p-2.5 bg-white border text-left cursor-pointer transition-all duration-200 hover:-translate-y-1 ${
                           isSelected
-                            ? 'border-[#4B4DED] ring-2 ring-[#4B4DED]/20 shadow-sm'
-                            : 'border-slate-200 hover:border-[#4B4DED]/50 active:scale-[0.99]'
+                            ? 'border-[#4a4df2] ring-2 ring-[#4a4df2]/20 shadow-md bg-[#EEF1FF]/30'
+                            : 'border-slate-200 hover:border-[#4a4df2]/50 hover:shadow-sm'
                         }`}
                       >
                         <DesignTemplateThumb Component={ThumbComp} cv={thumbCv} />
@@ -3026,41 +3140,101 @@ export default function BuilderPage() {
               : 'max-lg:fixed max-lg:-left-[9999px] max-lg:top-0 max-lg:w-[390px] max-lg:opacity-0 max-lg:pointer-events-none'
           }`}
         >
-          {/* Top Preview Action Strip */}
-          <div className="w-full flex items-center justify-between gap-2 mb-3 px-0.5">
-            <div className="flex items-center gap-2 min-w-0">
-              <button
-                type="button"
-                onClick={() => setIsTemplateModalOpen(true)}
-                className="min-h-[40px] px-3 sm:px-3.5 py-1.5 rounded-xl bg-white hover:bg-[#EEF1FF] border border-[#E8EAF5] hover:border-[#4B4DED] text-[#0F1B4D] text-xs font-semibold flex items-center gap-2 transition-colors cursor-pointer shadow-2xs whitespace-nowrap"
-              >
-                <LayoutGrid className="w-3.5 h-3.5 text-[#4B4DED] shrink-0" />
-                <span className="truncate max-w-[140px] sm:max-w-none">
-                  Template: {activeTemplate.name}
+          {/* Top Preview Action Strip with Quick Switcher on Desktop */}
+          <div className="w-full bg-white rounded-2xl border border-slate-200/90 shadow-[0_2px_12px_rgba(15,27,77,0.04)] p-2.5 mb-3 flex flex-col gap-2">
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+              {/* Left: Template Modal Trigger + Page Count Badge */}
+              <div className="flex items-center gap-2 min-w-0">
+                <button
+                  type="button"
+                  onClick={() => setIsTemplateModalOpen(true)}
+                  className="min-h-[36px] px-3 py-1 rounded-xl bg-indigo-50/80 hover:bg-indigo-100/80 border border-indigo-200/90 hover:border-indigo-400 text-indigo-950 text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
+                  title="Switch template layout"
+                >
+                  <LayoutGrid className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
+                  <span>Template: {activeTemplate.name}</span>
+                </button>
+                <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 px-2 py-1 rounded-lg tabular-nums whitespace-nowrap hidden sm:inline">
+                  A4 · {totalPages} {totalPages === 1 ? 'Page' : 'Pages'}
                 </span>
-              </button>
-              <span className="text-xs text-slate-400 hidden sm:inline">·</span>
-              <span className="text-xs text-slate-500 hidden sm:inline tabular-nums whitespace-nowrap">
-                A4 · {totalPages} {totalPages === 1 ? 'Page' : 'Pages'}
-              </span>
+                <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-full hidden md:inline-flex items-center gap-1">
+                  <Check className="w-3 h-3 text-emerald-600 stroke-[2.5]" />
+                  <span>ATS 99%</span>
+                </span>
+              </div>
+
+              {/* Right: Quick Color Swatches + Sample Reset */}
+              <div className="flex items-center gap-2">
+                <div className="hidden sm:flex items-center gap-1.5 bg-slate-50 px-2 py-1 rounded-xl border border-slate-200">
+                  {[
+                    { color: '#4a4df2', name: 'Royal Blue' },
+                    { color: '#1e3a8a', name: 'British Navy' },
+                    { color: '#0f172a', name: 'Executive Slate' },
+                    { color: '#065f46', name: 'Oxford Green' },
+                    { color: '#7f1d1d', name: 'Burgundy' },
+                  ].map((swatch) => {
+                    const isSelected =
+                      (store.themeColor || '#4a4df2').toLowerCase() === swatch.color.toLowerCase();
+                    return (
+                      <button
+                        key={swatch.color}
+                        type="button"
+                        onClick={() => store.setThemeColor(swatch.color)}
+                        title={swatch.name}
+                        className={`w-5 h-5 rounded-full cursor-pointer transition-transform duration-200 hover:scale-110 flex items-center justify-center ${
+                          isSelected
+                            ? 'ring-2 ring-offset-1 ring-[#4a4df2] scale-105'
+                            : 'opacity-85 hover:opacity-100'
+                        }`}
+                        style={{ backgroundColor: swatch.color }}
+                      >
+                        {isSelected && <Check className="w-3 h-3 text-white stroke-[3]" />}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleLoadSampleData}
+                  className="min-h-[36px] px-2.5 sm:px-3 py-1 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-600 hover:text-slate-900 text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap shrink-0 shadow-2xs"
+                  title="Populate sample UK CV data to preview layout"
+                >
+                  <RefreshCw className="w-3.5 h-3.5 text-[#4a4df2]" />
+                  <span className="hidden xs:inline">Sample</span>
+                </button>
+              </div>
             </div>
 
-            <button
-              type="button"
-              onClick={handleLoadSampleData}
-              className="min-h-[40px] px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 border border-[#E8EAF5] text-slate-600 hover:text-[#0F1B4D] text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap shrink-0"
-              title="Populate sample UK CV data to preview layout"
-            >
-              <RefreshCw className="w-3.5 h-3.5 text-[#4B4DED]" />
-              <span className="hidden xs:inline sm:inline">Sample Data</span>
-              <span className="xs:hidden sm:hidden">Sample</span>
-            </button>
+            {/* Desktop Quick Template Switcher Pills */}
+            <div className="hidden lg:flex items-center gap-1.5 pt-1.5 border-t border-slate-100 overflow-x-auto scrollbar-none">
+              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider shrink-0 pl-1">
+                Layout:
+              </span>
+              {CV_TEMPLATES.map((tmpl) => {
+                const isActive = activeTemplate.id === tmpl.id;
+                return (
+                  <button
+                    key={tmpl.id}
+                    type="button"
+                    onClick={() => store.setTemplate(tmpl.id as any)}
+                    className={`min-h-[30px] px-2.5 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+                      isActive
+                        ? 'bg-gradient-to-r from-[#4a4df2] to-[#6366f1] text-white shadow-xs font-bold'
+                        : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200/60'
+                    }`}
+                  >
+                    {tmpl.name}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
-          {/* Crisp Single-Scale A4 Preview Stage */}
+          {/* Crisp Single-Scale A4 Preview Stage with Designer Studio Canvas */}
           <div
             ref={previewContainerRef}
-            className="w-full lg:max-h-[calc(100vh-195px)] lg:min-h-[540px] bg-[#E9EEFB]/70 rounded-2xl sm:rounded-3xl border border-[#DCE3F7] overflow-x-auto overflow-y-auto flex justify-center items-start p-2 sm:p-5"
+            className="w-full lg:max-h-[calc(100vh-215px)] lg:min-h-[560px] bg-gradient-to-b from-[#F0F3FC] to-[#E6EBF8] rounded-3xl border border-[#DCE3F7] shadow-inner overflow-x-auto overflow-y-auto flex justify-center items-start p-3 sm:p-6"
           >
             <CvPreview
               showControlsBar={false}
@@ -3070,7 +3244,7 @@ export default function BuilderPage() {
           </div>
 
           {/* Floating Navy Zoom & Page Controls Dock */}
-          <div className="mt-3.5 bg-[#0F1B4D] text-white rounded-2xl px-3 sm:px-5 py-1.5 sm:py-2 flex items-center justify-center gap-1.5 sm:gap-3 shadow-[0_8px_24px_rgba(15,27,77,0.22)] max-w-full">
+          <div className="mt-3.5 bg-[#0F1B4D]/95 backdrop-blur-md text-white rounded-2xl px-4 sm:px-6 py-2 flex items-center justify-center gap-2 sm:gap-3.5 shadow-[0_12px_30px_rgba(15,27,77,0.28)] border border-slate-700/50 max-w-full">
             {/* Multi-Page Navigation */}
             <button
               type="button"
@@ -3096,7 +3270,7 @@ export default function BuilderPage() {
               <ChevronRight className="w-4 h-4" />
             </button>
 
-            <div className="w-px h-4 bg-white/15" />
+            <div className="w-px h-4 bg-white/20" />
 
             {/* Zoom Controls */}
             <button
@@ -3127,7 +3301,7 @@ export default function BuilderPage() {
               <ZoomIn className="w-4 h-4" />
             </button>
 
-            <div className="w-px h-4 bg-white/15" />
+            <div className="w-px h-4 bg-white/20" />
 
             {/* Auto-Fit Toggle */}
             <button
@@ -3135,7 +3309,7 @@ export default function BuilderPage() {
               onClick={() => setManualZoom((z) => (z === null ? 100 : null))}
               className={`min-h-[34px] text-xs font-semibold px-2.5 py-1 rounded-lg transition-colors cursor-pointer flex items-center gap-1 whitespace-nowrap ${
                 manualZoom === null
-                  ? 'bg-[#4B4DED] text-white'
+                  ? 'bg-[#4a4df2] text-white shadow-xs'
                   : 'text-white/80 hover:text-white'
               }`}
               title={manualZoom === null ? 'Switch to 100% Zoom' : 'Auto-fit to screen width'}
@@ -3144,7 +3318,7 @@ export default function BuilderPage() {
               <span>Fit</span>
             </button>
 
-            <div className="w-px h-4 bg-white/15" />
+            <div className="w-px h-4 bg-white/20" />
 
             {/* Quick Browser Print */}
             <button
@@ -3259,6 +3433,12 @@ export default function BuilderPage() {
           onImportSuccess={handleLinkedInImportSuccess}
         />
       )}
+
+      {/* AI Assistant Drawer */}
+      <AiAssistantDrawer
+        isOpen={isAiAssistantOpen}
+        onClose={() => setIsAiAssistantOpen(false)}
+      />
 
       {/* Subtle Auto-Save Confirmation Toast */}
       <SaveToast />

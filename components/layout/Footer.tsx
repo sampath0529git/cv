@@ -10,28 +10,31 @@ export default function Footer() {
 
   return (
     <>
-      <footer className="bg-white border-t border-slate-100 text-slate-600 text-xs sm:text-sm pt-10 pb-20 sm:py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-12 gap-8 sm:gap-10 lg:gap-16 text-left">
-            {/* Left: Brand Logo & Disclaimer (Full width on mobile, 5 cols on md+) */}
-            <div className="col-span-2 md:col-span-5 space-y-3.5">
+      <footer
+        aria-label="MakeMyCV Global Footer"
+        className="bg-white border-t border-slate-100 text-slate-600 text-xs sm:text-sm pt-14 pb-20 sm:py-16"
+      >
+        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-12 gap-8 lg:gap-12 text-left">
+            {/* Column 1: Brand Wordmark & Disclaimer (Full width on mobile, 5 cols on md+) */}
+            <div className="col-span-2 md:col-span-5 space-y-4">
               <Logo variant="dark" href="/" />
 
-              <p className="text-[11px] text-slate-400 leading-relaxed max-w-sm">
+              <p className="text-[11.5px] text-slate-500 leading-relaxed max-w-sm">
                 *The names and logos of the companies mentioned above are registered trademarks belonging to their respective owners. Unless otherwise noted, these references do not imply affiliation with MakeMyCV.
               </p>
             </div>
 
-            {/* Column 2: All Features (1 col on mobile so links sit cleanly side-by-side with About!) */}
-            <div className="col-span-1 md:col-span-4 space-y-2.5">
+            {/* Column 2: Tools & Builder */}
+            <div className="col-span-1 md:col-span-4 space-y-3">
               <div className="font-bold text-slate-900 text-xs tracking-wider uppercase">
                 Tools &amp; Builder
               </div>
-              <ul className="space-y-1 text-xs text-slate-500">
+              <ul className="space-y-1.5 text-xs text-slate-500">
                 <li>
                   <Link
                     href="/builder"
-                    className="inline-block py-1.5 hover:text-slate-900 transition-colors"
+                    className="inline-block py-1 hover:text-slate-900 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4a4df2] rounded"
                   >
                     CV builder studio
                   </Link>
@@ -39,7 +42,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/start"
-                    className="inline-block py-1.5 hover:text-slate-900 transition-colors"
+                    className="inline-block py-1 hover:text-slate-900 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4a4df2] rounded"
                   >
                     Start from template
                   </Link>
@@ -47,7 +50,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="/import"
-                    className="inline-block py-1.5 hover:text-slate-900 transition-colors"
+                    className="inline-block py-1 hover:text-slate-900 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4a4df2] rounded"
                   >
                     Import existing CV
                   </Link>
@@ -55,7 +58,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="#features-section"
-                    className="inline-block py-1.5 hover:text-slate-900 transition-colors"
+                    className="inline-block py-1 hover:text-slate-900 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4a4df2] rounded"
                   >
                     Cover letter builder
                   </Link>
@@ -63,7 +66,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="#templates-section"
-                    className="inline-block py-1.5 hover:text-slate-900 transition-colors"
+                    className="inline-block py-1 hover:text-slate-900 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4a4df2] rounded"
                   >
                     ATS CV templates
                   </Link>
@@ -71,16 +74,16 @@ export default function Footer() {
               </ul>
             </div>
 
-            {/* Column 3: About */}
-            <div className="col-span-1 md:col-span-3 space-y-2.5">
+            {/* Column 3: Resources */}
+            <div className="col-span-1 md:col-span-3 space-y-3">
               <div className="font-bold text-slate-900 text-xs tracking-wider uppercase">
                 Resources
               </div>
-              <ul className="space-y-1 text-xs text-slate-500">
+              <ul className="space-y-1.5 text-xs text-slate-500">
                 <li>
                   <Link
                     href="#seo-guide"
-                    className="inline-block py-1.5 hover:text-slate-900 transition-colors"
+                    className="inline-block py-1 hover:text-slate-900 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4a4df2] rounded"
                   >
                     UK CV Guide 2026
                   </Link>
@@ -88,7 +91,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="#steps-section"
-                    className="inline-block py-1.5 hover:text-slate-900 transition-colors"
+                    className="inline-block py-1 hover:text-slate-900 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4a4df2] rounded"
                   >
                     How it works
                   </Link>
@@ -96,7 +99,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="#templates-section"
-                    className="inline-block py-1.5 hover:text-slate-900 transition-colors"
+                    className="inline-block py-1 hover:text-slate-900 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4a4df2] rounded"
                   >
                     Template gallery
                   </Link>
@@ -104,7 +107,7 @@ export default function Footer() {
                 <li>
                   <Link
                     href="#seo-guide"
-                    className="inline-block py-1.5 hover:text-slate-900 transition-colors"
+                    className="inline-block py-1 hover:text-slate-900 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4a4df2] rounded"
                   >
                     FAQ &amp; formatting
                   </Link>
@@ -115,12 +118,12 @@ export default function Footer() {
         </div>
       </footer>
 
-      {/* Floating Accessibility Trigger at Bottom Left (44x44px hitbox + safe-area inset) */}
+      {/* Floating Accessibility Trigger at Bottom Left */}
       <div className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-4 z-40">
         <button
           type="button"
           onClick={() => setAccessibilityModalOpen(!accessibilityModalOpen)}
-          className="w-11 h-11 rounded-full bg-[#0c112b] text-white flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+          className="w-11 h-11 rounded-full bg-[#0c112b] text-white flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-transform duration-150 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
           aria-label="Accessibility options"
         >
           <PersonStanding className="w-5 h-5" />

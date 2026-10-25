@@ -109,6 +109,40 @@ export type TemplateId =
   | 'tech-slate'
   | (string & {});
 
+export interface ImportBackup {
+  contact: ContactDetails;
+  experiences: WorkExperience[];
+  educations: Education[];
+  skills: SkillItem[];
+  summary: string;
+  languagesList: string[];
+  interestsList: string[];
+  certificationsList: string[];
+  projectsList: ProjectItem[];
+  awardsList: string[];
+  referencesText: string;
+  includeReferences: boolean;
+  customSections: CustomSectionItem[];
+  importedFileName: string | null;
+  sectionOrder: string[];
+  showPhoto: boolean;
+  activeTemplate?: TemplateId;
+  timestamp: number;
+}
+
+export interface DetectedImportStats {
+  hasContact: boolean;
+  contactFieldsCount: number;
+  experienceCount: number;
+  educationCount: number;
+  skillCount: number;
+  hasSummary: boolean;
+  certificationCount: number;
+  projectCount: number;
+  languageCount: number;
+  autoDetectedSections: string[];
+}
+
 export interface CvState {
   currentStep: number;
   language: string;
@@ -128,6 +162,8 @@ export interface CvState {
   includeReferences: boolean;
   customSections: CustomSectionItem[];
   importedFileName: string | null;
+  lastImportBackup: ImportBackup | null;
+  detectedImportStats: DetectedImportStats | null;
   customPdfFileName: string;
   fontFamily: string;
   fontScale: FontScale;
@@ -196,6 +232,9 @@ export interface CvState {
   // Import & Reset
   setImportedFile: (fileName: string) => void;
   loadParsedCvData: (data: Partial<CvState>) => void;
+  revertLastImport: () => void;
+  dismissRevertImport: () => void;
+  clearImportStatus: () => void;
   resetCv: () => void;
 }
 
@@ -274,6 +313,8 @@ export const useCvStore = create<CvState>()(
         includeReferences: false,
         customSections: [],
         importedFileName: null,
+        lastImportBackup: null,
+        detectedImportStats: null,
         customPdfFileName: '',
         fontFamily: 'jakarta',
         fontScale: 'md',
@@ -632,6 +673,39 @@ export const useCvStore = create<CvState>()(
 
         loadParsedCvData: (data) =>
           mutate((state) => {
+            const backup: ImportBackup = {
+              contact: { ...state.contact },
+              experiences: state.experiences.map((e) => ({
+                ...e,
+                bullets: e.bullets ? [...e.bullets] : undefined,
+              })),
+              educations: state.educations.map((e) => ({
+                ...e,
+                bullets: e.bullets ? [...e.bullets] : undefined,
+              })),
+              skills: state.skills.map((s) => ({ ...s })),
+              summary: state.summary,
+              languagesList: [...state.languagesList],
+              interestsList: [...state.interestsList],
+              certificationsList: [...state.certificationsList],
+              projectsList: state.projectsList.map((p) => ({
+                ...p,
+                bullets: p.bullets ? [...p.bullets] : undefined,
+              })),
+              awardsList: [...state.awardsList],
+              referencesText: state.referencesText,
+              includeReferences: state.includeReferences,
+              customSections: state.customSections.map((c) => ({
+                ...c,
+                bullets: c.bullets ? [...c.bullets] : undefined,
+              })),
+              importedFileName: state.importedFileName,
+              sectionOrder: [...state.sectionOrder],
+              showPhoto: state.showPhoto,
+              activeTemplate: state.activeTemplate,
+              timestamp: Date.now(),
+            };
+
             let nextOrder = data.sectionOrder
               ? [...data.sectionOrder]
               : [...state.sectionOrder];
@@ -651,8 +725,64 @@ export const useCvStore = create<CvState>()(
             if (nextAwards.length > 0) nextOrder = ensureSectionInOrder(nextOrder, 'awards');
             if (nextCustom.length > 0) nextOrder = ensureSectionInOrder(nextOrder, 'custom');
 
+            const autoDetected: string[] = [];
+            const hasContact = Boolean(
+              (data.contact?.firstName && data.contact.firstName.trim()) ||
+              (data.contact?.email && data.contact.email.trim()) ||
+              (data.contact?.jobTitle && data.contact.jobTitle.trim())
+            );
+            if (hasContact) autoDetected.push('Personal Details');
+            if (data.experiences && data.experiences.length > 0) {
+              autoDetected.push(
+                `${data.experiences.length} Experience${data.experiences.length > 1 ? 's' : ''}`
+              );
+            }
+            if (data.educations && data.educations.length > 0) {
+              autoDetected.push(
+                `${data.educations.length} Education${data.educations.length > 1 ? 's' : ''}`
+              );
+            }
+            if (data.skills && data.skills.length > 0) {
+              autoDetected.push(`${data.skills.length} Skills`);
+            }
+            if (data.summary && data.summary.trim()) {
+              autoDetected.push('Executive Summary');
+            }
+            if (nextCerts.length > 0) {
+              autoDetected.push(`${nextCerts.length} Certifications`);
+            }
+            if (nextProjects.length > 0) {
+              autoDetected.push(`${nextProjects.length} Projects`);
+            }
+            if (data.languagesList && data.languagesList.length > 0) {
+              autoDetected.push(`${data.languagesList.length} Languages`);
+            }
+
+            const detectedImportStats: DetectedImportStats = {
+              hasContact,
+              contactFieldsCount: [
+                data.contact?.firstName,
+                data.contact?.lastName,
+                data.contact?.jobTitle,
+                data.contact?.email,
+                data.contact?.phone,
+                data.contact?.city,
+                data.contact?.linkedin,
+              ].filter(Boolean).length,
+              experienceCount: data.experiences?.length || 0,
+              educationCount: data.educations?.length || 0,
+              skillCount: data.skills?.length || 0,
+              hasSummary: Boolean(data.summary && data.summary.trim()),
+              certificationCount: nextCerts.length,
+              projectCount: nextProjects.length,
+              languageCount: data.languagesList?.length || 0,
+              autoDetectedSections: autoDetected,
+            };
+
             return {
               ...data,
+              lastImportBackup: backup,
+              detectedImportStats,
               contact: { ...state.contact, ...(data.contact || {}) },
               experiences: data.experiences ? [...data.experiences] : state.experiences,
               educations: data.educations ? [...data.educations] : state.educations,
@@ -666,6 +796,39 @@ export const useCvStore = create<CvState>()(
               sectionOrder: nextOrder,
             };
           }),
+
+        revertLastImport: () =>
+          mutate((state) => {
+            if (!state.lastImportBackup) return {};
+            const backup = state.lastImportBackup;
+            return {
+              contact: { ...backup.contact },
+              experiences: [...backup.experiences],
+              educations: [...backup.educations],
+              skills: [...backup.skills],
+              summary: backup.summary,
+              languagesList: [...backup.languagesList],
+              interestsList: [...backup.interestsList],
+              certificationsList: [...backup.certificationsList],
+              projectsList: [...backup.projectsList],
+              awardsList: [...backup.awardsList],
+              referencesText: backup.referencesText,
+              includeReferences: backup.includeReferences,
+              customSections: [...backup.customSections],
+              importedFileName: backup.importedFileName,
+              sectionOrder: [...backup.sectionOrder],
+              showPhoto: backup.showPhoto,
+              activeTemplate: backup.activeTemplate || state.activeTemplate,
+              lastImportBackup: null,
+              detectedImportStats: null,
+            };
+          }),
+
+        dismissRevertImport: () =>
+          mutate({ lastImportBackup: null }),
+
+        clearImportStatus: () =>
+          mutate({ detectedImportStats: null }),
 
         resetCv: () =>
           mutate({
@@ -684,6 +847,7 @@ export const useCvStore = create<CvState>()(
             includeReferences: false,
             customSections: [],
             importedFileName: null,
+            lastImportBackup: null,
             sectionOrder: [...DEFAULT_CORE_ORDER],
           }),
       };
@@ -743,6 +907,7 @@ export const useCvStore = create<CvState>()(
             ? persisted.customSections
             : currentState.customSections,
           includeReferences: Boolean(persisted.includeReferences),
+          lastImportBackup: (persistedState as any)?.lastImportBackup || null,
         };
       },
       partialize: (state) => ({
@@ -768,6 +933,7 @@ export const useCvStore = create<CvState>()(
         fontScale: state.fontScale || 'md',
         showPhoto: state.showPhoto ?? true,
         sectionOrder: state.sectionOrder || [...DEFAULT_CORE_ORDER],
+        lastImportBackup: state.lastImportBackup,
         lastSavedAt: state.lastSavedAt,
       }),
     }

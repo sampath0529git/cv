@@ -2,7 +2,7 @@ import React from 'react';
 import TopNav from '@/components/navigation/TopNav';
 import HeroSection from '@/components/home/HeroSection';
 import HiredByBar from '@/components/home/HiredByBar';
-
+import FeatureTabsSection from '@/components/home/FeatureTabsSection';
 import StepsSection from '@/components/home/StepsSection';
 import ReviewsSection from '@/components/home/ReviewsSection';
 import TemplatesSection from '@/components/home/TemplatesSection';
@@ -28,7 +28,8 @@ export default function HomePage() {
           {/* Hired by top employers banner */}
           <HiredByBar />
 
-
+          {/* Feature Showcase Tabs Section */}
+          <FeatureTabsSection />
 
           {/* 4-Step Creation Workflow */}
           <StepsSection />

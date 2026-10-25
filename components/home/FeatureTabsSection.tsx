@@ -176,43 +176,61 @@ export default function FeatureTabsSection() {
             : undefined
         }
         type="button"
+        role="tab"
+        aria-selected={isActive}
+        aria-controls={`feature-panel-${tab.id}`}
+        id={`tab-${tab.id}`}
         onClick={() => setActiveTab(globalIdx)}
-        className={`min-h-[42px] snap-start inline-flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-[13px] sm:text-[14px] font-medium transition-all select-none border shrink-0 cursor-pointer whitespace-nowrap ${
+        className={`min-h-[44px] snap-start inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13.5px] font-medium transition-all duration-150 select-none border shrink-0 cursor-pointer whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4a4df2] ${
           isActive
-            ? 'bg-[#edf0fe] border-[#c7d2fe] text-slate-950 font-semibold shadow-2xs ring-1 ring-[#4a4df2]/15'
+            ? 'bg-[#edf0fe] border-[#c7d2fe] text-slate-950 font-semibold shadow-2xs ring-2 ring-[#4a4df2]/20'
             : 'bg-white border-slate-200/90 text-slate-700 hover:bg-slate-50 hover:border-slate-300 shadow-2xs'
         }`}
       >
         <Icon
-          className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#4a4df2]' : 'text-slate-700'}`}
+          className={`w-4 h-4 shrink-0 transition-colors ${isActive ? 'text-[#4a4df2]' : 'text-slate-600'}`}
           strokeWidth={isActive ? 2.2 : 2}
         />
         <span>{tab.name}</span>
         {tab.isPremium && (
-          <span className="text-[11px] font-semibold text-[#4a4df2]">· Pro</span>
+          <span className="text-[11px] font-bold text-[#4a4df2] bg-[#4a4df2]/10 px-1.5 py-0.5 rounded">
+            Pro
+          </span>
         )}
       </button>
     );
   };
 
   return (
-    <section id="features-section" className="py-12 sm:py-18 md:py-24 bg-white overflow-hidden">
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10">
+    <section
+      id="features-section"
+      aria-label="Features and tools to land interviews"
+      className="py-16 sm:py-20 lg:py-24 bg-white overflow-hidden border-b border-slate-100"
+    >
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Heading */}
-        <div className="text-center max-w-3xl mx-auto mb-6 sm:mb-10">
-          <h2 className="text-2xl sm:text-4xl lg:text-[42px] font-bold text-slate-950 tracking-tight leading-tight [text-wrap:balance]">
+        <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
+          <h2 className="text-3xl sm:text-4xl lg:text-[42px] font-bold text-slate-950 tracking-tight leading-[1.15] [text-wrap:balance]">
             Everything you need to land interviews{' '}
             <span className="text-[#4a4df2] block sm:inline">in one place</span>
           </h2>
         </div>
 
         {/* Mobile/Tablet (< lg): Single Sleek Horizontal Swipeable Strip */}
-        <div className="lg:hidden -mx-4 px-4 pb-2 mb-6 overflow-x-auto scrollbar-none snap-x flex items-center gap-2">
+        <div
+          role="tablist"
+          aria-label="MakeMyCV Features Tabs"
+          className="lg:hidden -mx-4 px-4 pb-2 mb-8 overflow-x-auto scrollbar-none snap-x flex items-center gap-2.5"
+        >
           {tabs.map((tab, idx) => renderTabButton(tab, idx, true))}
         </div>
 
         {/* Desktop (lg+): Classic Two Centered Rows */}
-        <div className="hidden lg:flex flex-col items-center gap-3 w-full max-w-6xl mx-auto mb-12">
+        <div
+          role="tablist"
+          aria-label="MakeMyCV Features Tabs"
+          className="hidden lg:flex flex-col items-center gap-3 w-full max-w-5xl mx-auto mb-14"
+        >
           <div className="flex flex-wrap items-center justify-center gap-3">
             {row1Tabs.map((tab, idx) => renderTabButton(tab, idx))}
           </div>
@@ -222,8 +240,8 @@ export default function FeatureTabsSection() {
         </div>
 
         {/* Feature Showcase Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-7 sm:gap-10 lg:gap-14 items-center">
-          {/* Mobile Feature Headline & Controls right above editor on small screens so tapping tabs gives instant feedback */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+          {/* Mobile Feature Headline & Controls right above editor on small screens */}
           <div className="lg:hidden text-left space-y-3">
             <div className="flex items-center justify-between gap-3">
               <span className="text-xs font-semibold text-[#4a4df2] tabular-nums">
@@ -233,7 +251,7 @@ export default function FeatureTabsSection() {
                 <button
                   type="button"
                   onClick={handlePrev}
-                  className="w-10 h-10 rounded-full border border-slate-200 bg-white active:bg-slate-50 text-slate-800 flex items-center justify-center cursor-pointer"
+                  className="w-10 h-10 rounded-full border border-slate-200 bg-white active:bg-slate-50 text-slate-800 flex items-center justify-center cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4a4df2]"
                   aria-label="Previous feature"
                 >
                   <ChevronLeft className="w-4 h-4" />
@@ -241,7 +259,7 @@ export default function FeatureTabsSection() {
                 <button
                   type="button"
                   onClick={handleNext}
-                  className="w-10 h-10 rounded-full border border-slate-200 bg-white active:bg-slate-50 text-slate-800 flex items-center justify-center cursor-pointer"
+                  className="w-10 h-10 rounded-full border border-slate-200 bg-white active:bg-slate-50 text-slate-800 flex items-center justify-center cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4a4df2]"
                   aria-label="Next feature"
                 >
                   <ChevronRight className="w-4 h-4" />
@@ -251,18 +269,18 @@ export default function FeatureTabsSection() {
             <h3 className="text-2xl sm:text-3xl font-bold text-slate-950 tracking-tight leading-snug [text-wrap:balance]">
               {currentTab.headline}
             </h3>
-            <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
+            <p className="text-base text-slate-600 leading-[1.65]">
               {currentTab.description}
             </p>
           </div>
 
           {/* LEFT: Dark Navy Rounded Container (#121845) holding the interactive editor preview */}
           <div className="lg:col-span-7">
-            <div className="rounded-2xl sm:rounded-[32px] bg-[#121845] p-2.5 sm:p-6 lg:p-7 shadow-2xl relative overflow-hidden">
+            <div className="rounded-2xl sm:rounded-3xl bg-[#121845] p-3 sm:p-6 lg:p-7 shadow-[0_20px_50px_rgba(18,24,69,0.3)] relative overflow-hidden">
               {/* White App Window */}
-              <div className="rounded-xl bg-white shadow-2xl border border-slate-200/80 overflow-hidden flex flex-col relative">
+              <div className="rounded-xl bg-white shadow-xl border border-slate-200/80 overflow-hidden flex flex-col relative">
                 {/* 1. Top Editor Header Bar */}
-                <div className="flex items-center justify-between px-3 sm:px-4 py-2 bg-white border-b border-slate-200 text-xs gap-2">
+                <div className="flex items-center justify-between px-3 sm:px-4 py-2.5 bg-white border-b border-slate-200 text-xs gap-2">
                   <span className="font-bold text-slate-900 text-xs sm:text-sm truncate">
                     {activeTab === 0 ? 'Resume builder' : currentTab.name}
                   </span>
@@ -270,28 +288,28 @@ export default function FeatureTabsSection() {
                   <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                     <button
                       type="button"
-                      className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded border border-slate-200 text-slate-600 hover:text-slate-900 text-[11px] font-medium transition-colors whitespace-nowrap"
+                      className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:text-slate-900 text-[11px] font-medium transition-colors whitespace-nowrap cursor-pointer"
                     >
                       <Printer className="w-3 h-3 text-slate-500" />
                       <span>Print</span>
                     </button>
                     <button
                       type="button"
-                      className="hidden md:inline-flex items-center gap-1 px-2.5 py-1 rounded border border-slate-200 text-slate-600 hover:text-slate-900 text-[11px] font-medium transition-colors whitespace-nowrap"
+                      className="hidden md:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-200 text-slate-600 hover:text-slate-900 text-[11px] font-medium transition-colors whitespace-nowrap cursor-pointer"
                     >
                       <Mail className="w-3 h-3 text-slate-500" />
                       <span>Email</span>
                     </button>
                     <Link
                       href="/builder"
-                      className="inline-flex items-center gap-1 px-2.5 py-1 rounded border border-slate-200 text-slate-700 hover:text-slate-900 text-[11px] font-medium transition-colors whitespace-nowrap"
+                      className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-slate-200 text-slate-700 hover:text-slate-900 text-[11px] font-medium transition-colors whitespace-nowrap"
                     >
                       <Download className="w-3 h-3 text-slate-500" />
                       <span>PDF</span>
                     </Link>
                     <Link
                       href="/start"
-                      className="inline-flex items-center justify-center px-2.5 sm:px-3.5 py-1 rounded bg-[#5054ec] hover:bg-[#4347db] text-white font-semibold text-[11px] sm:text-[11.5px] transition-colors shadow-2xs whitespace-nowrap"
+                      className="inline-flex items-center justify-center px-3 sm:px-3.5 py-1.5 rounded-lg bg-[#4a4df2] hover:bg-[#3d40e0] text-white font-semibold text-[11px] sm:text-[11.5px] transition-colors shadow-2xs whitespace-nowrap"
                     >
                       Save &amp; next
                     </Link>
@@ -305,7 +323,7 @@ export default function FeatureTabsSection() {
                     <Edit2 className="w-2.5 h-2.5 text-[#5054ec] shrink-0" />
                   </div>
 
-                  {/* Mobile Compact Color Swatch Strip (< sm) so CV Sheet gets full width below */}
+                  {/* Mobile Compact Color Swatch Strip (< sm) */}
                   <div className="flex sm:hidden items-center gap-1.5">
                     {['#4a4df2', '#10b981', '#0f172a', '#dc2626', '#2563eb'].map((hex) => (
                       <button
@@ -332,14 +350,14 @@ export default function FeatureTabsSection() {
                       <button
                         type="button"
                         aria-label="Zoom out preview"
-                        className="text-slate-400 hover:text-slate-700 font-bold px-0.5"
+                        className="text-slate-400 hover:text-slate-700 font-bold px-0.5 cursor-pointer"
                       >
                         <Minus className="w-2.5 h-2.5" />
                       </button>
                       <button
                         type="button"
                         aria-label="Zoom in preview"
-                        className="text-slate-400 hover:text-slate-700 font-bold px-0.5"
+                        className="text-slate-400 hover:text-slate-700 font-bold px-0.5 cursor-pointer"
                       >
                         <Plus className="w-2.5 h-2.5" />
                       </button>
@@ -348,11 +366,11 @@ export default function FeatureTabsSection() {
                 </div>
 
                 {/* 3. Main Workspace: Full-Width Crisp CV on <sm, Side-by-Side Drawer + CV on sm+ */}
-                <div className="p-2.5 sm:p-4 pb-12 sm:pb-13 bg-[#edf2fb] flex gap-3 sm:gap-4 relative min-h-[370px] sm:min-h-[470px]">
-                  {/* Left Drawer: Design & Formatting (sm+ only so narrow phones never crush the CV sheet) */}
-                  <div className="hidden sm:block w-[155px] bg-white rounded-lg border border-slate-200 p-2.5 space-y-2.5 shadow-sm text-slate-800 shrink-0 text-[10px]">
-                    <div className="flex items-center justify-between border-b border-slate-100 pb-1">
-                      <span className="font-semibold text-[10.5px] text-slate-800">Formatting</span>
+                <div className="p-3 sm:p-4 pb-12 sm:pb-14 bg-[#edf2fb] flex gap-3 sm:gap-4 relative min-h-[380px] sm:min-h-[480px]">
+                  {/* Left Drawer: Design & Formatting */}
+                  <div className="hidden sm:block w-[160px] bg-white rounded-xl border border-slate-200 p-3 space-y-2.5 shadow-xs text-slate-800 shrink-0 text-[10px]">
+                    <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
+                      <span className="font-semibold text-[11px] text-slate-800">Formatting</span>
                       <X className="w-3 h-3 text-slate-400" />
                     </div>
 
@@ -389,7 +407,7 @@ export default function FeatureTabsSection() {
                     </div>
 
                     {/* Spacing & Sizing Sliders */}
-                    <div className="space-y-1.5 border-t border-slate-100 pt-1.5">
+                    <div className="space-y-2 border-t border-slate-100 pt-2">
                       <div>
                         <div className="flex items-center justify-between text-[9px] text-slate-600 mb-0.5">
                           <span>Line height</span>
@@ -404,6 +422,7 @@ export default function FeatureTabsSection() {
                           step="0.05"
                           value={lineSpacing}
                           onChange={(e) => setLineSpacing(parseFloat(e.target.value))}
+                          aria-label="Line spacing"
                           className="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#5054ec]"
                         />
                       </div>
@@ -422,6 +441,7 @@ export default function FeatureTabsSection() {
                           step="0.5"
                           value={fontSize}
                           onChange={(e) => setFontSize(parseFloat(e.target.value))}
+                          aria-label="Font size"
                           className="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#5054ec]"
                         />
                       </div>
@@ -429,9 +449,9 @@ export default function FeatureTabsSection() {
                   </div>
 
                   {/* Center CV Document Sheet: Elsa Manet */}
-                  <div className="flex-1 bg-white rounded-lg shadow-md border border-slate-200 p-3 sm:p-4 text-[8.5px] leading-tight space-y-2.5 overflow-hidden flex flex-col justify-between min-w-0">
+                  <div className="flex-1 bg-white rounded-xl shadow-sm border border-slate-200 p-3 sm:p-4 text-[8.5px] leading-tight space-y-2.5 overflow-hidden flex flex-col justify-between min-w-0">
                     <div>
-                      {/* Header Section with Local Candidate Portrait */}
+                      {/* Header Section with Candidate Portrait */}
                       <div className="flex items-start gap-2.5 pb-2.5 border-b border-slate-100">
                         <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden bg-[#eef2ff] border border-slate-200 shrink-0 relative">
                           <Image
@@ -564,8 +584,8 @@ export default function FeatureTabsSection() {
                     </div>
                   </div>
 
-                  {/* 4. Floating Bottom Dock Bar — Responsive single-line labels */}
-                  <div className="absolute bottom-2 sm:bottom-3 left-1/2 -translate-x-1/2 bg-[#edf0fd] border border-indigo-200/80 rounded-xl p-1 shadow-lg flex items-center gap-1 z-20 max-w-[calc(100%-16px)]">
+                  {/* 4. Floating Bottom Dock Bar */}
+                  <div className="absolute bottom-2.5 sm:bottom-3 left-1/2 -translate-x-1/2 bg-[#edf0fd] border border-indigo-200/80 rounded-xl p-1 shadow-md flex items-center gap-1 z-20 max-w-[calc(100%-16px)]">
                     <button
                       type="button"
                       onClick={() => setActiveDock('templates')}
@@ -611,10 +631,10 @@ export default function FeatureTabsSection() {
             </div>
 
             {/* Mobile Primary CTA below interactive preview */}
-            <div className="lg:hidden mt-5">
+            <div className="lg:hidden mt-6">
               <Link
                 href="/start"
-                className="w-full min-h-[50px] inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-[#5054ec] hover:bg-[#4347db] text-white font-semibold text-base shadow-sm transition-all active:scale-[0.99] whitespace-nowrap"
+                className="w-full min-h-[52px] inline-flex items-center justify-center px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#4a4df2] to-[#6366f1] hover:from-[#3d40e0] hover:to-[#4f46e5] text-white font-bold text-base shadow-[0_8px_25px_rgba(74,77,242,0.32)] transition-all active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4a4df2] whitespace-nowrap"
               >
                 Create my CV
               </Link>
@@ -624,13 +644,13 @@ export default function FeatureTabsSection() {
           {/* RIGHT (Desktop lg+): Headline, Description, CTA, and Carousel Arrows */}
           <div className="hidden lg:block lg:col-span-5 text-left space-y-6">
             <div className="space-y-4">
-              <span className="text-xs font-semibold text-[#4a4df2] tabular-nums">
+              <span className="text-xs font-bold text-[#4a4df2] uppercase tracking-wider tabular-nums">
                 Feature {activeTab + 1} of {tabs.length}
               </span>
-              <h3 className="text-3xl sm:text-4xl lg:text-[42px] font-bold text-slate-950 tracking-tight leading-[1.12] [text-wrap:balance]">
+              <h3 className="text-3xl sm:text-4xl lg:text-[40px] font-bold text-slate-950 tracking-tight leading-[1.12] [text-wrap:balance]">
                 {currentTab.headline}
               </h3>
-              <p className="text-base sm:text-[18px] text-slate-600 font-normal leading-relaxed max-w-md">
+              <p className="text-base sm:text-lg text-slate-600 font-normal leading-[1.65] max-w-md">
                 {currentTab.description}
               </p>
             </div>
@@ -638,17 +658,17 @@ export default function FeatureTabsSection() {
             <div className="pt-2">
               <Link
                 href="/start"
-                className="min-h-[52px] inline-flex items-center justify-center px-8 py-3.5 rounded-xl bg-[#5054ec] hover:bg-[#4347db] text-white font-semibold text-[17px] shadow-sm transition-all active:scale-[0.99] whitespace-nowrap"
+                className="min-h-[52px] inline-flex items-center justify-center px-8 py-3.5 rounded-xl bg-gradient-to-r from-[#4a4df2] to-[#6366f1] hover:from-[#3d40e0] hover:to-[#4f46e5] text-white font-bold text-base shadow-[0_8px_25px_rgba(74,77,242,0.32)] hover:shadow-[0_12px_28px_rgba(74,77,242,0.42)] hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4a4df2] whitespace-nowrap"
               >
                 Create my CV
               </Link>
             </div>
 
-            <div className="flex items-center gap-3.5 pt-4">
+            <div className="flex items-center gap-3 pt-3">
               <button
                 type="button"
                 onClick={handlePrev}
-                className="w-12 h-12 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 flex items-center justify-center transition-all shadow-2xs hover:shadow-xs active:scale-95 cursor-pointer"
+                className="w-11 h-11 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 flex items-center justify-center transition-all duration-150 shadow-2xs hover:shadow-xs hover:-translate-y-0.5 active:translate-y-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4a4df2]"
                 aria-label="Previous feature"
               >
                 <ChevronLeft className="w-5 h-5 text-slate-800" strokeWidth={2.2} />
@@ -656,7 +676,7 @@ export default function FeatureTabsSection() {
               <button
                 type="button"
                 onClick={handleNext}
-                className="w-12 h-12 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 flex items-center justify-center transition-all shadow-2xs hover:shadow-xs active:scale-95 cursor-pointer"
+                className="w-11 h-11 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 flex items-center justify-center transition-all duration-150 shadow-2xs hover:shadow-xs hover:-translate-y-0.5 active:translate-y-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4a4df2]"
                 aria-label="Next feature"
               >
                 <ChevronRight className="w-5 h-5 text-slate-800" strokeWidth={2.2} />
