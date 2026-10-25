@@ -4,10 +4,17 @@ import { A4_WIDTH_PX, A4_HEIGHT_PX, A4_WIDTH_MM, A4_HEIGHT_MM, CV } from '@/type
 import { useCvStore } from '@/store/useCvStore';
 import { cvStoreToCv } from '@/lib/cvAdapter';
 
+export interface PdfProgressInfo {
+  stage: 'Rendering layout' | 'Optimizing quality' | 'Finalizing' | 'Downloaded';
+  percent: number;
+  message: string;
+  toString?: () => string;
+}
+
 export interface ExportPdfOptions {
   fileName?: string;
   cv?: CV;
-  onProgress?: (message: string) => void;
+  onProgress?: (info: PdfProgressInfo | string, percent?: number) => void;
 }
 
 let isGenerating = false;
@@ -883,8 +890,26 @@ export async function downloadCvPdf(options: ExportPdfOptions = {}): Promise<boo
     return false;
   }
 
+  const notify = (
+    stage: 'Rendering layout' | 'Optimizing quality' | 'Finalizing' | 'Downloaded',
+    percent: number,
+    message?: string
+  ) => {
+    const text = message || `${stage}...`;
+    if (!onProgress) return;
+    const info: PdfProgressInfo = {
+      stage,
+      percent,
+      message: text,
+      toString() {
+        return text;
+      },
+    };
+    onProgress(info, percent);
+  };
+
   isGenerating = true;
-  onProgress?.('Preparing A4 PDF...');
+  notify('Rendering layout', 15);
 
   try {
     // 1. Flush pending React state updates (e.g. auto-committed skill/language/cert inputs)
@@ -982,10 +1007,14 @@ export async function downloadCvPdf(options: ExportPdfOptions = {}): Promise<boo
       const totalPages = pageElements.length;
 
       for (let i = 0; i < totalPages; i++) {
-        onProgress?.(
+        const pageRatio = i / totalPages;
+        const pageStepBase = 25 + Math.round(pageRatio * 45);
+        notify(
+          'Rendering layout',
+          pageStepBase,
           totalPages > 1
-            ? `Rendering page ${i + 1} of ${totalPages}...`
-            : 'Generating A4 PDF...'
+            ? `Rendering layout (Page ${i + 1}/${totalPages})...`
+            : 'Rendering layout...'
         );
 
         stagingContainer.innerHTML = '';
@@ -1057,6 +1086,14 @@ export async function downloadCvPdf(options: ExportPdfOptions = {}): Promise<boo
         stagingContainer.appendChild(styleProbe);
 
         await prepareImagesForCanvas(pageClone);
+
+        notify(
+          'Optimizing quality',
+          Math.min(85, pageStepBase + 25),
+          totalPages > 1
+            ? `Optimizing quality (Page ${i + 1}/${totalPages})...`
+            : 'Optimizing quality...'
+        );
 
         // Bound html2canvas per-page execution so off-screen iframe resources can never deadlock
         const abortController = new AbortController();
@@ -1188,12 +1225,12 @@ export async function downloadCvPdf(options: ExportPdfOptions = {}): Promise<boo
         );
       }
 
-      onProgress?.('Saving PDF...');
+      notify('Finalizing', 92);
       const saved = triggerPdfBlobDownload(pdf, sanitizedFileName);
       if (!saved) {
         return generateVectorFallbackPdf(sanitizedFileName, customCv);
       }
-      onProgress?.('Download complete!');
+      notify('Downloaded', 100, 'Downloaded!');
       return true;
     } finally {
       if (stagingContainer.parentNode) {

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Education } from '@/store/useCvStore';
+import WordCountBadge from '@/components/common/WordCountBadge';
 import {
   X,
   Sparkles,
@@ -274,9 +275,12 @@ export default function EducationModal({
                 </p>
               </div>
 
-              <p className="text-sm font-medium text-slate-800">
-                Description (optional):
-              </p>
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-sm font-medium text-slate-800">
+                  Description (optional):
+                </p>
+                <WordCountBadge text={description} min={15} max={60} />
+              </div>
 
               <div className="rounded-xl border border-slate-300 overflow-hidden bg-white shadow-2xs focus-within:border-[#4348F2] focus-within:ring-1 focus-within:ring-[#4348F2] transition-all">
                 <div className="px-3 py-2 border-b border-slate-200 flex items-center gap-1 text-slate-700 bg-slate-50/60 flex-wrap">

@@ -7,7 +7,7 @@ export default function SeoGuideFaqSection() {
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
-    <article id="seo-guide" className="py-12 sm:py-20 md:py-26 bg-white border-t border-slate-100">
+    <article id="seo-guide" className="py-10 sm:py-16 md:py-20 bg-white border-t border-slate-100">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-left">
         {/* Main Title */}
         <div className="text-left sm:text-center mb-8 sm:mb-12">

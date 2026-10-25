@@ -8,6 +8,9 @@ import CvPreview from '@/components/builder/CvPreview';
 import TemplateModal from '@/components/builder/TemplateModal';
 import ShareModal from '@/components/builder/ShareModal';
 import LinkedInImportModal from '@/components/builder/LinkedInImportModal';
+import SaveToast from '@/components/common/SaveToast';
+import WordCountBadge from '@/components/common/WordCountBadge';
+import PdfDownloadButton from '@/components/builder/PdfDownloadButton';
 import { CV_TEMPLATES } from '@/templates/registry';
 import { SAMPLE_UK_CV } from '@/data/sampleCv';
 import { cvToCvStore, normalizeSectionOrder } from '@/lib/cvAdapter';
@@ -45,6 +48,7 @@ import {
 import { downloadCvPdf, triggerBrowserPrint } from '@/lib/pdfGenerator';
 import { downloadCvDocx } from '@/lib/docxGenerator';
 import { useSummaryRewrite } from '@/hooks/useSummaryRewrite';
+import { useBulletGenerator } from '@/hooks/useBulletGenerator';
 
 const STEPS = [
   { id: 1, label: 'Personal details', short: 'Personal' },
@@ -241,6 +245,7 @@ export default function BuilderPage() {
     undoRewrite: handleUndoSummaryRewrite,
     clearError: clearSummaryRewriteError,
   } = useSummaryRewrite();
+  const bulletGen = useBulletGenerator();
 
   const contact = store.contact;
   const activeTemplate =
@@ -519,6 +524,25 @@ export default function BuilderPage() {
     store.updateExperience(expId, { description: nextValue });
   };
 
+  const handleGenerateExperienceBullet = async (exp: {
+    id: string;
+    jobTitle: string;
+    employer: string;
+    description?: string;
+  }) => {
+    await bulletGen.generateBullet({
+      expId: exp.id,
+      jobTitle: exp.jobTitle,
+      employer: exp.employer,
+      currentDescription: exp.description,
+      onSuccess: (newBullet) => {
+        const trimmed = (exp.description ?? '').trimEnd();
+        const updated = trimmed ? `${trimmed}\n${newBullet}` : newBullet;
+        store.updateExperience(exp.id, { description: updated });
+      },
+    });
+  };
+
   const handlePagesChange = useCallback((count: number) => {
     setTotalPages((prev) => (prev === count ? prev : count));
     setActivePreviewPage((p) => Math.min(p, count));
@@ -742,34 +766,12 @@ export default function BuilderPage() {
               )}
             </button>
 
-            <button
-              type="button"
-              onClick={handleDownloadPdf}
-              disabled={isDownloading}
-              className={`min-h-[40px] sm:min-h-[42px] flex items-center justify-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2 rounded-xl text-white text-xs sm:text-sm font-semibold shadow-[0_4px_14px_rgba(75,77,237,0.22)] transition-all cursor-pointer active:scale-[0.98] disabled:opacity-70 whitespace-nowrap shrink-0 ${
-                downloadDone
-                  ? 'bg-emerald-600 hover:bg-emerald-700'
-                  : 'bg-[#4B4DED] hover:bg-[#3D3FC9]'
-              }`}
-            >
-              {isDownloading ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin shrink-0" />
-                  <span>Exporting...</span>
-                </>
-              ) : downloadDone ? (
-                <>
-                  <Check className="w-4 h-4 shrink-0" />
-                  <span>Downloaded</span>
-                </>
-              ) : (
-                <>
-                  <Download className="w-4 h-4 shrink-0" />
-                  <span className="sm:hidden">PDF</span>
-                  <span className="hidden sm:inline">Download PDF</span>
-                </>
-              )}
-            </button>
+            <PdfDownloadButton
+              fileName={resolvedFileName}
+              onBeforeDownload={commitPendingInputs}
+              variant="header"
+              label="Download PDF"
+            />
           </div>
         </div>
 
@@ -1372,32 +1374,89 @@ export default function BuilderPage() {
                             </div>
 
                             <div>
-                              <div className="flex items-center justify-between gap-2 mb-1.5">
-                                <label className="text-[11px] font-semibold text-slate-600">
-                                  Key Achievements (one bullet per line)
-                                </label>
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    handleInsertExperienceBullet(exp.id, exp.description ?? '')
-                                  }
-                                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#EEF1FF] hover:bg-[#E0E5FA] text-[#4B4DED] text-[11px] font-semibold transition-colors cursor-pointer shrink-0"
-                                >
-                                  <ListPlus className="w-3.5 h-3.5" />
-                                  <span>+ Bullet</span>
-                                </button>
+                              <div className="flex items-center justify-between gap-2 mb-1.5 flex-wrap">
+                                <div className="flex items-center gap-2 min-w-0">
+                                  <label className="text-[11px] font-semibold text-slate-600 truncate">
+                                    Key Achievements (one bullet per line)
+                                  </label>
+                                  <WordCountBadge text={exp.description} min={30} max={120} />
+                                </div>
+                                <div className="flex items-center gap-1.5 shrink-0">
+                                  <button
+                                    type="button"
+                                    onClick={() => handleGenerateExperienceBullet(exp)}
+                                    disabled={bulletGen.generatingMap[exp.id]}
+                                    className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition-all cursor-pointer shrink-0 disabled:opacity-70 disabled:cursor-wait ${
+                                      bulletGen.successMap[exp.id]
+                                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                        : 'bg-[#EEF1FF] hover:bg-[#4B4DED] text-[#4B4DED] hover:text-white border border-[#4B4DED]/25 shadow-2xs'
+                                    }`}
+                                    title={
+                                      exp.jobTitle?.trim()
+                                        ? 'AI: Suggest a high-impact, results-driven achievement statement'
+                                        : 'Enter a Job Title above to generate tailored achievement statements'
+                                    }
+                                  >
+                                    {bulletGen.generatingMap[exp.id] ? (
+                                      <>
+                                        <Loader2 className="w-3.5 h-3.5 animate-spin shrink-0" />
+                                        <span>Generating...</span>
+                                      </>
+                                    ) : bulletGen.successMap[exp.id] ? (
+                                      <>
+                                        <Check className="w-3.5 h-3.5 stroke-[2.5] shrink-0" />
+                                        <span>Added</span>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <Sparkles className="w-3.5 h-3.5 shrink-0" />
+                                        <span>Generate bullet point</span>
+                                      </>
+                                    )}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      handleInsertExperienceBullet(exp.id, exp.description ?? '')
+                                    }
+                                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-semibold transition-colors cursor-pointer shrink-0"
+                                  >
+                                    <ListPlus className="w-3.5 h-3.5" />
+                                    <span>+ Bullet</span>
+                                  </button>
+                                </div>
                               </div>
                               <textarea
                                 value={exp.description ?? ''}
-                                onChange={(e) =>
-                                  store.updateExperience(exp.id, { description: e.target.value })
-                                }
+                                onChange={(e) => {
+                                  if (bulletGen.errorMap[exp.id]) bulletGen.clearError(exp.id);
+                                  store.updateExperience(exp.id, { description: e.target.value });
+                                }}
                                 placeholder={
                                   '• Spearheaded regional product launch generating £1.4M ARR\n• Reduced onboarding turnaround by 32% across 5 teams'
                                 }
                                 rows={4}
                                 className={inputClass}
                               />
+                              {bulletGen.errorMap[exp.id] && (
+                                <div
+                                  role="alert"
+                                  className="mt-1.5 px-3 py-2 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-center justify-between gap-2"
+                                >
+                                  <div className="flex items-center gap-1.5 min-w-0">
+                                    <AlertCircle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                                    <span className="truncate">{bulletGen.errorMap[exp.id]}</span>
+                                  </div>
+                                  <button
+                                    type="button"
+                                    onClick={() => bulletGen.clearError(exp.id)}
+                                    className="text-amber-600 hover:text-amber-800 p-0.5 cursor-pointer"
+                                    title="Dismiss notice"
+                                  >
+                                    <X className="w-3 h-3" />
+                                  </button>
+                                </div>
+                              )}
                             </div>
                           </div>
                         )}
@@ -1748,14 +1807,17 @@ export default function BuilderPage() {
                   <div>
                     <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                       <div>
-                        <label
-                          htmlFor="builder-step5-summary-textarea"
-                          className="text-xs font-semibold text-[#0F1B4D] block"
-                        >
-                          Professional Profile Statement
-                        </label>
+                        <div className="flex items-center gap-2">
+                          <label
+                            htmlFor="builder-step5-summary-textarea"
+                            className="text-xs font-semibold text-[#0F1B4D] block"
+                          >
+                            Professional Profile Statement
+                          </label>
+                          <WordCountBadge count={summaryWordCount} min={40} max={80} />
+                        </div>
                         <span className="text-[11px] text-slate-400 tabular-nums">
-                          {summaryWordCount} words · {summaryText.length} chars
+                          Recruitment standard: 40–80 words · {summaryText.length} chars
                         </span>
                       </div>
 
@@ -2128,14 +2190,17 @@ export default function BuilderPage() {
                   <div>
                     <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                       <div>
-                        <label
-                          htmlFor="builder-finalize-summary-textarea"
-                          className="text-xs font-semibold text-[#0F1B4D] block"
-                        >
-                          Professional Summary
-                        </label>
+                        <div className="flex items-center gap-2">
+                          <label
+                            htmlFor="builder-finalize-summary-textarea"
+                            className="text-xs font-semibold text-[#0F1B4D] block"
+                          >
+                            Professional Summary
+                          </label>
+                          <WordCountBadge count={summaryWordCount} min={40} max={80} />
+                        </div>
                         <span className="text-[11px] text-slate-400 tabular-nums">
-                          {summaryWordCount} words · {summaryText.length} chars
+                          Recruitment standard: 40–80 words · {summaryText.length} chars
                         </span>
                       </div>
 
@@ -2364,6 +2429,12 @@ export default function BuilderPage() {
                                   className={inputClass}
                                 />
                               </div>
+                              <div className="flex items-center justify-between gap-2 pt-0.5">
+                                <label className="text-[11px] font-semibold text-slate-600">
+                                  Project Outcomes &amp; Highlights
+                                </label>
+                                <WordCountBadge text={proj.description} min={15} max={60} />
+                              </div>
                               <textarea
                                 value={proj.description ?? ''}
                                 onChange={(e) =>
@@ -2464,6 +2535,12 @@ export default function BuilderPage() {
                                   <Trash2 className="w-4 h-4" />
                                 </button>
                               </div>
+                              <div className="flex items-center justify-between gap-2 pt-0.5">
+                                <label className="text-[11px] font-semibold text-slate-600">
+                                  Section Content
+                                </label>
+                                <WordCountBadge text={sec.content} min={20} max={80} />
+                              </div>
                               <textarea
                                 value={sec.content ?? ''}
                                 onChange={(e) =>
@@ -2489,13 +2566,21 @@ export default function BuilderPage() {
                             <span>Include References section on CV</span>
                           </label>
                           {store.includeReferences && (
-                            <textarea
-                              value={store.referencesText ?? ''}
-                              onChange={(e) => store.setReferencesText(e.target.value)}
-                              placeholder="References available on request"
-                              rows={2}
-                              className={inputClass}
-                            />
+                            <div className="space-y-1">
+                              <div className="flex items-center justify-between gap-2">
+                                <span className="text-[11px] font-semibold text-slate-600">
+                                  References Statement
+                                </span>
+                                <WordCountBadge text={store.referencesText} max={25} />
+                              </div>
+                              <textarea
+                                value={store.referencesText ?? ''}
+                                onChange={(e) => store.setReferencesText(e.target.value)}
+                                placeholder="References available on request"
+                                rows={2}
+                                className={inputClass}
+                              />
+                            </div>
                           )}
                         </div>
                       </div>
@@ -3075,31 +3160,12 @@ export default function BuilderPage() {
 
           {/* Mobile Quick Export Card inside Preview Tab */}
           <div className="lg:hidden w-full mt-4 p-3.5 rounded-2xl bg-white border border-[#E8EAF5] flex items-center gap-2.5 shadow-2xs">
-            <button
-              type="button"
-              onClick={handleDownloadPdf}
-              disabled={isDownloading}
-              className={`flex-1 min-h-[46px] px-4 py-2.5 rounded-xl text-white text-sm font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-[0.99] disabled:opacity-70 ${
-                downloadDone ? 'bg-emerald-600' : 'bg-[#4B4DED] hover:bg-[#3D3FC9]'
-              }`}
-            >
-              {isDownloading ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  <span>Generating A4 PDF...</span>
-                </>
-              ) : downloadDone ? (
-                <>
-                  <Check className="w-4 h-4" />
-                  <span>PDF Downloaded</span>
-                </>
-              ) : (
-                <>
-                  <Download className="w-4 h-4" />
-                  <span>Download A4 PDF</span>
-                </>
-              )}
-            </button>
+            <PdfDownloadButton
+              fileName={resolvedFileName}
+              onBeforeDownload={commitPendingInputs}
+              variant="mobile"
+              label="Download A4 PDF"
+            />
             <button
               type="button"
               onClick={handleBrowserPrint}
@@ -3193,6 +3259,9 @@ export default function BuilderPage() {
           onImportSuccess={handleLinkedInImportSuccess}
         />
       )}
+
+      {/* Subtle Auto-Save Confirmation Toast */}
+      <SaveToast />
     </div>
   );
 }

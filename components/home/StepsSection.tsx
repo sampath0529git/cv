@@ -6,7 +6,7 @@ import { Upload, Edit3, Sparkles, FileText, MousePointer, Mail, Printer } from '
 
 export default function StepsSection() {
   return (
-    <section id="steps-section" className="py-12 sm:py-16 md:py-24 bg-[#f8faff] sm:bg-white border-t border-slate-100/80">
+    <section id="steps-section" className="py-10 sm:py-16 md:py-20 bg-[#f8faff] sm:bg-white border-t border-slate-100/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Heading */}
         <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">

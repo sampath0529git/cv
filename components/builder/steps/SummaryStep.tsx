@@ -19,6 +19,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { useSummaryRewrite } from '@/hooks/useSummaryRewrite';
+import WordCountBadge from '@/components/common/WordCountBadge';
 
 interface SummaryStepProps {
   mode?: 'intro' | 'form';
@@ -148,6 +149,7 @@ export default function SummaryStep({ mode = 'form' }: SummaryStepProps) {
               <Redo2 className="w-4 h-4 stroke-[2]" />
             </button>
           </div>
+          <WordCountBadge text={summary} min={40} max={80} />
         </div>
 
         {/* Textarea */}
@@ -163,7 +165,10 @@ export default function SummaryStep({ mode = 'form' }: SummaryStepProps) {
             className="w-full text-base sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none resize-y leading-relaxed font-sans bg-transparent"
           />
 
-          {/* AI Rewrite action inside textarea footer */}
+          {/* Word count & AI Rewrite action inside textarea footer */}
+          <div className="absolute left-4 bottom-4 flex items-center sm:hidden">
+            <WordCountBadge text={summary} min={40} max={80} />
+          </div>
           <div className="absolute right-4 bottom-4 flex items-center gap-2">
             {canUndo && !isRewriting && (
               <button

@@ -53,7 +53,7 @@ export default function TopNav() {
           </Link>
 
           <Link
-            href="#templates-section"
+            href="/templates"
             className="flex items-center gap-2 text-[15px] font-medium text-slate-800 hover:text-[#4a4df2] transition-colors py-1 whitespace-nowrap shrink-0"
           >
             <LayoutGrid className="w-[17px] h-[17px] text-[#4a4df2] shrink-0" />
@@ -68,46 +68,13 @@ export default function TopNav() {
             <span>Import CV</span>
           </Link>
 
-          {/* Features Dropdown */}
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => setFeaturesDropdownOpen(!featuresDropdownOpen)}
-              onBlur={() => setTimeout(() => setFeaturesDropdownOpen(false), 200)}
-              className="flex items-center gap-1.5 text-[15px] font-medium text-slate-800 hover:text-[#4a4df2] transition-colors py-1 cursor-pointer whitespace-nowrap shrink-0"
-              aria-expanded={featuresDropdownOpen}
-            >
-              <span>Features</span>
-              <ChevronDown
-                className={`w-3.5 h-3.5 text-slate-600 transition-transform duration-200 ${
-                  featuresDropdownOpen ? 'rotate-180' : ''
-                }`}
-              />
-            </button>
-
-            {featuresDropdownOpen && (
-              <div className="absolute top-full left-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-100 p-2 z-50">
-                <Link
-                  href="#cv-builder-section"
-                  className="block px-3 py-2.5 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-[#4a4df2]"
-                >
-                  CV Builder &amp; Live Editor
-                </Link>
-                <Link
-                  href="#templates-section"
-                  className="block px-3 py-2.5 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-[#4a4df2]"
-                >
-                  Recruiter Templates
-                </Link>
-                <Link
-                  href="#seo-guide"
-                  className="block px-3 py-2.5 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-[#4a4df2]"
-                >
-                  UK CV Guide 2026
-                </Link>
-              </div>
-            )}
-          </div>
+          <Link
+            href="/blog"
+            className="flex items-center gap-2 text-[15px] font-medium text-slate-800 hover:text-[#4a4df2] transition-colors py-1 whitespace-nowrap shrink-0"
+          >
+            <BookOpen className="w-[17px] h-[17px] text-[#4a4df2] shrink-0" />
+            <span>Blog</span>
+          </Link>
         </nav>
 
         {/* Zone 3: Desktop Language + Account Action */}
@@ -223,7 +190,7 @@ export default function TopNav() {
               </Link>
 
               <Link
-                href="#templates-section"
+                href="/templates"
                 onClick={() => setMobileMenuOpen(false)}
                 className="min-h-[52px] flex items-center justify-between px-2 py-3 text-sm font-semibold text-slate-900 active:bg-slate-50 rounded-xl"
               >
@@ -237,15 +204,15 @@ export default function TopNav() {
               </Link>
 
               <Link
-                href="#features-section"
+                href="/blog"
                 onClick={() => setMobileMenuOpen(false)}
                 className="min-h-[52px] flex items-center justify-between px-2 py-3 text-sm font-semibold text-slate-900 active:bg-slate-50 rounded-xl"
               >
                 <span className="flex items-center gap-3">
                   <span className="w-9 h-9 rounded-xl bg-[#eef2ff] text-[#4a4df2] flex items-center justify-center shrink-0">
-                    <FileText className="w-4 h-4" />
+                    <BookOpen className="w-4 h-4" />
                   </span>
-                  <span>Cover Letter &amp; Tools</span>
+                  <span>Career Blog &amp; Advice</span>
                 </span>
                 <ChevronRight className="w-4 h-4 text-slate-400" />
               </Link>

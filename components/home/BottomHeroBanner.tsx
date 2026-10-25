@@ -4,7 +4,7 @@ import { ArrowRight } from 'lucide-react';
 
 export default function BottomHeroBanner() {
   return (
-    <section className="bg-[#0b0e20] text-white py-12 sm:py-18 md:py-24 relative overflow-hidden">
+    <section className="bg-[#0b0e20] text-white py-10 sm:py-16 md:py-20 relative overflow-hidden">
       {/* Subtle curved vector line art in background */}
       <svg
         className="absolute inset-0 w-full h-full opacity-20 pointer-events-none"

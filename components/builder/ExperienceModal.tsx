@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react';
 import { WorkExperience } from '@/store/useCvStore';
+import WordCountBadge from '@/components/common/WordCountBadge';
+import { useBulletGenerator } from '@/hooks/useBulletGenerator';
 import {
   X,
   Sparkles,
@@ -16,6 +18,9 @@ import {
   Undo2,
   Redo2,
   Trash2,
+  Loader2,
+  Check,
+  AlertCircle,
 } from 'lucide-react';
 
 interface ExperienceModalProps {
@@ -98,6 +103,23 @@ export default function ExperienceModal({
     initialExperience?.isCurrent ? 'Present' : initialExperience?.endDate ?? ''
   );
   const [description, setDescription] = useState(initialExperience?.description ?? '');
+
+  const bulletGen = useBulletGenerator();
+
+  const handleGenerateBullet = async () => {
+    await bulletGen.generateBullet({
+      expId: 'modal-exp',
+      jobTitle,
+      employer: companyName,
+      currentDescription: description,
+      onSuccess: (newBullet) => {
+        setDescription((prev) => {
+          const trimmed = (prev ?? '').trimEnd();
+          return trimmed ? `${trimmed}\n${newBullet}` : newBullet;
+        });
+      },
+    });
+  };
 
   // Validation
   const [hasAttemptedNext, setHasAttemptedNext] = useState(false);
@@ -320,10 +342,47 @@ export default function ExperienceModal({
                 </p>
               </div>
 
-              {/* Subtitle */}
-              <p className="text-sm font-medium text-slate-800">
-                Add 3–5 bullet points about your role and achievements:
-              </p>
+              {/* Subtitle, Word Count & Generate Action */}
+              <div className="flex items-center justify-between gap-2 flex-wrap">
+                <div className="flex items-center gap-2 min-w-0">
+                  <p className="text-sm font-medium text-slate-800 truncate">
+                    Key Achievements &amp; Outcomes:
+                  </p>
+                  <WordCountBadge text={description} min={30} max={120} />
+                </div>
+                <button
+                  type="button"
+                  onClick={handleGenerateBullet}
+                  disabled={bulletGen.generatingMap['modal-exp']}
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap disabled:opacity-70 disabled:cursor-wait ${
+                    bulletGen.successMap['modal-exp']
+                      ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                      : 'bg-[#EEF1FF] hover:bg-[#4348F2] text-[#4348F2] hover:text-white border border-[#4348F2]/25 shadow-2xs'
+                  }`}
+                  title={
+                    jobTitle.trim()
+                      ? 'AI: Suggest a high-impact, results-driven achievement statement'
+                      : 'Enter a Job Title to generate tailored achievement statements'
+                  }
+                >
+                  {bulletGen.generatingMap['modal-exp'] ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin shrink-0" />
+                      <span>Generating...</span>
+                    </>
+                  ) : bulletGen.successMap['modal-exp'] ? (
+                    <>
+                      <Check className="w-3.5 h-3.5 stroke-[2.5] shrink-0" />
+                      <span>Bullet added</span>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-3.5 h-3.5 shrink-0" />
+                      <span>Generate bullet point</span>
+                    </>
+                  )}
+                </button>
+              </div>
 
               {/* Rich formatting toolbar + Textarea */}
               <div className="rounded-xl border border-slate-300 overflow-hidden bg-white shadow-2xs focus-within:border-[#4348F2] focus-within:ring-1 focus-within:ring-[#4348F2] transition-all">
@@ -420,6 +479,26 @@ export default function ExperienceModal({
                   className="w-full p-3.5 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none min-h-[110px] resize-y leading-relaxed font-sans"
                 />
               </div>
+
+              {bulletGen.errorMap['modal-exp'] && (
+                <div
+                  role="alert"
+                  className="px-3.5 py-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-center justify-between gap-2"
+                >
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <AlertCircle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                    <span className="truncate">{bulletGen.errorMap['modal-exp']}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => bulletGen.clearError('modal-exp')}
+                    className="text-amber-600 hover:text-amber-800 p-0.5 cursor-pointer"
+                    title="Dismiss"
+                  >
+                    <X className="w-3 h-3" />
+                  </button>
+                </div>
+              )}
 
               {/* AI suggestions container */}
               <div className="rounded-xl border border-[#DCE4FD] overflow-hidden bg-[#F8FAFF]">

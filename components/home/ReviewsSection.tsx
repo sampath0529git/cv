@@ -68,7 +68,7 @@ export default function ReviewsSection() {
   );
 
   return (
-    <section className="py-12 sm:py-18 md:py-24 bg-white border-t border-slate-100">
+    <section className="py-10 sm:py-16 md:py-20 bg-white border-t border-slate-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header with Title and Rating */}
         <div className="text-center max-w-xl mx-auto space-y-3 mb-7 sm:mb-10">

@@ -19,6 +19,8 @@ import {
 import { downloadCvPdf, triggerBrowserPrint } from '@/lib/pdfGenerator';
 import { downloadCvDocx } from '@/lib/docxGenerator';
 import { useSummaryRewrite } from '@/hooks/useSummaryRewrite';
+import WordCountBadge from '@/components/common/WordCountBadge';
+import PdfDownloadButton from '@/components/builder/PdfDownloadButton';
 
 export default function FinalizeStep() {
   const {
@@ -69,7 +71,7 @@ export default function FinalizeStep() {
     try {
       const ok = await downloadCvPdf({
         fileName: resolvedFileName,
-        onProgress: (status) => setDownloadProgressText(status),
+        onProgress: (status) => setDownloadProgressText(typeof status === 'string' ? status : (status.message || status.stage)),
       });
       if (ok) {
         setDownloadSuccess(true);
@@ -137,13 +139,16 @@ export default function FinalizeStep() {
       <div className="p-5 rounded-2xl border border-slate-200 bg-white shadow-2xs space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
           <div>
-            <label
-              htmlFor="finalize-summary-textarea"
-              className="text-sm font-bold text-[#0F1B4D] flex items-center gap-2"
-            >
-              <Sparkles className="w-4 h-4 text-[#4B4DED]" />
-              <span>Professional Summary</span>
-            </label>
+            <div className="flex items-center gap-2">
+              <label
+                htmlFor="finalize-summary-textarea"
+                className="text-sm font-bold text-[#0F1B4D] flex items-center gap-2"
+              >
+                <Sparkles className="w-4 h-4 text-[#4B4DED]" />
+                <span>Professional Summary</span>
+              </label>
+              <WordCountBadge count={summaryWordCount} min={40} max={80} />
+            </div>
             <p className="text-xs text-slate-500 mt-0.5">
               Review or automatically polish your summary for stronger recruiter impact and clarity.
             </p>
@@ -314,32 +319,13 @@ export default function FinalizeStep() {
         {/* Download Buttons and Actions */}
         <div className="flex flex-col items-center sm:items-end gap-2.5 w-full sm:w-auto shrink-0">
           <div className="relative group w-full sm:w-auto flex flex-col items-center sm:items-end">
-            <button
-              type="button"
-              onClick={handleDownloadPdf}
-              disabled={isDownloading}
+            <PdfDownloadButton
+              fileName={resolvedFileName}
+              variant="hero"
+              label="Download PDF"
               onMouseEnter={() => setShowTooltip(true)}
               onMouseLeave={() => setShowTooltip(false)}
-              className="w-full sm:w-auto px-8 py-3.5 bg-[#4B4DED] hover:bg-[#3D3FC9] active:scale-98 text-white font-bold rounded-2xl shadow-[0_6px_20px_rgba(75,77,237,0.4)] flex items-center justify-center gap-2.5 transition-all cursor-pointer text-base disabled:opacity-75 disabled:cursor-wait"
-              aria-label={`Download ${resolvedFileName}`}
-            >
-              {isDownloading ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  <span className="max-w-[190px] truncate">{downloadProgressText || 'Generating PDF...'}</span>
-                </>
-              ) : downloadSuccess ? (
-                <>
-                  <Check className="w-5 h-5 text-emerald-300" />
-                  <span>Downloaded!</span>
-                </>
-              ) : (
-                <>
-                  <Download className="w-5 h-5" />
-                  <span>Download PDF</span>
-                </>
-              )}
-            </button>
+            />
 
             {/* Subtle ATS-Friendly PDF Hover Tooltip */}
             <div

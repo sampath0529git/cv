@@ -10,6 +10,7 @@ import { downloadCvPdf, triggerBrowserPrint } from '@/lib/pdfGenerator';
 import { downloadCvDocx } from '@/lib/docxGenerator';
 import { A4_WIDTH_PX } from '@/types/cv';
 import { CV_TEMPLATES } from '@/templates/registry';
+import PdfDownloadButton from '@/components/builder/PdfDownloadButton';
 import {
   Download,
   Printer,
@@ -361,34 +362,12 @@ function SharedCvWorkspace() {
               <span>Print</span>
             </button>
 
-            <button
-              type="button"
-              onClick={handleDownloadSharedPdf}
-              disabled={isDownloading}
-              className={`min-h-[40px] px-3.5 sm:px-5 py-2 rounded-xl text-white text-xs sm:text-sm font-semibold shadow-[0_4px_14px_rgba(75,77,237,0.22)] inline-flex items-center justify-center gap-1.5 sm:gap-2 transition-all cursor-pointer active:scale-[0.98] disabled:opacity-70 whitespace-nowrap shrink-0 ${
-                downloadDone
-                  ? 'bg-[#16A34A] hover:bg-[#15803D]'
-                  : 'bg-[#4B4DED] hover:bg-[#3D3FC9]'
-              }`}
-            >
-              {isDownloading ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin shrink-0" />
-                  <span>Exporting...</span>
-                </>
-              ) : downloadDone ? (
-                <>
-                  <Check className="w-4 h-4 shrink-0" />
-                  <span>Downloaded</span>
-                </>
-              ) : (
-                <>
-                  <Download className="w-4 h-4 shrink-0" />
-                  <span className="sm:hidden">PDF</span>
-                  <span className="hidden sm:inline">Download PDF</span>
-                </>
-              )}
-            </button>
+            <PdfDownloadButton
+              fileName={sanitizedFileName}
+              cv={cv}
+              variant="header"
+              label="Download PDF"
+            />
           </div>
         </div>
       </header>

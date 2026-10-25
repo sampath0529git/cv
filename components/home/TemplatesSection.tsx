@@ -51,7 +51,7 @@ export default function TemplatesSection() {
   return (
     <section
       id="templates-section"
-      className="py-14 sm:py-20 md:py-28 bg-[#090d1f] text-white relative overflow-hidden"
+      className="py-12 sm:py-18 md:py-22 bg-[#090d1f] text-white relative overflow-hidden"
     >
       {/* Subtle curved background overlay */}
       <div className="absolute bottom-0 inset-x-0 h-28 bg-[#0d122e]/60 rounded-t-[100px] pointer-events-none" />

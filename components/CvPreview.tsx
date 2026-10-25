@@ -256,7 +256,7 @@ export default function CvPreview({
     try {
       const ok = await downloadCvPdf({
         fileName: pdfFileName,
-        onProgress: (msg) => setExportProgressText(msg),
+        onProgress: (msg) => setExportProgressText(typeof msg === 'string' ? msg : (msg.message || msg.stage)),
       });
       if (ok) {
         setIsDownloadSuccess(true);
@@ -476,7 +476,7 @@ export default function CvPreview({
             : pdfFileName;
         const ok = await downloadCvPdf({
           fileName: targetName,
-          onProgress: (msg) => setExportProgressText(msg),
+          onProgress: (msg) => setExportProgressText(typeof msg === 'string' ? msg : (msg.message || msg.stage)),
         });
         if (ok) {
           setIsDownloadSuccess(true);

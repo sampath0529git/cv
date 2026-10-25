@@ -5,7 +5,7 @@ import { Plus, Sparkles, Check, Link as LinkIcon, FileText, CheckCircle2 } from 
 
 export default function ReasonsSection() {
   return (
-    <section className="py-12 sm:py-20 md:py-26 bg-white overflow-hidden">
+    <section className="py-10 sm:py-16 md:py-20 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Heading */}
         <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-14">
