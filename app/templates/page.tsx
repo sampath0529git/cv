@@ -158,10 +158,10 @@ export default function TemplatesPage() {
               <span>ISO A4 &bull; British &amp; Global Recruitment Formats</span>
             </div>
             <h1 className="text-3xl sm:text-5xl font-bold tracking-tight text-white max-w-3xl mx-auto leading-tight">
-              Recruiter-Approved CV Templates
+              Free CV Templates – Recruiter-Approved UK Formats
             </h1>
             <p className="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
-              Every layout is meticulously designed to pass automated ATS parsers, impress corporate recruiters, and deliver crystal-clear 300 DPI PDF exports.
+              Explore recruiter-approved free CV templates designed to pass automated ATS parsers, impress British employers, and deliver crystal-clear 300 DPI A4 PDF exports.
             </p>
 
             {/* Category Filter Pills */}

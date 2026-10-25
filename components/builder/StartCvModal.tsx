@@ -67,21 +67,12 @@ export default function StartCvModal({ isOpen, onClose, initialMode = 'default' 
 
             {/* Two Main Cards Container */}
             <div className="space-y-6 sm:space-y-7 text-left max-w-xl mx-auto">
-              {/* Card 1: Import my CV (with Recommended badge & blue bottom-left accent) */}
+              {/* Card 1: Import my CV */}
               <div
                 onClick={handleStartImport}
                 className="group relative bg-white rounded-3xl border border-slate-200 shadow-md hover:shadow-xl hover:border-[#4a4df2] transition-all duration-200 p-6 sm:p-7 flex items-center gap-5 sm:gap-6 cursor-pointer overflow-hidden"
               >
-                {/* 1. Recommended Pill Badge (Top Right) */}
-                <div className="absolute top-0 right-6 -translate-y-1/2 bg-[#131a47] text-white text-[11.5px] font-semibold px-3.5 py-1 rounded-full shadow-md flex items-center gap-1.5 z-20 border border-indigo-400/20">
-                  <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
-                  <span>Recommended</span>
-                </div>
-
-                {/* 2. Royal Blue Curved Accent Shape (Bottom Left Corner) */}
-                <div className="absolute bottom-0 left-0 w-24 h-24 bg-[#4a4df2] rounded-tr-[48px] pointer-events-none z-0 transition-transform group-hover:scale-105" />
-
-                {/* 3. Left Icon Box */}
+                {/* Left Icon Box */}
                 <div className="relative z-10 w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-[#eff3fd] flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
                   {/* Document with Arrow Import SVG */}
                   <svg
@@ -101,7 +92,7 @@ export default function StartCvModal({ isOpen, onClose, initialMode = 'default' 
                   </svg>
                 </div>
 
-                {/* 4. Right Content */}
+                {/* Right Content */}
                 <div className="relative z-10 flex-1">
                   <h3 className="text-xl sm:text-2xl font-bold text-slate-900 group-hover:text-[#4a4df2] transition-colors leading-tight">
                     Import my CV
@@ -112,18 +103,27 @@ export default function StartCvModal({ isOpen, onClose, initialMode = 'default' 
                 </div>
               </div>
 
-              {/* Card 2: From scratch (with Paintbrush icon) */}
+              {/* Card 2: From scratch (Recommended) */}
               <div
                 onClick={handleStartScratch}
                 className="group relative bg-white rounded-3xl border border-slate-200 shadow-md hover:shadow-xl hover:border-[#4a4df2] transition-all duration-200 p-6 sm:p-7 flex items-center gap-5 sm:gap-6 cursor-pointer overflow-hidden"
               >
-                {/* 1. Left Icon Box */}
-                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-[#eff3fd] flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
+                {/* 1. Recommended Pill Badge (Top Right) */}
+                <div className="absolute top-0 right-6 -translate-y-1/2 bg-[#131a47] text-white text-[11.5px] font-semibold px-3.5 py-1 rounded-full shadow-md flex items-center gap-1.5 z-20 border border-indigo-400/20">
+                  <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
+                  <span>Recommended</span>
+                </div>
+
+                {/* 2. Royal Blue Curved Accent Shape (Bottom Left Corner) */}
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-[#4a4df2] rounded-tr-[48px] pointer-events-none z-0 transition-transform group-hover:scale-105" />
+
+                {/* 3. Left Icon Box */}
+                <div className="relative z-10 w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-[#eff3fd] flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
                   <Paintbrush className="w-9 h-9 sm:w-10 sm:h-10 text-[#4a4df2]" strokeWidth={2.2} />
                 </div>
 
-                {/* 2. Right Content */}
-                <div className="flex-1">
+                {/* 4. Right Content */}
+                <div className="relative z-10 flex-1">
                   <h3 className="text-xl sm:text-2xl font-bold text-slate-900 group-hover:text-[#4a4df2] transition-colors leading-tight">
                     From scratch
                   </h3>

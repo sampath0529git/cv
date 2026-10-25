@@ -2,15 +2,13 @@ import React from 'react';
 import TopNav from '@/components/navigation/TopNav';
 import HeroSection from '@/components/home/HeroSection';
 import HiredByBar from '@/components/home/HiredByBar';
-import FeatureTabsSection from '@/components/home/FeatureTabsSection';
 import StepsSection from '@/components/home/StepsSection';
-import ReviewsSection from '@/components/home/ReviewsSection';
 import TemplatesSection from '@/components/home/TemplatesSection';
 import ReasonsSection from '@/components/home/ReasonsSection';
-import SeoGuideFaqSection from '@/components/home/SeoGuideFaqSection';
+import ReviewsSection from '@/components/home/ReviewsSection';
+import UkCvSeoSection from '@/components/home/UkCvSeoSection';
 import BottomHeroBanner from '@/components/home/BottomHeroBanner';
 import Footer from '@/components/layout/Footer';
-import ScrollToTop from '@/components/common/ScrollToTop';
 import { StartCvProvider } from '@/components/builder/StartCvContext';
 
 export default function HomePage() {
@@ -22,39 +20,33 @@ export default function HomePage() {
 
         {/* 2. Main Content Sections */}
         <main className="flex-1">
-          {/* Hero Section with primary value prop and live CV mockup */}
+          {/* Hero Section */}
           <HeroSection />
 
           {/* Hired by top employers banner */}
           <HiredByBar />
 
-          {/* Feature Showcase Tabs Section */}
-          <FeatureTabsSection />
-
-          {/* 4-Step Creation Workflow */}
+          {/* Create your CV in 4 steps + Why 1M+ users trust Makemeyour */}
           <StepsSection />
 
-          {/* Social Proof Reviews and Ratings Carousel */}
-          <ReviewsSection />
-
-          {/* Recruiter-Approved CV Templates Carousel (Dark Navy Mode) */}
+          {/* Professional Academic & Corporate CV Templates (Dark Navy) */}
           <TemplatesSection />
 
-          {/* 6 Reasons to Choose ukcvmaker */}
+          {/* 6 Reasons to Create Your CV with Makemeyour */}
           <ReasonsSection />
 
-          {/* Editorial UK SEO Guide & Structured FAQ */}
-          <SeoGuideFaqSection />
+          {/* Real Stories / Customer Testimonial Slider */}
+          <ReviewsSection />
 
-          {/* Bottom Conversion Banner */}
+          {/* UK CV Standards & Free CV Maker UK SEO Section with FAQ */}
+          <UkCvSeoSection />
+
+          {/* Bottom Callout Banner */}
           <BottomHeroBanner />
         </main>
 
-        {/* 3. Global UK Footer */}
+        {/* 3. Global Footer */}
         <Footer />
-
-        {/* Floating Scroll to Top button */}
-        <ScrollToTop />
       </div>
     </StartCvProvider>
   );

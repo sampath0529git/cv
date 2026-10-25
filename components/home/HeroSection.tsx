@@ -1,181 +1,219 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Upload } from 'lucide-react';
+import { motion } from 'motion/react';
+import { Sparkles, ArrowRight, Play, Check, Star } from 'lucide-react';
+import VideoTourModal from '@/components/home/VideoTourModal';
 
 export default function HeroSection() {
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+
   return (
-    <section
-      aria-label="MakeMyCV Hero Section"
-      className="relative overflow-hidden w-full select-none"
-      style={{
-        background: 'linear-gradient(120deg, #e1f5fc 0%, #ebf5fd 35%, #e1e8fe 75%, #d5dbfe 100%)',
-      }}
-    >
-      {/* DESKTOP FULL-BLEED SEAMLESS ARTWORK (lg and above)
-          Integrated directly into the hero section with zero separate box container */}
-      <div className="hidden lg:block absolute inset-0 w-full h-full pointer-events-none z-0">
-        <Image
-          src="/assets/hero-backdrop-clean.png"
-          alt="MakeMyCV Standout CV 3D Hero Artwork"
-          fill
-          priority
-          sizes="100vw"
-          referrerPolicy="no-referrer"
-          className="object-cover object-right xl:object-center"
+    <>
+      <section
+        aria-label="Makemeyour Hero"
+        className="relative overflow-hidden w-full bg-gradient-to-b from-[#F0F5FF] via-[#F8FAFF] to-white pt-4 sm:pt-10 lg:pt-14 pb-8 sm:pb-16 lg:pb-20 border-b border-slate-100"
+      >
+        {/* Multi-layered soft ambient glass glows */}
+        <div
+          aria-hidden="true"
+          className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-br from-blue-300/35 via-indigo-200/30 to-purple-200/25 rounded-full blur-3xl pointer-events-none -translate-y-1/3 translate-x-1/4"
         />
-        {/* Soft edge blend for extra-wide displays so background seamlessly extends */}
-        <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#e1f5fc] to-transparent pointer-events-none" />
-        <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#d5dbfe]/50 to-transparent pointer-events-none" />
-      </div>
+        <div
+          aria-hidden="true"
+          className="absolute top-1/2 left-0 w-[450px] h-[450px] bg-gradient-to-tr from-cyan-200/30 to-blue-200/20 rounded-full blur-3xl pointer-events-none -translate-y-1/2 -translate-x-1/3"
+        />
 
-      {/* Hero Content Container: 8px Scale Spacing & Max-w 1200px */}
-      <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center">
-          {/* Left Column: Social Proof, Headline, Subtitle, CTAs, Trustpilot */}
-          <div className="lg:col-span-6 xl:col-span-5 flex flex-col items-start text-left space-y-6 sm:space-y-7">
-            {/* Social Proof: 4 overlapping circle avatars + "+1 million satisfied users" */}
-            <div className="inline-flex items-center gap-3">
-              <div className="flex items-center -space-x-2.5 shrink-0">
-                <Image
-                  src="/assets/hero-avatars-clean.png"
-                  alt="MakeMyCV verified users"
-                  width={100}
-                  height={32}
-                  referrerPolicy="no-referrer"
-                  className="h-7 sm:h-8 w-auto object-contain shrink-0 drop-shadow-xs"
-                  priority
-                />
-              </div>
-              <div className="text-[13px] sm:text-[15px] font-normal text-slate-800 tracking-tight select-none">
-                <span className="text-[#4353ff] font-semibold">+1 million</span> satisfied users
-              </div>
-            </div>
-
-            {/* Hero Headline: 56–64px desktop scale, 1.06 tight line-height */}
-            <h1 className="text-[2.75rem] sm:text-[3.25rem] lg:text-[56px] xl:text-[62px] font-black text-slate-950 tracking-[-0.035em] leading-[1.06] [text-wrap:balance]">
-              Create a<br />
-              standout CV<br />
-              in minutes
-            </h1>
-
-            {/* Subheading: 16–18px, relaxed 1.65 line-height */}
-            <p className="text-base sm:text-lg text-slate-600 font-normal leading-[1.65] max-w-[480px]">
-              Build an ATS-ready British or international CV with recruiter-approved templates, live A4 preview, and instant PDF export.
-            </p>
-
-            {/* Action Buttons: Primary (Gradient with soft shadow) & Secondary (Ghost outline) */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 sm:gap-4 w-full sm:w-auto pt-1 sm:pt-2">
-              {/* PRIMARY CTA: Create my CV (52px height, focus ring, hover lift) */}
-              <Link
-                href="/start"
-                className="min-h-[52px] sm:min-h-[54px] inline-flex items-center justify-center px-8 sm:px-9 py-3.5 rounded-2xl bg-gradient-to-r from-[#4452fe] via-[#4d5cff] to-[#5b66f7] hover:from-[#3745ea] hover:to-[#4e57eb] text-white font-semibold text-base sm:text-[17px] shadow-[0_10px_24px_rgba(68,82,254,0.32)] hover:shadow-[0_14px_30px_rgba(68,82,254,0.42)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4452fe] focus-visible:ring-offset-2 whitespace-nowrap"
+        <div className="relative z-10 max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center">
+            {/* Left Column: Value Prop, Headline, Subtitle, CTAs, Social Proof */}
+            <div className="lg:col-span-6 xl:col-span-6 flex flex-col items-start text-left space-y-3 sm:space-y-4 lg:space-y-6">
+              {/* Frosted Glass Badge: AI POWERED FREE CV MAKER UK */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45, delay: 0.02, ease: [0.22, 1, 0.36, 1] }}
+                className="inline-flex items-center gap-1.5 sm:gap-2 px-3.5 py-1.5 rounded-full bg-white/70 backdrop-blur-xl border border-white/80 text-[#2563EB] text-[10.5px] sm:text-xs font-semibold shadow-[0_4px_16px_rgba(37,99,235,0.08),inset_0_1px_1px_rgba(255,255,255,0.95)]"
               >
-                Create my CV
-              </Link>
+                <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#2563EB]" />
+                <span className="tracking-wide uppercase text-[10px] sm:text-[11px]">AI POWERED FREE CV MAKER UK</span>
+              </motion.div>
 
-              {/* SECONDARY CTA: Import my CV (52px height, ghost outline, focus ring) */}
-              <Link
-                href="/import"
-                className="min-h-[52px] sm:min-h-[54px] inline-flex items-center justify-center gap-2.5 px-7 sm:px-8 py-3.5 rounded-2xl bg-white hover:bg-slate-50 text-slate-800 font-semibold text-base sm:text-[17px] border border-slate-200/90 hover:border-slate-300 shadow-xs hover:shadow-sm hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4452fe] focus-visible:ring-offset-2 whitespace-nowrap"
+              {/* Main Headline */}
+              <motion.h1
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.55, delay: 0.08, ease: [0.22, 1, 0.36, 1] }}
+                className="text-[32px] xs:text-[36px] sm:text-5xl lg:text-[58px] xl:text-[62px] font-extrabold text-[#0B112C] tracking-tight leading-[1.12] sm:leading-[1.08] [text-wrap:balance]"
               >
-                <Upload className="w-5 h-5 text-slate-800 shrink-0 stroke-[2.2]" />
-                <span>Import my CV</span>
-              </Link>
-            </div>
-
-            {/* Trustpilot EXCELLENT 5-Star Rating Widget */}
-            <div
-              className="pt-2 sm:pt-3 flex items-center gap-3 select-none"
-              aria-label="Rated Excellent on Trustpilot based on 5 star verified reviews"
-            >
-              <div className="flex flex-col">
-                <span className="text-[11px] sm:text-[12px] font-black text-slate-950 tracking-tight leading-none uppercase">
-                  EXCELLENT
+                Create a standout CV <br className="hidden sm:inline" />
+                in{' '}
+                <span className="text-[#0EA5E9] bg-gradient-to-r from-[#0EA5E9] to-[#00B67A] bg-clip-text text-transparent">
+                  minutes
                 </span>
-                <div className="flex items-center gap-1 mt-1 text-slate-950 font-bold text-[13px] sm:text-[14px] leading-none">
-                  <svg className="w-3.5 h-3.5 text-[#00b67a] fill-current" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                  </svg>
-                  <span>Trustpilot</span>
-                </div>
-              </div>
+              </motion.h1>
 
-              {/* 5 Green Rating Star Boxes matching reference exactly */}
-              <div className="flex items-center gap-1 sm:gap-1.5" aria-hidden="true">
-                {[1, 2, 3, 4].map((star) => (
-                  <div
-                    key={star}
-                    className="w-6 h-6 sm:w-6.5 sm:h-6.5 bg-[#00b67a] flex items-center justify-center rounded-[2px]"
-                  >
-                    <svg
-                      className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white fill-current"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                    </svg>
+              {/* Subheading: Keyword optimized for Free CV Maker UK */}
+              <motion.p
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
+                className="text-[14px] sm:text-base lg:text-lg text-slate-600 font-normal leading-relaxed sm:leading-[1.65] max-w-[500px]"
+              >
+                The #1 free CV maker UK. Build professional, ATS-friendly UK resumes and CVs with smart AI writing assistance, recruiter-approved British layouts, and instant PDF download.
+              </motion.p>
+
+              {/* CTAs */}
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.24, ease: [0.22, 1, 0.36, 1] }}
+                className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-4 w-full sm:w-auto pt-0.5 sm:pt-2"
+              >
+                <Link
+                  href="/start"
+                  className="min-h-[46px] sm:min-h-[52px] inline-flex items-center justify-center gap-2 px-6 sm:px-8 py-2.5 sm:py-3.5 rounded-full bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-semibold text-[15px] sm:text-base shadow-[0_8px_24px_rgba(37,99,235,0.35),inset_0_1px_1px_rgba(255,255,255,0.3)] hover:shadow-[0_12px_28px_rgba(37,99,235,0.45)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-200 whitespace-nowrap cursor-pointer"
+                >
+                  <span>Create My CV</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+
+                <button
+                  type="button"
+                  onClick={() => setIsVideoModalOpen(true)}
+                  className="min-h-[44px] sm:min-h-[52px] inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2 sm:py-3.5 rounded-full bg-white/75 hover:bg-white/95 backdrop-blur-xl text-slate-800 font-semibold text-[14px] sm:text-base border border-white/80 shadow-[0_4px_20px_rgba(15,23,42,0.05),inset_0_1px_2px_rgba(255,255,255,0.95)] hover:shadow-[0_8px_24px_rgba(15,23,42,0.08)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-200 whitespace-nowrap cursor-pointer"
+                >
+                  <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-blue-50/80 text-[#2563EB] flex items-center justify-center">
+                    <Play className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-current ml-0.5" />
                   </div>
-                ))}
-                {/* 5th Star: 82% green filled box representing 4.5/5 rating */}
-                <div className="w-6 h-6 sm:w-6.5 sm:h-6.5 bg-[#dcdfe4] relative overflow-hidden flex items-center justify-center rounded-[2px]">
-                  <div className="absolute inset-y-0 left-0 w-[82%] bg-[#00b67a]" />
+                  <span>Watch How It Works</span>
+                </button>
+              </motion.div>
+
+              {/* Social Proof: Frosted Glass Capsule */}
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.32, ease: [0.22, 1, 0.36, 1] }}
+                className="pt-1 sm:pt-3"
+              >
+                <div className="inline-flex items-center gap-3 bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl px-3.5 py-2 shadow-[0_4px_20px_rgba(15,23,42,0.04),inset_0_1px_1px_rgba(255,255,255,0.95)]">
+                  <div className="flex items-center -space-x-2 shrink-0">
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-white overflow-hidden bg-slate-200 relative shadow-xs">
+                      <Image
+                        src="https://picsum.photos/seed/user1/100/100"
+                        alt="User avatar 1"
+                        fill
+                        sizes="32px"
+                        className="object-cover"
+                        referrerPolicy="no-referrer"
+                      />
+                    </div>
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-white overflow-hidden bg-slate-200 relative shadow-xs">
+                      <Image
+                        src="https://picsum.photos/seed/user2/100/100"
+                        alt="User avatar 2"
+                        fill
+                        sizes="32px"
+                        className="object-cover"
+                        referrerPolicy="no-referrer"
+                      />
+                    </div>
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-white overflow-hidden bg-slate-200 relative shadow-xs">
+                      <Image
+                        src="https://picsum.photos/seed/user3/100/100"
+                        alt="User avatar 3"
+                        fill
+                        sizes="32px"
+                        className="object-cover"
+                        referrerPolicy="no-referrer"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col text-left">
+                    <span className="text-[11.5px] sm:text-[13px] font-bold text-slate-900 leading-tight">
+                      Join 1M+ happy users
+                    </span>
+                    <div className="flex items-center gap-1 mt-0.5">
+                      <div className="flex items-center text-amber-400">
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} className="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-current" />
+                        ))}
+                      </div>
+                      <span className="text-[10px] sm:text-[11px] font-semibold text-slate-500">
+                        4.8/5 average rating
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Right Column: Hero Visual with Candidate & Layered CV Cards */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.98, y: 14 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+              className="lg:col-span-6 xl:col-span-6 relative flex justify-center items-center w-full mt-2 lg:mt-0"
+            >
+              <div className="relative w-full max-w-[480px] lg:max-w-[540px] aspect-[16/11] sm:aspect-[1.15/1] flex items-center justify-center">
+                {/* Background Soft Pastel Halo */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-blue-300/40 via-cyan-200/40 to-indigo-200/50 rounded-3xl blur-2xl transform scale-95" />
+
+                {/* Candidate Composition Artwork */}
+                <div className="relative z-10 w-full h-full rounded-2xl overflow-hidden flex items-center justify-center">
+                  <Image
+                    src="/assets/hero-backdrop-clean.png"
+                    alt="Free CV maker UK - Professional candidate with recruiter-approved UK CV templates"
+                    fill
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 540px"
+                    className="object-contain object-center drop-shadow-xl"
+                    referrerPolicy="no-referrer"
+                  />
+                </div>
+
+                {/* Floating Badge: Frosted Glass Dark Aesthetic */}
+                <div className="absolute top-3 sm:top-8 right-2 sm:right-6 z-20 px-3 sm:px-4 py-1.5 rounded-full bg-slate-950/75 backdrop-blur-xl text-white text-[10px] sm:text-xs font-semibold flex items-center gap-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.25)] border border-white/20">
+                  <Check className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-400 stroke-[3]" />
+                  <span>Professional &amp; Modern</span>
+                </div>
+
+                {/* Hand-drawn style note with playful curved arrow */}
+                <div className="absolute bottom-1 sm:bottom-4 right-0 sm:right-2 z-20 flex flex-col items-end text-right select-none pointer-events-none">
+                  <span className="text-[11px] sm:text-sm font-medium text-slate-600 italic tracking-tight font-sans">
+                    Your dream job<br />
+                    is closer than you think
+                  </span>
                   <svg
-                    className="relative z-10 w-3.5 h-3.5 sm:w-4 sm:h-4 text-white fill-current"
-                    viewBox="0 0 24 24"
+                    className="w-9 h-5 sm:w-12 sm:h-6 text-slate-400 mr-1 sm:mr-2 mt-0.5"
+                    viewBox="0 0 50 25"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
                   >
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    <path
+                      d="M5 20C18 24 35 18 42 6M42 6L37 7M42 6L40 12"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
-
-          {/* MOBILE & TABLET SEAMLESS ARTWORK (visible below lg, hidden on desktop lg+) */}
-          <div className="lg:hidden relative w-full pt-4 sm:pt-6 flex justify-center">
-            <div className="relative w-full max-w-[540px] aspect-[876/680] overflow-hidden">
-              <Image
-                src="/assets/hero-backdrop-clean.png"
-                alt="Candidate with 3D glass CV template"
-                fill
-                priority
-                sizes="(max-width: 1024px) 100vw, 540px"
-                referrerPolicy="no-referrer"
-                className="object-cover object-[78%_center]"
-              />
-              {/* Soft feather gradients on edges so it melts seamlessly into the background */}
-              <div className="absolute inset-x-0 top-0 h-10 bg-gradient-to-b from-[#ebf5fd] to-transparent pointer-events-none" />
-              <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-[#ebf5fd] to-transparent pointer-events-none" />
-              <div className="absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-[#ebf5fd] to-transparent pointer-events-none" />
-              <div className="absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-[#ebf5fd] to-transparent pointer-events-none" />
-            </div>
-          </div>
-
-          {/* Desktop Right Column Spacer: Preserves clean layout without any separate container box */}
-          <div className="hidden lg:block lg:col-span-6 xl:col-span-7 min-h-[560px] xl:min-h-[620px] pointer-events-none" />
         </div>
-      </div>
+      </section>
 
-      {/* Embed original user attachments for reference and compliance */}
-      <div className="sr-only">
-        <Image
-          src="/assets/aistudio/image_7f3d12b7.png"
-          alt="MakeMyCV Standout CV reference"
-          width={1376}
-          height={768}
-          priority
-          referrerPolicy="no-referrer"
-        />
-        <Image
-          src="/assets/aistudio/image_bf1160e8.png"
-          alt="MakeMyCV UI improved reference"
-          width={1376}
-          height={768}
-          priority
-          referrerPolicy="no-referrer"
-        />
-      </div>
-    </section>
+      {/* Interactive Video Tour Modal */}
+      <VideoTourModal
+        isOpen={isVideoModalOpen}
+        onClose={() => setIsVideoModalOpen(false)}
+      />
+    </>
   );
 }

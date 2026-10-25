@@ -17,15 +17,15 @@ export interface BrandConfig {
 }
 
 export const BRAND_CONFIG: BrandConfig = {
-  name: 'Makemycv',
-  tagline: 'Free CV Maker & Resume Builder',
-  domain: 'makemycv.co.uk',
-  // Design tokens matching reference screenshots:
-  primaryColor: '#4B4DED',
-  primaryHover: '#3D3FC9',
-  primaryDisabled: '#A5A7F5',
-  navyColor: '#0F1B4D',
-  sidebarBg: '#12114A',
-  pageGradientTop: '#EEF1FF',
+  name: 'Makemeyour',
+  tagline: 'The #1 Free CV Maker UK & AI Resume Builder',
+  domain: 'makemeyour.com',
+  // Design tokens matching reference design:
+  primaryColor: '#2563EB',
+  primaryHover: '#1D4ED8',
+  primaryDisabled: '#93C5FD',
+  navyColor: '#0A102F',
+  sidebarBg: '#0C1233',
+  pageGradientTop: '#F0F5FF',
   pageGradientBottom: '#FFFFFF',
 };

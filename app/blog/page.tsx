@@ -2,106 +2,24 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { BookOpen, Calendar, Clock, ArrowRight, Search, ChevronRight, User, CheckCircle2 } from 'lucide-react';
+import Image from 'next/image';
+import { BookOpen, Calendar, Clock, ArrowRight, Search } from 'lucide-react';
 import TopNav from '@/components/navigation/TopNav';
 import Footer from '@/components/layout/Footer';
+import { BLOG_POSTS, BlogPost } from '@/data/blogPosts';
 
-interface BlogPost {
-  id: string;
-  title: string;
-  excerpt: string;
-  category: string;
-  readTime: string;
-  date: string;
-  author: {
-    name: string;
-    role: string;
-  };
-  image: string;
-  content: string[];
-}
-
-const BLOG_POSTS: BlogPost[] = [
-  {
-    id: 'how-to-write-ats-cv-uk-2026',
-    title: 'How to Write an ATS-Optimised CV for the UK Job Market in 2026',
-    excerpt: 'Discover why 75% of CVs are rejected by automated recruitment software and learn the exact formatting rules to pass parsing filters.',
-    category: 'ATS Guide',
-    readTime: '6 min read',
-    date: 'October 24, 2026',
-    author: {
-      name: 'Sarah Jenkins',
-      role: 'Lead UK Recruitment Consultant',
-    },
-    image: 'https://images.unsplash.com/photo-1586281380349-632531db7ed4?auto=format&fit=crop&w=800&q=80',
-    content: [
-      'Applicant Tracking Systems (ATS) have become the gatekeepers for major UK employers, financial institutions, and tech firms. When you submit your CV online, software parses your document for keywords, formatting consistency, and standard headings.',
-      'To ensure your CV is parsed correctly: stick to standard section titles like "Professional Experience" and "Education", avoid complex tables or text boxes, and save your document as a crisp ISO A4 PDF.',
-      'Tailoring your keywords to the exact job description is paramount. Include hard technical competencies as well as transferable skills such as stakeholder management, commercial awareness, and agile delivery.'
-    ],
-  },
-  {
-    id: 'top-5-cv-mistakes-london-graduates',
-    title: 'Top 5 CV Mistakes London Graduates Make (And How to Fix Them)',
-    excerpt: 'Avoid the common pitfalls that cost graduates interviews in finance, consulting, and creative agencies across the UK.',
-    category: 'CV Tips',
-    readTime: '5 min read',
-    date: 'October 20, 2026',
-    author: {
-      name: 'Oliver Thorne',
-      role: 'Graduate Career Coach',
-    },
-    image: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80',
-    content: [
-      'Graduates often make the mistake of listing irrelevant part-time jobs in exhaustive detail while glossing over academic projects, dissertations, and leadership roles in university societies.',
-      'Keep your CV strictly to 2 pages maximum. UK recruiters spend an average of 6 to 8 seconds on an initial scan, so clarity, concise bullet points, and strong action verbs are essential.',
-      'Always proofread for British spelling conventions (e.g., organise, professional, behavioural) unless applying specifically to US-headquartered firms.'
-    ],
-  },
-  {
-    id: 'mastering-star-interview-technique',
-    title: 'Mastering the STAR Interview Technique for UK Hiring Panels',
-    excerpt: 'A step-by-step framework to structure compelling competency-based answers that impress interviewers.',
-    category: 'Interviews',
-    readTime: '7 min read',
-    date: 'October 15, 2026',
-    author: {
-      name: 'Dr. Elena Vance',
-      role: 'Executive Placement Director',
-    },
-    image: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=80',
-    content: [
-      'The STAR method (Situation, Task, Action, Result) is the gold standard for answering competency questions in UK corporate and public sector interviews.',
-      'Spend roughly 20% of your answer setting the context (Situation and Task), 50% detailing your specific contribution and initiative (Action), and 30% highlighting the measurable outcome (Result).',
-      'Quantify your results wherever possible—use percentages, monetary values, time saved, or team efficiency gains to substantiate your achievements.'
-    ],
-  },
-  {
-    id: 'executive-cv-formatting-strategies',
-    title: 'Executive CV Formatting Strategies for Senior Leadership Roles',
-    excerpt: 'How C-suite executives and directors should frame board-level achievements and strategic growth.',
-    category: 'Career Growth',
-    readTime: '8 min read',
-    date: 'October 10, 2026',
-    author: {
-      name: 'Marcus Sterling',
-      role: 'Headhunter & Board Advisor',
-    },
-    image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=800&q=80',
-    content: [
-      'At the executive level, your CV is not just a chronological list of jobs—it is a strategic marketing document showcasing P&L ownership, organizational transformation, and visionary leadership.',
-      'Lead with a powerful executive summary that encapsulates your core sector expertise, board advisory experience, and scale of operations managed.',
-      'Highlight governance, stakeholder engagement, and mergers & acquisitions (M&A) experience clearly to reassure nomination committees.'
-    ],
-  },
+const CATEGORIES = [
+  'All',
+  'ATS Guide',
+  'CV Tips',
+  'Graduate & School Leaver',
+  'Interviews',
+  'Career Growth',
 ];
-
-const CATEGORIES = ['All', 'ATS Guide', 'CV Tips', 'Interviews', 'Career Growth'];
 
 export default function BlogPage() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
-  const [activePost, setActivePost] = useState<BlogPost | null>(null);
 
   const filteredPosts = BLOG_POSTS.filter((post) => {
     const matchesCat = selectedCategory === 'All' || post.category === selectedCategory;
@@ -124,10 +42,10 @@ export default function BlogPage() {
               <span>Career Advice &amp; CV Insights</span>
             </div>
             <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white [text-wrap:balance]">
-              The UKCVGuide Career Blog
+              UK CV Writing Guides &amp; Career Advice
             </h1>
             <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto leading-relaxed">
-              Expert advice on CV writing, ATS optimization, interview preparation, and career advancement in the UK and global job markets.
+              Recruiter-approved advice on UK CV formatting, ATS optimization, personal statement examples, school leavers, and interview techniques.
             </p>
 
             {/* Search Bar */}
@@ -147,7 +65,7 @@ export default function BlogPage() {
         </section>
 
         {/* Category Filter Bar */}
-        <section className="bg-white border-b border-slate-200 sticky top-[60px] md:top-[80px] z-30 shadow-2xs">
+        <section className="bg-white border-b border-slate-200 sticky top-[56px] sm:top-[64px] md:top-[72px] z-30 shadow-2xs">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-start sm:justify-center gap-2 overflow-x-auto scrollbar-none">
             {CATEGORIES.map((cat) => (
               <button
@@ -187,19 +105,21 @@ export default function BlogPage() {
               {filteredPosts.map((post) => (
                 <article
                   key={post.id}
-                  onClick={() => setActivePost(post)}
-                  className="bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-sm hover:shadow-lg transition-all cursor-pointer flex flex-col group"
+                  className="bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-sm hover:shadow-lg transition-all flex flex-col group"
                 >
-                  <div className="relative h-52 sm:h-60 w-full overflow-hidden bg-slate-100">
-                    <img
+                  <Link href={`/blog/${post.id}`} className="relative h-52 sm:h-60 w-full overflow-hidden bg-slate-100 block">
+                    <Image
                       src={post.image}
                       alt={post.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      fill
+                      sizes="(max-width: 768px) 100vw, 600px"
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      referrerPolicy="no-referrer"
                     />
                     <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-slate-900/80 backdrop-blur-xs text-white text-[11px] font-semibold">
                       {post.category}
                     </div>
-                  </div>
+                  </Link>
 
                   <div className="p-6 sm:p-7 flex-1 flex flex-col justify-between space-y-4">
                     <div className="space-y-2.5">
@@ -216,7 +136,9 @@ export default function BlogPage() {
                       </div>
 
                       <h2 className="text-xl sm:text-2xl font-bold text-slate-900 group-hover:text-[#4a4df2] transition-colors leading-snug">
-                        {post.title}
+                        <Link href={`/blog/${post.id}`}>
+                          {post.title}
+                        </Link>
                       </h2>
 
                       <p className="text-sm text-slate-600 leading-relaxed">
@@ -235,10 +157,13 @@ export default function BlogPage() {
                         </div>
                       </div>
 
-                      <span className="inline-flex items-center gap-1 text-xs font-semibold text-[#4a4df2] group-hover:translate-x-1 transition-transform">
+                      <Link
+                        href={`/blog/${post.id}`}
+                        className="inline-flex items-center gap-1 text-xs font-semibold text-[#4a4df2] group-hover:translate-x-1 transition-transform"
+                      >
                         <span>Read article</span>
                         <ArrowRight className="w-3.5 h-3.5" />
-                      </span>
+                      </Link>
                     </div>
                   </div>
                 </article>
@@ -252,12 +177,12 @@ export default function BlogPage() {
           <div className="max-w-2xl mx-auto space-y-4">
             <h2 className="text-2xl sm:text-3xl font-bold">Get expert UK career tips in your inbox</h2>
             <p className="text-sm sm:text-base text-slate-300">
-              Join 50,000+ job seekers who receive our weekly newsletter with resume templates, interview guides, and salary insights.
+              Join 50,000+ UK jobseekers who receive our weekly newsletter with resume templates, interview guides, and salary insights.
             </p>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                alert('Thank you for subscribing to the UKCVGuide career newsletter!');
+                alert('Thank you for subscribing to the Makemeyour career newsletter!');
               }}
               className="flex flex-col sm:flex-row gap-3 pt-2 max-w-md mx-auto"
             >
@@ -277,71 +202,6 @@ export default function BlogPage() {
           </div>
         </section>
       </main>
-
-      {/* Article Detail Modal */}
-      {activePost && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 overflow-y-auto"
-          onClick={() => setActivePost(null)}
-        >
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-10 relative space-y-6 text-left"
-          >
-            <button
-              type="button"
-              onClick={() => setActivePost(null)}
-              className="absolute top-5 right-5 w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center cursor-pointer"
-              aria-label="Close modal"
-            >
-              ✕
-            </button>
-
-            <div className="space-y-3">
-              <span className="px-3 py-1 rounded-full bg-[#eef2ff] text-[#4a4df2] text-xs font-semibold">
-                {activePost.category}
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 leading-snug">
-                {activePost.title}
-              </h2>
-              <div className="flex items-center gap-3 text-xs text-slate-500 pb-4 border-b border-slate-100">
-                <span>By {activePost.author.name} ({activePost.author.role})</span>
-                <span>·</span>
-                <span>{activePost.date}</span>
-                <span>·</span>
-                <span>{activePost.readTime}</span>
-              </div>
-            </div>
-
-            <div className="rounded-2xl overflow-hidden h-64 sm:h-72 bg-slate-100">
-              <img src={activePost.image} alt={activePost.title} className="w-full h-full object-cover" />
-            </div>
-
-            <div className="space-y-4 text-slate-700 text-sm sm:text-base leading-relaxed">
-              {activePost.content.map((paragraph, idx) => (
-                <p key={idx}>{paragraph}</p>
-              ))}
-            </div>
-
-            <div className="pt-6 border-t border-slate-100 flex items-center justify-between">
-              <Link
-                href="/start"
-                onClick={() => setActivePost(null)}
-                className="px-6 py-3 rounded-xl bg-[#4a4df2] text-white font-semibold text-sm shadow-md hover:bg-[#383be0] transition-colors"
-              >
-                Create your CV now
-              </Link>
-              <button
-                type="button"
-                onClick={() => setActivePost(null)}
-                className="px-5 py-3 rounded-xl border border-slate-200 text-slate-700 text-sm font-semibold hover:bg-slate-50 cursor-pointer"
-              >
-                Close article
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       <Footer />
     </div>
