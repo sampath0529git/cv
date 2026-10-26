@@ -7,13 +7,26 @@ import MinimalCleanTemplate from './MinimalCleanTemplate';
 import TechCompactTemplate from './TechCompactTemplate';
 import GraduateStarterTemplate from './GraduateStarterTemplate';
 import ClassicCorporateTemplate from './ClassicCorporateTemplate';
+import EdinburghTemplate from './EdinburghTemplate';
+import ManchesterTemplate from './ManchesterTemplate';
+import BristolTemplate from './BristolTemplate';
+import LeedsTemplate from './LeedsTemplate';
+import DublinTemplate from './DublinTemplate';
+import GlasgowTemplate from './GlasgowTemplate';
+import BrightonTemplate from './BrightonTemplate';
+import NewcastleTemplate from './NewcastleTemplate';
+import BelfastTemplate from './BelfastTemplate';
+import CardiffTemplate from './CardiffTemplate';
 
 export const TEMPLATE_CATEGORIES: TemplateCategory[] = [
   'Executive',
   'Classic',
   'Modern',
   'Minimal',
+  'Creative',
   'Graduate',
+  'Tech',
+  'Healthcare',
 ];
 
 /**
@@ -82,6 +95,97 @@ export const CV_TEMPLATES: TemplateDefinition[] = [
     bestFor: 'Academia, public sector, civil service, medicine, and traditional UK employers.',
     supportsPhoto: false,
     component: (props) => <UkTraditionalTemplate {...props} />,
+  },
+  // 10 New UK & European City Templates
+  {
+    id: 'edinburgh',
+    name: 'Edinburgh',
+    category: 'Executive',
+    description: 'Distinguished executive layout featuring an authoritative header banner, board-level impact metrics, and photo support.',
+    bestFor: 'C-suite executives, VP/Directors, non-exec directors, and corporate strategists.',
+    supportsPhoto: true,
+    component: (props) => <EdinburghTemplate {...props} />,
+  },
+  {
+    id: 'manchester',
+    name: 'Manchester',
+    category: 'Tech',
+    description: 'Modern high-impact tech CV with categorical skill chips, engineering impact metrics, and strict ATS parser compliance.',
+    bestFor: 'Full-stack engineers, cloud architects, technical leads, and product engineers.',
+    supportsPhoto: false,
+    component: (props) => <ManchesterTemplate {...props} />,
+  },
+  {
+    id: 'bristol',
+    name: 'Bristol',
+    category: 'Creative',
+    description: 'Contemporary two-column creative studio architecture with left-hand bio sidebar, photo showcase, and exhibition portfolio highlights.',
+    bestFor: 'UI/UX designers, creative directors, brand strategists, and multimedia producers.',
+    supportsPhoto: true,
+    component: (props) => <BristolTemplate {...props} />,
+  },
+  {
+    id: 'leeds',
+    name: 'Leeds',
+    category: 'Healthcare',
+    description: 'Clinical NHS trust compliant CV with clinical governance, audit metrics, registration numbers, and CPD credentials.',
+    bestFor: 'NHS doctors, clinical nurses, allied health professionals, and practice managers.',
+    supportsPhoto: false,
+    component: (props) => <LeedsTemplate {...props} />,
+  },
+  {
+    id: 'dublin',
+    name: 'Dublin',
+    category: 'Modern',
+    description: 'Sleek European tech hub layout with asymmetric accent header, optional headshot, and dual-track achievements.',
+    bestFor: 'Fintech specialists, management consultants, SaaS account executives, and modern analysts.',
+    supportsPhoto: true,
+    component: (props) => <DublinTemplate {...props} />,
+  },
+  {
+    id: 'glasgow',
+    name: 'Glasgow',
+    category: 'Executive',
+    description: 'Commanding corporate layout with double-ruled gold/slate framing, executive narrative summary, and governance milestones.',
+    bestFor: 'Senior operational leaders, finance directors, partners, and governance chairs.',
+    supportsPhoto: false,
+    component: (props) => <GlasgowTemplate {...props} />,
+  },
+  {
+    id: 'brighton',
+    name: 'Brighton',
+    category: 'Creative',
+    description: 'Editorial narrative design featuring an inspiring creative quote block, pastel accents, portfolio links, and headshot framing.',
+    bestFor: 'Copywriters, journalists, creative agency leads, content creators, and art directors.',
+    supportsPhoto: true,
+    component: (props) => <BrightonTemplate {...props} />,
+  },
+  {
+    id: 'newcastle',
+    name: 'Newcastle',
+    category: 'Tech',
+    description: 'High-density terminal/sysadmin engineering CV with monospaced tabular figures, certifications matrix, and clean ATS parsing.',
+    bestFor: 'DevOps engineers, systems architects, site reliability engineers, and backend developers.',
+    supportsPhoto: false,
+    component: (props) => <NewcastleTemplate {...props} />,
+  },
+  {
+    id: 'belfast',
+    name: 'Belfast',
+    category: 'Healthcare',
+    description: 'Clinical academic trust layout with Royal College affiliations, GMC/NMC registration standing, and research publications.',
+    bestFor: 'Consultant physicians, surgeons, clinical researchers, and medical academics.',
+    supportsPhoto: false,
+    component: (props) => <BelfastTemplate {...props} />,
+  },
+  {
+    id: 'cardiff',
+    name: 'Cardiff',
+    category: 'Graduate',
+    description: 'Fresh early-career progression layout with bilingual language showcase, degree honors badge, and modern headshot framing.',
+    bestFor: 'University graduates, civil service apprentices, entry-level associates, and career changers.',
+    supportsPhoto: true,
+    component: (props) => <CardiffTemplate {...props} />,
   },
 ];
 

@@ -10,6 +10,7 @@ import { useCvStore } from '@/store/useCvStore';
 import { SAMPLE_UK_CV } from '@/data/sampleCv';
 import { A4_WIDTH_PX, A4_HEIGHT_PX, TemplateDefinition, TemplateCategory } from '@/types/cv';
 import { Check, Eye, ShieldCheck, Sparkles, ArrowRight, X, FileText, CheckCircle2 } from 'lucide-react';
+import TemplatePreviewModal from '@/components/common/TemplatePreviewModal';
 
 function TemplateCard({
   template,
@@ -281,62 +282,12 @@ export default function TemplatesPage() {
         </section>
       </main>
 
-      {/* Full Preview Modal */}
-      {previewTemplate && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 overflow-y-auto animate-[fadeIn_0.2s_ease-out]"
-          onClick={() => setPreviewTemplate(null)}
-        >
-          <div
-            className="relative w-full max-w-3xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Modal Header */}
-            <div className="p-4 sm:p-5 bg-[#0F1B4D] text-white flex items-center justify-between shrink-0">
-              <div>
-                <span className="text-xs text-blue-400 font-semibold">{previewTemplate.category} Template</span>
-                <h3 className="text-lg sm:text-xl font-bold">{previewTemplate.name}</h3>
-              </div>
-              <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => {
-                    handleUseTemplate(previewTemplate.id);
-                  }}
-                  className="px-4 py-2 rounded-xl bg-[#4B4DED] hover:bg-[#3D3FC9] text-white text-xs sm:text-sm font-semibold shadow-xs flex items-center gap-1.5 cursor-pointer transition-all"
-                >
-                  <span>Use This Template</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPreviewTemplate(null)}
-                  className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
-                  aria-label="Close preview"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-            </div>
-
-            {/* Modal Body: Scaled A4 Preview */}
-            <div className="flex-1 overflow-y-auto p-6 bg-slate-100 flex justify-center items-start">
-              <div className="bg-white shadow-2xl rounded-lg overflow-hidden border border-slate-300 max-w-full">
-                <div style={{ width: `${A4_WIDTH_PX}px`, height: `${A4_HEIGHT_PX}px`, transform: 'scale(0.7)', transformOrigin: 'top left' }}>
-                  {React.createElement(previewTemplate.component, {
-                    cv: {
-                      ...SAMPLE_UK_CV,
-                      settings: { ...SAMPLE_UK_CV.settings, templateId: previewTemplate.id },
-                    },
-                  })}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Full Responsive Preview Modal with Auto-Fit & Mobile Calibration */}
+      <TemplatePreviewModal
+        template={previewTemplate}
+        onClose={() => setPreviewTemplate(null)}
+        onUseTemplate={handleUseTemplate}
+      />
 
       <Footer />
     </div>

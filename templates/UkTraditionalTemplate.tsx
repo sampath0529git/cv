@@ -86,7 +86,7 @@ export default function UkTraditionalTemplate({
 
   return (
     <div
-      className="w-[794px] h-[1123px] min-w-[794px] max-w-[794px] min-h-[1123px] max-h-[1123px] print:h-auto print:min-h-[297mm] print:max-h-none print:overflow-visible box-border px-12 py-10 text-[11px] leading-relaxed text-black bg-white flex flex-col justify-between overflow-hidden select-text"
+      className="cv-template-container w-[794px] h-[1123px] min-w-[794px] max-w-[794px] min-h-[1123px] max-h-[1123px] print:h-auto print:min-h-[297mm] print:max-h-none print:overflow-visible box-border px-12 py-10 text-[11px] leading-relaxed text-black bg-white flex flex-col justify-between overflow-hidden select-text"
       style={{
         width: `${A4_WIDTH_PX}px`,
         height: `${A4_HEIGHT_PX}px`,
@@ -207,28 +207,28 @@ export default function UkTraditionalTemplate({
                     return (
                       <div
                         key={edu.id || idx}
-                        className="grid grid-cols-[140px_1fr] gap-4 break-inside-avoid cv-item"
+                        className="grid grid-cols-[140px_1fr] gap-4 break-inside-avoid cv-item min-w-0"
                       >
-                        <div className="font-bold text-neutral-800 text-[10.5px] leading-snug tabular-nums">
+                        <div className="font-bold text-neutral-800 text-[10.5px] leading-snug tabular-nums min-w-0">
                           {dateDisplay}
                         </div>
-                        <div>
+                        <div className="min-w-0">
                           <div className="flex justify-between items-baseline gap-2">
-                            <span className="font-bold text-black">
+                            <span className="font-bold text-black break-words [overflow-wrap:anywhere]">
                               {edu.institution || 'University / Institution'}
                             </span>
-                            <span className="font-semibold text-black text-right">
+                            <span className="font-semibold text-black text-right break-words [overflow-wrap:anywhere]">
                               {edu.qualification || 'Degree / Qualification'}
                             </span>
                           </div>
                           {(edu.location || edu.grade) && (
                             <div className="flex justify-between items-baseline text-[10px] text-neutral-700 mt-0.5">
-                              <span>{edu.location || ''}</span>
+                              <span className="break-words [overflow-wrap:anywhere]">{edu.location || ''}</span>
                               <span className="font-medium">{edu.grade || ''}</span>
                             </div>
                           )}
                           {edu.description && (
-                            <p className="text-[10px] text-neutral-800 mt-1 leading-normal whitespace-pre-line">
+                            <p className="text-[10px] text-neutral-800 mt-1 leading-normal whitespace-pre-line break-words [overflow-wrap:anywhere] [text-wrap:pretty]">
                               {edu.description}
                             </p>
                           )}
@@ -247,7 +247,7 @@ export default function UkTraditionalTemplate({
               <section
                 key="experience"
                 style={{ borderTopColor: accent }}
-                className="border-t pt-2 break-inside-avoid cv-section"
+                className="border-t pt-2 break-inside-avoid cv-section min-w-0"
               >
                 <h2
                   style={{ color: accent }}
@@ -255,39 +255,39 @@ export default function UkTraditionalTemplate({
                 >
                   {pageData?.experienceTitle || 'Work Experience'}
                 </h2>
-                <div className="space-y-3.5">
+                <div className="space-y-3.5 min-w-0">
                   {experiences.map((exp: any, idx: number) => {
                     const dateDisplay = [exp.startDate, exp.endDate].filter(Boolean).join(' – ');
                     return (
                       <div
                         key={exp.id || idx}
-                        className="grid grid-cols-[140px_1fr] gap-4 break-inside-avoid cv-item"
+                        className="grid grid-cols-[140px_1fr] gap-4 break-inside-avoid cv-item min-w-0"
                       >
-                        <div className="font-bold text-neutral-800 text-[10.5px] leading-snug tabular-nums">
+                        <div className="font-bold text-neutral-800 text-[10.5px] leading-snug tabular-nums min-w-0">
                           {dateDisplay}
                         </div>
-                        <div>
+                        <div className="min-w-0">
                           <div className="flex justify-between items-baseline gap-2">
-                            <span className="font-bold text-black">
+                            <span className="font-bold text-black break-words [overflow-wrap:anywhere]">
                               {exp.company || 'Company Name'}
                             </span>
                             {exp.location && (
-                              <span className="text-neutral-700 text-[10px]">{exp.location}</span>
+                              <span className="text-neutral-700 text-[10px] break-words [overflow-wrap:anywhere]">{exp.location}</span>
                             )}
                           </div>
-                          <div className="italic font-medium text-neutral-900 text-[10.5px] mt-0.5 mb-1">
+                          <div className="italic font-medium text-neutral-900 text-[10.5px] mt-0.5 mb-1 break-words [overflow-wrap:anywhere]">
                             {exp.role || 'Job Title'}
                           </div>
                           {exp.bullets && exp.bullets.length > 0 ? (
-                            <ul className="list-disc pl-4 space-y-0.5 text-[10px] text-neutral-900">
+                            <ul className="list-disc pl-4 space-y-0.5 text-[10px] text-neutral-900 min-w-0">
                               {exp.bullets.map((b: string, bIdx: number) => (
-                                <li key={bIdx} className="leading-snug break-inside-avoid">
+                                <li key={bIdx} className="leading-snug break-inside-avoid break-words [overflow-wrap:anywhere] [text-wrap:pretty]">
                                   {b}
                                 </li>
                               ))}
                             </ul>
                           ) : exp.description ? (
-                            <p className="text-[10px] text-neutral-900 leading-snug whitespace-pre-line break-inside-avoid">
+                            <p className="text-[10px] text-neutral-900 leading-snug whitespace-pre-line break-inside-avoid break-words [overflow-wrap:anywhere] [text-wrap:pretty]">
                               {exp.description}
                             </p>
                           ) : null}
@@ -306,7 +306,7 @@ export default function UkTraditionalTemplate({
               <section
                 key="projects"
                 style={{ borderTopColor: accent }}
-                className="border-t pt-2 break-inside-avoid cv-section"
+                className="border-t pt-2 break-inside-avoid cv-section min-w-0"
               >
                 <h2
                   style={{ color: accent }}
@@ -314,32 +314,32 @@ export default function UkTraditionalTemplate({
                 >
                   {projectTitle}
                 </h2>
-                <div className="space-y-2.5">
+                <div className="space-y-2.5 min-w-0">
                   {projects.map((proj, idx) => (
                     <div
                       key={proj.id || idx}
-                      className="grid grid-cols-[125px_1fr] gap-4 break-inside-avoid cv-item"
+                      className="grid grid-cols-[125px_1fr] gap-4 break-inside-avoid cv-item min-w-0"
                     >
-                      <div className="font-bold text-neutral-800 text-[10px] truncate">
+                      <div className="font-bold text-neutral-800 text-[10px] truncate min-w-0">
                         {proj.role || 'Project'}
                       </div>
-                      <div>
+                      <div className="min-w-0">
                         <div className="flex justify-between items-baseline gap-2">
-                          <span className="font-bold text-black">{proj.title}</span>
+                          <span className="font-bold text-black break-words [overflow-wrap:anywhere]">{proj.title}</span>
                           {proj.link && (
-                            <span className="text-neutral-700 text-[10px]">{proj.link}</span>
+                            <span className="text-neutral-700 text-[10px] truncate max-w-[150px]">{proj.link}</span>
                           )}
                         </div>
                         {proj.bullets && proj.bullets.length > 0 ? (
-                          <ul className="list-disc pl-4 space-y-0.5 text-[10px] text-neutral-900 mt-0.5">
+                          <ul className="list-disc pl-4 space-y-0.5 text-[10px] text-neutral-900 mt-0.5 min-w-0">
                             {proj.bullets.map((b, bIdx) => (
-                              <li key={bIdx} className="leading-snug">
+                              <li key={bIdx} className="leading-snug break-words [overflow-wrap:anywhere] [text-wrap:pretty]">
                                 {b}
                               </li>
                             ))}
                           </ul>
                         ) : proj.description ? (
-                          <p className="text-[10px] text-neutral-900 leading-snug whitespace-pre-line mt-0.5">
+                          <p className="text-[10px] text-neutral-900 leading-snug whitespace-pre-line mt-0.5 break-words [overflow-wrap:anywhere] [text-wrap:pretty]">
                             {proj.description}
                           </p>
                         ) : null}

@@ -137,7 +137,7 @@ export default function BlogPage() {
               {filteredPosts.map((post) => (
                 <article
                   key={post.id}
-                  className="bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-sm hover:shadow-lg transition-all flex flex-col group"
+                  className="bg-white rounded-2xl border border-slate-200/90 overflow-hidden shadow-sm hover:shadow-lg transition-all flex flex-col group min-w-0"
                 >
                   <Link href={`/blog/${post.id}`} className="relative h-52 sm:h-60 w-full overflow-hidden bg-slate-100 block">
                     <Image
@@ -153,8 +153,8 @@ export default function BlogPage() {
                     </div>
                   </Link>
 
-                  <div className="p-6 sm:p-7 flex-1 flex flex-col justify-between space-y-4">
-                    <div className="space-y-2.5">
+                  <div className="p-6 sm:p-7 flex-1 flex flex-col justify-between space-y-4 min-w-0">
+                    <div className="space-y-2.5 min-w-0">
                       <div className="flex items-center gap-3 text-xs text-slate-500">
                         <span className="flex items-center gap-1">
                           <Calendar className="w-3.5 h-3.5 text-slate-400" />
@@ -167,13 +167,13 @@ export default function BlogPage() {
                         </span>
                       </div>
 
-                      <h2 className="text-xl sm:text-2xl font-bold text-slate-900 group-hover:text-[#4a4df2] transition-colors leading-snug">
+                      <h2 className="text-xl sm:text-2xl font-bold text-slate-900 group-hover:text-[#4a4df2] transition-colors leading-snug break-words [overflow-wrap:anywhere] [text-wrap:pretty]">
                         <Link href={`/blog/${post.id}`}>
                           {post.title}
                         </Link>
                       </h2>
 
-                      <p className="text-sm text-slate-600 leading-relaxed">
+                      <p className="text-sm text-slate-600 leading-relaxed break-words whitespace-pre-line [overflow-wrap:anywhere] [text-wrap:pretty]">
                         {post.excerpt}
                       </p>
                     </div>

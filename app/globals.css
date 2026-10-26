@@ -697,5 +697,59 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 600 !important;
 }
 
+/* ==========================================================================
+   CV Template Content Container & Blog Line-Break Fluidity Rules
+   Ensures consistent line-breaks and prevents horizontal container blowouts
+   during dynamic text updates in CV templates and blog articles.
+   ========================================================================== */
+
+/* 1. Template Content Container Strict Bounding */
+.cv-page,
+.cv-print-sheet,
+.cv-page-wrapper,
+.cv-preview-sheet,
+.cv-template-container {
+  overflow-wrap: anywhere;
+  word-break: normal;
+  box-sizing: border-box;
+}
+
+/* 2. Grid & Flex Track Fluidity: Allow all children to shrink below auto min-width */
+.cv-page :is(div, section, aside, header, main, article, p, ul, ol, li),
+.cv-print-sheet :is(div, section, aside, header, main, article, p, ul, ol, li) {
+  min-width: 0;
+}
+
+/* 3. Consistent Multiline Text & Line-Break Rendering */
+.cv-page :is(p, .cv-item p, .cv-section p, .cv-template-text, [data-cv-content]),
+.cv-print-sheet :is(p, .cv-item p, .cv-section p, .cv-template-text, [data-cv-content]) {
+  overflow-wrap: anywhere;
+  word-break: normal;
+  text-wrap: pretty;
+}
+
+.cv-page :is(li, .cv-item li, .cv-section li),
+.cv-print-sheet :is(li, .cv-item li, .cv-section li) {
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+/* 4. Blog Layout Fluidity & Dynamic Line-Break Preservation */
+.blog-article-content,
+.blog-article-body,
+.prose {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.blog-article-content p,
+.blog-article-body p,
+.prose p {
+  overflow-wrap: anywhere;
+  word-break: normal;
+  text-wrap: pretty;
+}
+
 
 

@@ -362,26 +362,26 @@ export default function ClassicCorporateTemplate({
 
   return (
     <div
-      className="w-[794px] h-[1123px] min-w-[794px] max-w-[794px] min-h-[1123px] max-h-[1123px] print:h-auto print:min-h-[297mm] print:max-h-none print:overflow-visible box-border px-12 py-10 text-[11px] leading-relaxed text-slate-800 bg-white flex flex-col justify-between overflow-hidden select-text"
+      className="cv-template-container w-[794px] h-[1123px] min-w-[794px] max-w-[794px] min-h-[1123px] max-h-[1123px] print:h-auto print:min-h-[297mm] print:max-h-none print:overflow-visible box-border px-12 py-10 text-[11px] leading-relaxed text-slate-800 bg-white flex flex-col justify-between overflow-hidden select-text"
       style={{
         width: `${A4_WIDTH_PX}px`,
         height: `${A4_HEIGHT_PX}px`,
         fontFamily: 'inherit',
       }}
     >
-      <div className="space-y-4">
+      <div className="space-y-4 min-w-0">
         {/* City Corporate Header with Top Accent Rule */}
         {isFirstPage ? (
           <header
             style={{ borderBottomColor: accent }}
-            className="border-b-2 pb-4 break-inside-avoid flex items-center justify-between gap-6"
+            className="border-b-2 pb-4 break-inside-avoid flex items-center justify-between gap-6 min-w-0"
           >
             <div className="min-w-0 flex-1">
-              <h1 className="text-[26px] font-bold tracking-tight text-slate-900 leading-tight">
+              <h1 className="text-[26px] font-bold tracking-tight text-slate-900 leading-tight break-words [overflow-wrap:anywhere]">
                 {fullName}
               </h1>
               {jobTitle && (
-                <p style={{ color: accent }} className="text-[12.5px] font-semibold tracking-wide mt-1">
+                <p style={{ color: accent }} className="text-[12.5px] font-semibold tracking-wide mt-1 break-words [overflow-wrap:anywhere]">
                   {jobTitle}
                 </p>
               )}

@@ -19,7 +19,10 @@ export default function CvBulletList({
       {bullets.map((bullet, idx) => {
         if (!bullet || !bullet.trim()) return null;
         return (
-          <li key={idx} className="relative pl-3.5 text-[10px] break-inside-avoid">
+          <li
+            key={idx}
+            className="relative pl-3.5 text-[10px] break-inside-avoid min-w-0 break-words [overflow-wrap:anywhere] [text-wrap:pretty]"
+          >
             <span
               className="absolute left-0 top-[6px] w-1.5 h-1.5 rounded-full shrink-0"
               style={{

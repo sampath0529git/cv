@@ -44,12 +44,12 @@ export default function BaseTemplateSkeleton({
   if (isTwoColumn) {
     return (
       <div
-        className="w-[794px] h-[1123px] min-w-[794px] max-w-[794px] min-h-[1123px] max-h-[1123px] box-border flex flex-row text-[10px] leading-relaxed text-slate-800 bg-white overflow-hidden"
+        className="cv-template-container w-[794px] h-[1123px] min-w-[794px] max-w-[794px] min-h-[1123px] max-h-[1123px] box-border flex flex-row text-[10px] leading-relaxed text-slate-800 bg-white overflow-hidden select-text"
         style={{ width: `${A4_WIDTH_PX}px`, height: `${A4_HEIGHT_PX}px` }}
       >
         {/* Left Sidebar */}
         <aside
-          className="w-[33%] p-5 shrink-0 flex flex-col justify-between border-r border-slate-200/90 relative overflow-hidden"
+          className="w-[33%] p-5 shrink-0 flex flex-col justify-between border-r border-slate-200/90 relative overflow-hidden min-w-0"
           style={{ backgroundColor: `${accent}0d` }}
         >
           <div className="space-y-4">
@@ -163,8 +163,8 @@ export default function BaseTemplateSkeleton({
         </aside>
 
         {/* Right Main Column */}
-        <main className="w-[67%] p-6 space-y-4 flex flex-col justify-between overflow-hidden">
-          <div className="space-y-4">
+        <main className="w-[67%] p-6 space-y-4 flex flex-col justify-between overflow-hidden min-w-0">
+          <div className="space-y-4 min-w-0">
             {/* Main Header on Page 1 */}
             {isFirstPage ? (
               <header className="border-b pb-3.5" style={{ borderColor: `${accent}25` }}>
@@ -349,10 +349,10 @@ export default function BaseTemplateSkeleton({
   // -------------------------------------------------------------
   return (
     <div
-      className="w-[794px] h-[1123px] min-w-[794px] max-w-[794px] min-h-[1123px] max-h-[1123px] box-border p-8 text-[10px] leading-relaxed text-slate-800 bg-white flex flex-col justify-between overflow-hidden"
+      className="cv-template-container w-[794px] h-[1123px] min-w-[794px] max-w-[794px] min-h-[1123px] max-h-[1123px] box-border p-8 text-[10px] leading-relaxed text-slate-800 bg-white flex flex-col justify-between overflow-hidden select-text"
       style={{ width: `${A4_WIDTH_PX}px`, height: `${A4_HEIGHT_PX}px` }}
     >
-      <div className="space-y-4">
+      <div className="space-y-4 min-w-0">
         {/* Main Header on Page 1 */}
         {isFirstPage ? (
           <header

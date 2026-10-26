@@ -21,7 +21,9 @@ export default function FormattedText({
 }: FormattedTextProps) {
   if (!text) return null;
 
-  const lines = text.split('\n');
+  // Normalize Windows CRLF and CR to LF
+  const normalizedText = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const lines = normalizedText.split('\n');
 
   const renderFormattedLine = (line: string, lineKey: number) => {
     const tokenRegex = /(\*\*[^*]+\*\*|\*[^*]+\*|<u>.*?<\/u>|\[[^\]]+\]\(https?:\/\/[^\s)]+\)|https?:\/\/[^\s]+)/g;
@@ -92,19 +94,37 @@ export default function FormattedText({
     });
 
     return (
-      <span key={lineKey} className="block">
+      <span
+        key={lineKey}
+        className={`${inline ? 'inline' : 'block'} break-words [overflow-wrap:anywhere]`}
+      >
         {renderedParts}
       </span>
     );
   };
 
   if (inline) {
-    return <span className={className}>{lines.map((l, idx) => renderFormattedLine(l, idx))}</span>;
+    return (
+      <span className={`inline break-words [overflow-wrap:anywhere] ${className}`}>
+        {lines.map((l, idx) => (
+          <React.Fragment key={idx}>
+            {idx > 0 && <br />}
+            {renderFormattedLine(l, idx)}
+          </React.Fragment>
+        ))}
+      </span>
+    );
   }
 
   return (
-    <div className={`space-y-1 ${className}`}>
-      {lines.map((l, idx) => (l.trim() ? renderFormattedLine(l, idx) : <div key={idx} className="h-1.5" />))}
+    <div className={`space-y-1.5 break-words [overflow-wrap:anywhere] [text-wrap:pretty] min-w-0 ${className}`}>
+      {lines.map((l, idx) =>
+        l.trim() ? (
+          renderFormattedLine(l, idx)
+        ) : (
+          <div key={idx} className="min-h-[0.75em]" aria-hidden="true" />
+        )
+      )}
     </div>
   );
 }

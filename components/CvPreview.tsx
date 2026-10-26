@@ -210,9 +210,9 @@ export default function CvPreview({
       if (!containerRef.current) return;
       const containerWidth = containerRef.current.clientWidth;
       if (containerWidth > 0) {
-        const padding = containerWidth < 480 ? 12 : 24;
+        const padding = containerWidth < 480 ? 24 : 36;
         const available = Math.max(200, containerWidth - padding);
-        const calculated = Math.min(1.0, Math.max(0.28, available / A4_WIDTH_PX));
+        const calculated = Math.min(1.0, Math.max(0.24, available / A4_WIDTH_PX));
         setAutoScale(Number(calculated.toFixed(3)));
       }
     };

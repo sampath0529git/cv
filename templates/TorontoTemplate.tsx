@@ -292,18 +292,18 @@ export default function TorontoTemplate({
 
   return (
     <div
-      className="w-[794px] h-[1123px] min-w-[794px] max-w-[794px] min-h-[1123px] max-h-[1123px] print:h-auto print:min-h-[297mm] print:max-h-none print:overflow-visible box-border text-[11px] leading-relaxed text-slate-800 bg-white flex flex-col justify-between overflow-hidden select-text"
+      className="cv-template-container w-[794px] h-[1123px] min-w-[794px] max-w-[794px] min-h-[1123px] max-h-[1123px] print:h-auto print:min-h-[297mm] print:max-h-none print:overflow-visible box-border text-[11px] leading-relaxed text-slate-800 bg-white flex flex-col justify-between overflow-hidden select-text"
       style={{
         width: `${A4_WIDTH_PX}px`,
         height: `${A4_HEIGHT_PX}px`,
         fontFamily: 'inherit',
       }}
     >
-      <div className="grid grid-cols-[240px_1fr] flex-1 min-h-0">
+      <div className="grid grid-cols-[240px_1fr] flex-1 min-h-0 min-w-0">
         {/* LEFT SIDEBAR */}
         <aside
           style={{ backgroundColor: `${accent}0A`, borderRightColor: `${accent}1F` }}
-          className="px-7 py-9 border-r flex flex-col justify-between"
+          className="px-7 py-9 border-r flex flex-col justify-between min-w-0 overflow-hidden"
         >
           <div className="space-y-6">
             {/* Optional Profile Photo */}
@@ -489,37 +489,37 @@ export default function TorontoTemplate({
         </aside>
 
         {/* MAIN RIGHT COLUMN */}
-        <main className="px-9 py-9 space-y-5 flex flex-col justify-between">
-          <div className="space-y-5">
+        <main className="px-9 py-9 space-y-5 flex flex-col justify-between min-w-0 overflow-hidden">
+          <div className="space-y-5 min-w-0">
             {isFirstPage ? (
-              <header className="pb-4 border-b border-slate-200 break-inside-avoid">
-                <h1 className="text-[28px] font-bold text-slate-950 tracking-tight leading-none">
+              <header className="pb-4 border-b border-slate-200 break-inside-avoid min-w-0">
+                <h1 className="text-[28px] font-bold text-slate-950 tracking-tight leading-none break-words [overflow-wrap:anywhere]">
                   {fullName}
                 </h1>
                 {jobTitle && (
                   <p
                     style={{ color: accent }}
-                    className="text-[13px] font-semibold tracking-wide mt-2"
+                    className="text-[13px] font-semibold tracking-wide mt-2 break-words [overflow-wrap:anywhere]"
                   >
                     {jobTitle}
                   </p>
                 )}
                 {statementText?.trim() && (
-                  <p className="text-[10.5px] text-slate-600 leading-[1.6] mt-3 whitespace-pre-line">
+                  <p className="text-[10.5px] text-slate-600 leading-[1.6] mt-3 whitespace-pre-line break-words [overflow-wrap:anywhere] [text-wrap:pretty]">
                     {statementText}
                   </p>
                 )}
               </header>
             ) : (
-              <div className="space-y-3">
+              <div className="space-y-3 min-w-0">
                 <div className="flex justify-between items-baseline border-b border-slate-200 pb-2 text-xs break-inside-avoid">
-                  <span className="font-bold text-slate-900">{fullName}</span>
-                  <span className="text-slate-400 text-[10px] tabular-nums">
+                  <span className="font-bold text-slate-900 truncate">{fullName}</span>
+                  <span className="text-slate-400 text-[10px] tabular-nums whitespace-nowrap">
                     Continued · Page {pageIndex + 1}
                   </span>
                 </div>
                 {statementText?.trim() && (
-                  <p className="text-[10.5px] text-slate-600 leading-[1.6] whitespace-pre-line">
+                  <p className="text-[10.5px] text-slate-600 leading-[1.6] whitespace-pre-line break-words [overflow-wrap:anywhere] [text-wrap:pretty]">
                     {statementText}
                   </p>
                 )}

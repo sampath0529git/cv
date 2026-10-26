@@ -64,6 +64,7 @@ import {
   FileText,
   Linkedin,
   FileCheck2,
+  ShieldCheck,
   Bold,
   Calendar,
   SeparatorHorizontal,
@@ -384,6 +385,19 @@ export default function BuilderPage() {
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [isFullscreenPreviewOpen, isTemplateModalOpen]);
+
+  const handleOpenFullscreenPreview = useCallback(() => {
+    if (typeof window !== 'undefined' && window.innerWidth < 640) {
+      const mobileFit = Math.min(
+        100,
+        Math.max(30, Math.round(((window.innerWidth - 32) / A4_WIDTH_PX) * 100))
+      );
+      setFullscreenZoom(mobileFit);
+    } else {
+      setFullscreenZoom(100);
+    }
+    setIsFullscreenPreviewOpen(true);
+  }, []);
 
   // Dismiss Quick Actions floating menu on outside click or Escape key
   useEffect(() => {
@@ -2520,169 +2534,217 @@ export default function BuilderPage() {
               {/* Step 8: Finalize, Optional Sections & Section Reordering */}
               {currentStep === 8 && (
                 <div className="space-y-5 sm:space-y-6">
-                  <div className="p-4 sm:p-5 rounded-2xl bg-[#EEF1FF]/70 border border-[#4B4DED]/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div className="flex items-start sm:items-center gap-3.5">
-                      <div className="w-11 h-11 rounded-2xl bg-[#4B4DED] text-white flex items-center justify-center shrink-0">
-                        <Check className="w-6 h-6 stroke-[2.5]" />
+                  <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-br from-[#F5F7FF] via-[#EEF1FF]/75 to-[#F8F9FE] border border-[#4B4DED]/25 shadow-xs space-y-4">
+                    {/* Header: Status Icon, Title, Subtitle & ATS Badge */}
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-start gap-3 min-w-0">
+                        <div className="w-10 h-10 rounded-xl bg-[#4B4DED] text-white flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+                          <Check className="w-5 h-5 stroke-[2.5]" />
+                        </div>
+                        <div className="min-w-0">
+                          <h3 className="text-base sm:text-lg font-bold text-[#0F1B4D] leading-snug">
+                            Your CV is ready for export
+                          </h3>
+                          <p className="text-xs text-slate-600 mt-1 tabular-nums">
+                            Active template: <strong className="text-[#0F1B4D]">{activeTemplate.name}</strong> · {totalPages} {totalPages === 1 ? 'A4 page' : 'A4 pages'}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="text-base font-bold text-[#0F1B4D]">
-                          Your CV is ready for export
-                        </h3>
-                        <p className="text-xs text-slate-600 mt-0.5 tabular-nums">
-                          Active template:{' '}
-                          <strong className="text-[#0F1B4D]">{activeTemplate.name}</strong> ·{' '}
-                          {totalPages} {totalPages === 1 ? 'A4 page' : 'A4 pages'}
-                        </p>
-                        {(readyPdfBlob || readyDocxBlob) && (
-                          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
-                            {readyPdfBlob && (
-                              <a
-                                href={readyPdfBlob.blobUrl}
-                                download={readyPdfBlob.fileName}
-                                className="inline-flex items-center gap-1 text-xs font-semibold text-[#4B4DED] hover:underline"
-                              >
-                                <Download className="w-3 h-3" />
-                                <span>Save {readyPdfBlob.fileName} again</span>
-                              </a>
-                            )}
-                            {readyDocxBlob && (
-                              <a
-                                href={readyDocxBlob.blobUrl}
-                                download={readyDocxBlob.fileName}
-                                className="inline-flex items-center gap-1 text-xs font-semibold text-[#4B4DED] hover:underline"
-                              >
-                                <FileText className="w-3 h-3" />
-                                <span>Save {readyDocxBlob.fileName} again</span>
-                              </a>
-                            )}
-                          </div>
-                        )}
-                      </div>
+                      <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/80 text-[11px] font-semibold shrink-0">
+                        <ShieldCheck className="w-3.5 h-3.5" />
+                        <span>ATS Ready</span>
+                      </span>
                     </div>
 
-                    <div className="flex flex-col sm:items-end gap-1.5 sm:shrink-0">
-                      <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-                        <button
-                          type="button"
-                          onClick={() => handleSwitchMobileMode('preview')}
-                          className="lg:hidden flex-1 min-h-[40px] px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-[#0F1B4D] text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
-                        >
-                          <Eye className="w-3.5 h-3.5 text-[#4B4DED]" />
-                          <span>Preview CV</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={handleDownloadDocx}
-                          disabled={isDownloadingDocx}
-                          className={`flex-1 sm:flex-none min-h-[40px] px-3.5 py-2 rounded-xl border text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shrink-0 whitespace-nowrap disabled:opacity-70 ${
-                            docxDownloadDone
-                              ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
-                              : 'bg-white hover:bg-slate-50 border-slate-200 text-[#0F1B4D]'
-                          }`}
-                        >
-                          {isDownloadingDocx ? (
-                            <>
-                              <Loader2 className="w-3.5 h-3.5 animate-spin text-[#4B4DED]" />
-                              <span>Building .docx...</span>
-                            </>
-                          ) : docxDownloadDone ? (
-                            <>
-                              <Check className="w-3.5 h-3.5 text-emerald-600" />
-                              <span>DOCX Saved</span>
-                            </>
-                          ) : (
-                            <>
-                              <FileText className="w-3.5 h-3.5 text-[#4B4DED]" />
-                              <span>Word (.docx)</span>
-                            </>
-                          )}
-                        </button>
-                        <button
-                          type="button"
-                          onClick={handleBrowserPrint}
-                          onMouseEnter={() => setShowPrintSettingsTip(true)}
-                          onMouseLeave={() => setShowPrintSettingsTip(false)}
-                          onFocus={() => setShowPrintSettingsTip(true)}
-                          onBlur={() => setShowPrintSettingsTip(false)}
-                          aria-describedby="vector-print-settings-hint"
-                          className="flex-1 sm:flex-none min-h-[40px] px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-[#0F1B4D] text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shrink-0 whitespace-nowrap"
-                        >
-                          <Printer className="w-3.5 h-3.5 text-[#4B4DED]" />
-                          <span>Vector Print</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            commitPendingInputs();
-                            setIsPdfSettingsModalOpen(true);
-                          }}
-                          className="flex-1 sm:flex-none min-h-[40px] px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-[#0F1B4D] text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shrink-0 whitespace-nowrap"
-                          title="Configure hyperlinks and image compression for PDF export"
-                        >
-                          <Sliders className="w-3.5 h-3.5 text-[#4B4DED]" />
-                          <span>PDF Export Settings</span>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={handleOpenShareModal}
-                          className="flex-1 sm:flex-none min-h-[40px] px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-[#0F1B4D] text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shrink-0 whitespace-nowrap"
-                          title="Generate a temporary shareable CV link"
-                        >
-                          <Share2 className="w-3.5 h-3.5 text-[#4B4DED]" />
-                          <span>Share</span>
-                        </button>
-                      </div>
-
-                      <div className="relative flex items-center justify-end w-full sm:w-auto">
-                        <button
-                          type="button"
-                          id="vector-print-settings-hint"
-                          onClick={() => setShowPrintSettingsTip((prev) => !prev)}
-                          onMouseEnter={() => setShowPrintSettingsTip(true)}
-                          onMouseLeave={() => setShowPrintSettingsTip(false)}
-                          onFocus={() => setShowPrintSettingsTip(true)}
-                          onBlur={() => setShowPrintSettingsTip(false)}
-                          aria-expanded={showPrintSettingsTip}
-                          className="inline-flex items-center gap-1 text-[11px] text-slate-600 hover:text-[#4B4DED] transition-colors cursor-pointer text-right leading-tight py-0.5"
-                        >
-                          <Info className="w-3.5 h-3.5 text-[#4B4DED] shrink-0" />
-                          <span>
-                            Set <strong className="font-semibold text-[#0F1B4D]">Margins: None</strong> &amp;{' '}
-                            <strong className="font-semibold text-[#0F1B4D]">Scale: 100%</strong>
-                          </span>
-                        </button>
-
-                        {showPrintSettingsTip && (
-                          <div
-                            role="tooltip"
-                            className="absolute top-full right-0 mt-1.5 w-[264px] max-w-[calc(100vw-2.5rem)] p-3 rounded-xl bg-[#0F1B4D] text-white text-[11px] leading-relaxed shadow-xl border border-white/10 z-30 text-left"
+                    {/* Quick Re-save links if already generated */}
+                    {(readyPdfBlob || readyDocxBlob) && (
+                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs pt-1 border-t border-[#4B4DED]/15">
+                        <span className="text-slate-500 font-medium">Recent exports:</span>
+                        {readyPdfBlob && (
+                          <a
+                            href={readyPdfBlob.blobUrl}
+                            download={readyPdfBlob.fileName}
+                            className="inline-flex items-center gap-1 font-semibold text-[#4B4DED] hover:underline"
                           >
-                            <div className="font-bold text-white mb-1.5 flex items-center justify-between gap-2">
-                              <span>Recommended Print Settings</span>
-                              <span className="text-[10px] font-mono text-indigo-200">A4 PDF</span>
-                            </div>
-                            <ul className="space-y-1 text-slate-200">
-                              <li className="flex items-center justify-between gap-2">
-                                <span className="text-slate-300">Margins:</span>
-                                <span className="font-semibold text-white">None</span>
-                              </li>
-                              <li className="flex items-center justify-between gap-2">
-                                <span className="text-slate-300">Scale:</span>
-                                <span className="font-semibold text-white">100%</span>
-                              </li>
-                              <li className="flex items-center justify-between gap-2">
-                                <span className="text-slate-300">Paper size:</span>
-                                <span className="font-semibold text-white">A4 (210 × 297 mm)</span>
-                              </li>
-                              <li className="flex items-center justify-between gap-2">
-                                <span className="text-slate-300">Background graphics:</span>
-                                <span className="font-semibold text-emerald-300">Enabled</span>
-                              </li>
-                            </ul>
-                          </div>
+                            <Download className="w-3 h-3" />
+                            <span>Save {readyPdfBlob.fileName}</span>
+                          </a>
+                        )}
+                        {readyDocxBlob && (
+                          <a
+                            href={readyDocxBlob.blobUrl}
+                            download={readyDocxBlob.fileName}
+                            className="inline-flex items-center gap-1 font-semibold text-[#4B4DED] hover:underline"
+                          >
+                            <FileText className="w-3 h-3" />
+                            <span>Save {readyDocxBlob.fileName}</span>
+                          </a>
                         )}
                       </div>
+                    )}
+
+                    {/* Primary Export CTA: Prominent Download Button */}
+                    <div className="pt-1">
+                      <button
+                        type="button"
+                        onClick={handleDownloadPdf}
+                        disabled={isDownloading}
+                        className={`w-full min-h-[46px] px-5 py-2.5 rounded-xl text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all cursor-pointer active:scale-[0.99] disabled:opacity-75 disabled:cursor-wait ${
+                          downloadDone
+                            ? 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-500/20'
+                            : 'bg-[#4B4DED] hover:bg-[#3D3FC9] shadow-[#4B4DED]/25'
+                        }`}
+                      >
+                        {isDownloading ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin shrink-0" />
+                            <span>Generating 300 DPI A4 PDF...</span>
+                          </>
+                        ) : downloadDone ? (
+                          <>
+                            <Check className="w-4 h-4 stroke-[2.5] shrink-0" />
+                            <span>A4 PDF Downloaded!</span>
+                          </>
+                        ) : (
+                          <>
+                            <Download className="w-4 h-4 shrink-0" />
+                            <span>Download A4 PDF</span>
+                            <span className="text-xs text-white/80 font-normal font-mono hidden sm:inline">
+                              ({resolvedFileName()})
+                            </span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+
+                    {/* Secondary Action Grid: Word, Vector Print, PDF Settings, Share, Preview (mobile) */}
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-1">
+                      <button
+                        type="button"
+                        onClick={handleDownloadDocx}
+                        disabled={isDownloadingDocx}
+                        className={`min-h-[40px] px-3 py-2 rounded-xl border text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer disabled:opacity-70 ${
+                          docxDownloadDone
+                            ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
+                            : 'bg-white hover:bg-slate-50 border-slate-200/90 text-[#0F1B4D] shadow-2xs'
+                        }`}
+                      >
+                        {isDownloadingDocx ? (
+                          <>
+                            <Loader2 className="w-3.5 h-3.5 animate-spin text-[#4B4DED]" />
+                            <span className="truncate">Building...</span>
+                          </>
+                        ) : docxDownloadDone ? (
+                          <>
+                            <Check className="w-3.5 h-3.5 text-emerald-600" />
+                            <span>Saved</span>
+                          </>
+                        ) : (
+                          <>
+                            <FileText className="w-3.5 h-3.5 text-[#4B4DED] shrink-0" />
+                            <span className="truncate">Word (.docx)</span>
+                          </>
+                        )}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={handleBrowserPrint}
+                        onMouseEnter={() => setShowPrintSettingsTip(true)}
+                        onMouseLeave={() => setShowPrintSettingsTip(false)}
+                        onFocus={() => setShowPrintSettingsTip(true)}
+                        onBlur={() => setShowPrintSettingsTip(false)}
+                        aria-describedby="vector-print-settings-hint"
+                        className="min-h-[40px] px-3 py-2 rounded-xl bg-white hover:bg-slate-50 border border-slate-200/90 text-[#0F1B4D] text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
+                      >
+                        <Printer className="w-3.5 h-3.5 text-[#4B4DED] shrink-0" />
+                        <span className="truncate">Vector Print</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          commitPendingInputs();
+                          setIsPdfSettingsModalOpen(true);
+                        }}
+                        className="min-h-[40px] px-3 py-2 rounded-xl bg-white hover:bg-slate-50 border border-slate-200/90 text-[#0F1B4D] text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
+                        title="Configure hyperlinks and image compression for PDF export"
+                      >
+                        <Sliders className="w-3.5 h-3.5 text-[#4B4DED] shrink-0" />
+                        <span className="truncate">PDF Settings</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={handleOpenShareModal}
+                        className="min-h-[40px] px-3 py-2 rounded-xl bg-white hover:bg-slate-50 border border-slate-200/90 text-[#0F1B4D] text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
+                        title="Generate a temporary shareable CV link"
+                      >
+                        <Share2 className="w-3.5 h-3.5 text-[#4B4DED] shrink-0" />
+                        <span className="truncate">Share Link</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => handleSwitchMobileMode('preview')}
+                        className="lg:hidden col-span-2 min-h-[40px] px-3 py-2 rounded-xl bg-white hover:bg-slate-50 border border-slate-200/90 text-[#0F1B4D] text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
+                      >
+                        <Eye className="w-3.5 h-3.5 text-[#4B4DED] shrink-0" />
+                        <span>Preview Full A4 CV</span>
+                      </button>
+                    </div>
+
+                    {/* Print hint with interactive tooltip */}
+                    <div className="relative pt-1 border-t border-[#4B4DED]/15 flex items-center justify-between text-[11px] text-slate-500">
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <Info className="w-3.5 h-3.5 text-[#4B4DED] shrink-0" />
+                        <span className="truncate">
+                          For print: set <strong className="font-semibold text-[#0F1B4D]">Margins: None</strong> &amp; <strong className="font-semibold text-[#0F1B4D]">Scale: 100%</strong>
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        id="vector-print-settings-hint"
+                        onClick={() => setShowPrintSettingsTip((prev) => !prev)}
+                        onMouseEnter={() => setShowPrintSettingsTip(true)}
+                        onMouseLeave={() => setShowPrintSettingsTip(false)}
+                        onFocus={() => setShowPrintSettingsTip(true)}
+                        onBlur={() => setShowPrintSettingsTip(false)}
+                        aria-expanded={showPrintSettingsTip}
+                        className="text-[#4B4DED] hover:underline font-medium cursor-pointer shrink-0 ml-2"
+                      >
+                        Print specs
+                      </button>
+
+                      {showPrintSettingsTip && (
+                        <div
+                          role="tooltip"
+                          className="absolute bottom-full right-0 mb-2 w-[264px] max-w-[calc(100vw-2.5rem)] p-3 rounded-xl bg-[#0F1B4D] text-white text-[11px] leading-relaxed shadow-xl border border-white/10 z-30 text-left"
+                        >
+                          <div className="font-bold text-white mb-1.5 flex items-center justify-between gap-2">
+                            <span>Recommended Print Settings</span>
+                            <span className="text-[10px] font-mono text-indigo-200">A4 PDF</span>
+                          </div>
+                          <ul className="space-y-1 text-slate-200">
+                            <li className="flex items-center justify-between gap-2">
+                              <span className="text-slate-300">Margins:</span>
+                              <span className="font-semibold text-white">None</span>
+                            </li>
+                            <li className="flex items-center justify-between gap-2">
+                              <span className="text-slate-300">Scale:</span>
+                              <span className="font-semibold text-white">100%</span>
+                            </li>
+                            <li className="flex items-center justify-between gap-2">
+                              <span className="text-slate-300">Paper size:</span>
+                              <span className="font-semibold text-white">A4 (210 × 297 mm)</span>
+                            </li>
+                            <li className="flex items-center justify-between gap-2">
+                              <span className="text-slate-300">Background graphics:</span>
+                              <span className="font-semibold text-emerald-300">Enabled</span>
+                            </li>
+                          </ul>
+                        </div>
+                      )}
                     </div>
                   </div>
 
@@ -3961,7 +4023,7 @@ export default function BuilderPage() {
                 {/* Fullscreen A4 Inspection Modal Trigger */}
                 <button
                   type="button"
-                  onClick={() => setIsFullscreenPreviewOpen(true)}
+                  onClick={handleOpenFullscreenPreview}
                   className="min-h-[36px] px-2.5 sm:px-3 rounded-xl border border-slate-200/90 bg-white hover:bg-slate-50 text-[#0F1B4D] text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
                   title="Open full-screen A4 CV inspection view"
                   aria-label="Expand full-screen preview"
@@ -4108,23 +4170,23 @@ export default function BuilderPage() {
               </span>
             </div>
 
-            <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
-              <div className="hidden xs:flex sm:flex items-center bg-slate-100 rounded-xl border border-slate-200 p-0.5">
+            <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+              <div className="flex items-center bg-slate-100 rounded-xl border border-slate-200 p-0.5">
                 <button
                   type="button"
-                  onClick={() => setFullscreenZoom((z) => Math.max(50, z - 15))}
-                  disabled={fullscreenZoom <= 50}
+                  onClick={() => setFullscreenZoom((z) => Math.max(30, z - 10))}
+                  disabled={fullscreenZoom <= 30}
                   className="min-h-[30px] min-w-[28px] flex items-center justify-center rounded-lg text-slate-600 hover:bg-white disabled:opacity-35 cursor-pointer"
                   aria-label="Zoom out fullscreen preview"
                 >
                   <ZoomOut className="w-3.5 h-3.5" />
                 </button>
-                <span className="text-xs font-mono font-semibold text-slate-800 min-w-[42px] text-center tabular-nums">
+                <span className="text-[11px] sm:text-xs font-mono font-semibold text-slate-800 min-w-[38px] sm:min-w-[42px] text-center tabular-nums">
                   {fullscreenZoom}%
                 </span>
                 <button
                   type="button"
-                  onClick={() => setFullscreenZoom((z) => Math.min(145, z + 15))}
+                  onClick={() => setFullscreenZoom((z) => Math.min(145, z + 10))}
                   disabled={fullscreenZoom >= 145}
                   className="min-h-[30px] min-w-[28px] flex items-center justify-center rounded-lg text-slate-600 hover:bg-white disabled:opacity-35 cursor-pointer"
                   aria-label="Zoom in fullscreen preview"
@@ -4133,14 +4195,20 @@ export default function BuilderPage() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setFullscreenZoom(100)}
+                  onClick={() => {
+                    const mobileFit = typeof window !== 'undefined' && window.innerWidth < 640
+                      ? Math.min(100, Math.round(((window.innerWidth - 32) / A4_WIDTH_PX) * 100))
+                      : 100;
+                    setFullscreenZoom((curr) => (curr === mobileFit ? 100 : mobileFit));
+                  }}
                   className={`min-h-[30px] px-2 rounded-lg text-[11px] font-semibold cursor-pointer ${
                     fullscreenZoom === 100
                       ? 'bg-[#4B4DED] text-white'
                       : 'text-slate-600 hover:bg-white'
                   }`}
+                  title="Toggle between Fit and 100%"
                 >
-                  100%
+                  {fullscreenZoom === 100 ? '100%' : 'Fit'}
                 </button>
               </div>
 

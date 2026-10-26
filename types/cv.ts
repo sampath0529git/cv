@@ -3,8 +3,11 @@ export type TemplateCategory =
   | 'Modern'
   | 'Minimal'
   | 'Executive'
+  | 'Creative'
   | 'Creative-Light'
-  | 'Graduate';
+  | 'Graduate'
+  | 'Tech'
+  | 'Healthcare';
 
 export type FontScale = 'sm' | 'md' | 'lg';
 
@@ -124,6 +127,7 @@ export interface EducationItem {
 
 export interface SkillGroup {
   group?: string;
+  category?: string;
   items: string[];
 }
 

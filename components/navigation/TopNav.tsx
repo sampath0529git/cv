@@ -2,12 +2,28 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Menu, X, ChevronRight } from 'lucide-react';
 import Logo from '@/components/brand/Logo';
 
 export default function TopNav() {
+  const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+
+  const navItems = [
+    { href: '/', label: 'Home', isActive: pathname === '/' },
+    {
+      href: '/templates',
+      label: 'Templates',
+      isActive: pathname.startsWith('/templates'),
+    },
+    {
+      href: '/blog',
+      label: 'Blog',
+      isActive: pathname.startsWith('/blog'),
+    },
+  ];
 
   // Scroll listener for sticky glassmorphism elevation
   useEffect(() => {
@@ -44,29 +60,24 @@ export default function TopNav() {
           <Logo variant="dark" href="/" />
         </div>
 
-        {/* Zone 2: Desktop Navigation Links (Features, Pricing removed) */}
+        {/* Zone 2: Desktop Navigation Links */}
         <nav className="hidden md:flex items-center gap-8" aria-label="Main Navigation">
-          <Link
-            href="/"
-            className="relative py-2 text-[15px] font-semibold text-[#2563EB] whitespace-nowrap transition-colors"
-          >
-            <span>Home</span>
-            <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#2563EB] rounded-full" />
-          </Link>
-
-          <Link
-            href="/templates"
-            className="py-2 text-[15px] font-medium text-slate-700 hover:text-[#2563EB] transition-colors whitespace-nowrap"
-          >
-            Templates
-          </Link>
-
-          <Link
-            href="/blog"
-            className="py-2 text-[15px] font-medium text-slate-700 hover:text-[#2563EB] transition-colors whitespace-nowrap"
-          >
-            Blog
-          </Link>
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`relative py-2 text-[15px] whitespace-nowrap transition-colors ${
+                item.isActive
+                  ? 'font-semibold text-[#2563EB]'
+                  : 'font-medium text-slate-700 hover:text-[#2563EB]'
+              }`}
+            >
+              <span>{item.label}</span>
+              {item.isActive && (
+                <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#2563EB] rounded-full" />
+              )}
+            </Link>
+          ))}
         </nav>
 
         {/* Zone 3: Desktop CTA (Login button removed) */}
@@ -108,32 +119,25 @@ export default function TopNav() {
           />
           <div className="relative z-50 md:hidden border-t border-white/60 bg-white/90 backdrop-blur-2xl px-4 pt-3 pb-6 shadow-2xl rounded-b-3xl">
             <nav className="flex flex-col divide-y divide-slate-100" aria-label="Mobile Navigation">
-              <Link
-                href="/"
-                onClick={() => setMobileMenuOpen(false)}
-                className="min-h-[48px] flex items-center justify-between px-3 py-2.5 text-sm font-semibold text-[#2563EB]"
-              >
-                <span>Home</span>
-                <ChevronRight className="w-4 h-4 text-[#2563EB]" />
-              </Link>
-
-              <Link
-                href="/templates"
-                onClick={() => setMobileMenuOpen(false)}
-                className="min-h-[48px] flex items-center justify-between px-3 py-2.5 text-sm font-medium text-slate-800"
-              >
-                <span>Templates</span>
-                <ChevronRight className="w-4 h-4 text-slate-400" />
-              </Link>
-
-              <Link
-                href="/blog"
-                onClick={() => setMobileMenuOpen(false)}
-                className="min-h-[48px] flex items-center justify-between px-3 py-2.5 text-sm font-medium text-slate-800"
-              >
-                <span>Blog</span>
-                <ChevronRight className="w-4 h-4 text-slate-400" />
-              </Link>
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`min-h-[48px] flex items-center justify-between px-3 py-2.5 text-sm ${
+                    item.isActive
+                      ? 'font-semibold text-[#2563EB]'
+                      : 'font-medium text-slate-800'
+                  }`}
+                >
+                  <span>{item.label}</span>
+                  <ChevronRight
+                    className={`w-4 h-4 ${
+                      item.isActive ? 'text-[#2563EB]' : 'text-slate-400'
+                    }`}
+                  />
+                </Link>
+              ))}
             </nav>
 
             <div className="mt-4 pt-3 border-t border-slate-100">

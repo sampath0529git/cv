@@ -204,7 +204,7 @@ export default async function BlogPostPage({ params }: Props) {
         </header>
 
         {/* Featured Image & Body */}
-        <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
+        <article className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 min-w-0 blog-article-content">
           <div className="relative h-64 sm:h-96 w-full rounded-2xl overflow-hidden shadow-md bg-slate-200 mb-8 sm:mb-10">
             <Image
               src={post.image}
@@ -217,18 +217,21 @@ export default async function BlogPostPage({ params }: Props) {
             />
           </div>
 
-          <div className="prose prose-slate max-w-none space-y-6 text-slate-700 leading-relaxed text-base sm:text-lg">
-            <p className="font-medium text-slate-900 text-lg sm:text-xl leading-relaxed border-l-4 border-[#2563EB] pl-4 italic bg-blue-50/50 py-2 rounded-r-xl">
+          <div className="prose prose-slate max-w-none space-y-6 text-slate-700 leading-relaxed text-base sm:text-lg break-words [overflow-wrap:anywhere] min-w-0">
+            <p className="font-medium text-slate-900 text-lg sm:text-xl leading-relaxed border-l-4 border-[#2563EB] pl-4 italic bg-blue-50/50 py-2 rounded-r-xl break-words whitespace-pre-line [text-wrap:pretty]">
               {post.content.intro}
             </p>
 
             {post.content.sections.map((sec, idx) => (
-              <section key={idx} className="space-y-3 pt-4">
-                <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+              <section key={idx} className="space-y-3 pt-4 min-w-0">
+                <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight break-words [text-wrap:pretty]">
                   {sec.heading}
                 </h2>
                 {sec.body.map((p, pIdx) => (
-                  <p key={pIdx} className="text-slate-700 leading-relaxed text-sm sm:text-base">
+                  <p
+                    key={pIdx}
+                    className="text-slate-700 leading-relaxed text-sm sm:text-base break-words whitespace-pre-line [overflow-wrap:anywhere] [text-wrap:pretty]"
+                  >
                     {p}
                   </p>
                 ))}
@@ -236,12 +239,12 @@ export default async function BlogPostPage({ params }: Props) {
             ))}
 
             {/* Contextual In-Article Callout Box */}
-            <div className="my-8 p-6 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/80 shadow-xs space-y-3">
+            <div className="my-8 p-6 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/80 shadow-xs space-y-3 min-w-0">
               <div className="flex items-center gap-2 text-[#2563EB] font-bold text-sm">
                 <Sparkles className="w-4 h-4" />
                 <span>UK CV Builder Tip</span>
               </div>
-              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed break-words whitespace-pre-line">
                 Looking to format your CV in standard British A4 dimensions? Our free online CV maker includes recruiter-verified templates for graduates, career changers, and experienced professionals.
               </p>
               <div className="pt-1">
@@ -256,7 +259,7 @@ export default async function BlogPostPage({ params }: Props) {
             </div>
 
             <div className="pt-4 border-t border-slate-200">
-              <p className="text-sm sm:text-base text-slate-600 italic">
+              <p className="text-sm sm:text-base text-slate-600 italic break-words whitespace-pre-line [text-wrap:pretty]">
                 {post.content.conclusion}
               </p>
             </div>

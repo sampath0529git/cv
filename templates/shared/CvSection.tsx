@@ -18,7 +18,7 @@ export default function CvSection({
   accentColor,
 }: CvSectionProps) {
   return (
-    <section className={`mb-3.5 break-inside-avoid ${className}`}>
+    <section className={`mb-3.5 break-inside-avoid min-w-0 ${className}`}>
       {/* Semantic H2 heading for ATS compliance */}
       <div className="mb-2">
         {variant === 'underline' && (
@@ -78,7 +78,7 @@ export default function CvSection({
         )}
       </div>
 
-      <div className="space-y-2">{children}</div>
+      <div className="space-y-2 min-w-0">{children}</div>
     </section>
   );
 }

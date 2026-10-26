@@ -382,21 +382,21 @@ export default function ModernExecutiveTemplate({
 
   return (
     <div
-      className="w-[794px] h-[1123px] min-w-[794px] max-w-[794px] min-h-[1123px] max-h-[1123px] print:h-auto print:min-h-[297mm] print:max-h-none print:overflow-visible box-border text-[11px] leading-relaxed text-slate-800 bg-white flex flex-col justify-between overflow-hidden select-text"
+      className="cv-template-container w-[794px] h-[1123px] min-w-[794px] max-w-[794px] min-h-[1123px] max-h-[1123px] print:h-auto print:min-h-[297mm] print:max-h-none print:overflow-visible box-border text-[11px] leading-relaxed text-slate-800 bg-white flex flex-col justify-between overflow-hidden select-text"
       style={{
         width: `${A4_WIDTH_PX}px`,
         height: `${A4_HEIGHT_PX}px`,
         fontFamily: 'inherit',
       }}
     >
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-w-0">
         {/* Top Executive Accent Header */}
         {isFirstPage ? (
           <header
             style={{ backgroundColor: accent }}
-            className="text-white px-11 py-7 break-inside-avoid"
+            className="text-white px-11 py-7 break-inside-avoid min-w-0"
           >
-            <div className="flex items-center justify-between gap-6">
+            <div className="flex items-center justify-between gap-6 min-w-0">
               <div className="flex items-center gap-4 min-w-0">
                 {showPhoto && (
                   <img
@@ -407,11 +407,11 @@ export default function ModernExecutiveTemplate({
                   />
                 )}
                 <div className="min-w-0">
-                  <h1 className="text-[26px] font-bold tracking-tight text-white leading-tight">
+                  <h1 className="text-[26px] font-bold tracking-tight text-white leading-tight break-words [overflow-wrap:anywhere]">
                     {fullName}
                   </h1>
                   {jobTitle && (
-                    <p className="text-[13px] font-medium text-white/90 mt-1 tracking-wide">
+                    <p className="text-[13px] font-medium text-white/90 mt-1 tracking-wide break-words [overflow-wrap:anywhere]">
                       {jobTitle}
                     </p>
                   )}
@@ -419,7 +419,7 @@ export default function ModernExecutiveTemplate({
               </div>
 
               {contactItems.length > 0 && (
-                <div className="text-[10px] text-white/90 text-right space-y-0.5 leading-snug shrink-0 max-w-[260px]">
+                <div className="text-[10px] text-white/90 text-right space-y-0.5 leading-snug shrink-0 max-w-[260px] min-w-0">
                   {email && <div className="truncate">{email}</div>}
                   {phone && <div className="tabular-nums">{phone}</div>}
                   {location && <div>{location}</div>}
@@ -435,16 +435,16 @@ export default function ModernExecutiveTemplate({
             </div>
           </header>
         ) : (
-          <div className="px-11 pt-7 pb-2.5 border-b border-slate-200 flex justify-between items-baseline text-xs break-inside-avoid">
-            <span className="font-bold text-slate-900">{fullName}</span>
-            <span className="text-slate-400 text-[10px] tabular-nums">
+          <div className="px-11 pt-7 pb-2.5 border-b border-slate-200 flex justify-between items-baseline text-xs break-inside-avoid min-w-0">
+            <span className="font-bold text-slate-900 truncate">{fullName}</span>
+            <span className="text-slate-400 text-[10px] tabular-nums whitespace-nowrap">
               Curriculum Vitae · Page {pageIndex + 1} of {totalPages}
             </span>
           </div>
         )}
 
         {/* Content Body */}
-        <div className="px-11 py-7 space-y-5 flex-1">
+        <div className="px-11 py-7 space-y-5 flex-1 min-w-0">
           {sectionOrder.map((key) => renderSection(key))}
           {isCompletelyEmpty && <EmptyCvGuide accent={accent} />}
         </div>

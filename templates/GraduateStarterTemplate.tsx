@@ -93,25 +93,25 @@ export default function GraduateStarterTemplate({
 
   return (
     <div
-      className="w-[794px] h-[1123px] min-w-[794px] max-w-[794px] min-h-[1123px] max-h-[1123px] print:h-auto print:min-h-[297mm] print:max-h-none print:overflow-visible box-border px-11 py-9 text-[11px] leading-relaxed text-slate-800 bg-white flex flex-col justify-between overflow-hidden select-text"
+      className="cv-template-container w-[794px] h-[1123px] min-w-[794px] max-w-[794px] min-h-[1123px] max-h-[1123px] print:h-auto print:min-h-[297mm] print:max-h-none print:overflow-visible box-border px-11 py-9 text-[11px] leading-relaxed text-slate-800 bg-white flex flex-col justify-between overflow-hidden select-text"
       style={{
         width: `${A4_WIDTH_PX}px`,
         height: `${A4_HEIGHT_PX}px`,
         fontFamily: 'inherit',
       }}
     >
-      <div className="space-y-4">
+      <div className="space-y-4 min-w-0">
         {/* Centered Graduate Header */}
         {isFirstPage ? (
           <header
             style={{ borderBottomColor: `${accent}30` }}
-            className="text-center pb-4 border-b break-inside-avoid"
+            className="text-center pb-4 border-b break-inside-avoid min-w-0"
           >
-            <h1 className="text-[26px] font-bold tracking-tight text-slate-900 leading-tight">
+            <h1 className="text-[26px] font-bold tracking-tight text-slate-900 leading-tight break-words [overflow-wrap:anywhere]">
               {fullName}
             </h1>
             {jobTitle && (
-              <p style={{ color: accent }} className="text-xs font-semibold mt-1">
+              <p style={{ color: accent }} className="text-xs font-semibold mt-1 break-words [overflow-wrap:anywhere]">
                 {jobTitle}
               </p>
             )}

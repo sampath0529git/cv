@@ -93,20 +93,20 @@ export default function TechCompactTemplate({
 
   return (
     <div
-      className="w-[794px] h-[1123px] min-w-[794px] max-w-[794px] min-h-[1123px] max-h-[1123px] print:h-auto print:min-h-[297mm] print:max-h-none print:overflow-visible box-border px-11 py-9 text-[11px] leading-relaxed text-slate-800 bg-white flex flex-col justify-between overflow-hidden select-text"
+      className="cv-template-container w-[794px] h-[1123px] min-w-[794px] max-w-[794px] min-h-[1123px] max-h-[1123px] print:h-auto print:min-h-[297mm] print:max-h-none print:overflow-visible box-border px-11 py-9 text-[11px] leading-relaxed text-slate-800 bg-white flex flex-col justify-between overflow-hidden select-text"
       style={{
         width: `${A4_WIDTH_PX}px`,
         height: `${A4_HEIGHT_PX}px`,
         fontFamily: 'inherit',
       }}
     >
-      <div className="space-y-4">
+      <div className="space-y-4 min-w-0">
         {/* Top Accent Strip + Technical Header */}
         {isFirstPage ? (
-          <header className="pb-3.5 border-b border-slate-200 break-inside-avoid">
+          <header className="pb-3.5 border-b border-slate-200 break-inside-avoid min-w-0">
             <div style={{ backgroundColor: accent }} className="w-12 h-1 rounded-full mb-3" />
-            <div className="flex justify-between items-baseline gap-4">
-              <h1 className="text-[25px] font-bold tracking-tight text-slate-950 leading-none">
+            <div className="flex justify-between items-baseline gap-4 min-w-0">
+              <h1 className="text-[25px] font-bold tracking-tight text-slate-950 leading-none break-words [overflow-wrap:anywhere]">
                 {fullName}
               </h1>
               {jobTitle && (

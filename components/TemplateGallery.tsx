@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { CV, DateFormatOption, normalizeFontBoldness } from '@/types/cv';
+import { CV, DateFormatOption, normalizeFontBoldness, TemplateDefinition } from '@/types/cv';
 import { CV_TEMPLATES, TEMPLATE_CATEGORIES } from '@/templates/registry';
 import { SAMPLE_UK_CV } from '@/data/sampleCv';
 import { applyDateFormatToCv } from '@/lib/dateFormat';
-import { Check, Camera, ShieldCheck } from 'lucide-react';
+import { Check, Camera, ShieldCheck, Eye } from 'lucide-react';
+import TemplatePreviewModal from '@/components/common/TemplatePreviewModal';
 
 interface TemplateGalleryProps {
   selectedTemplateId: string;
@@ -84,6 +85,7 @@ export default function TemplateGallery({
   className = '',
 }: TemplateGalleryProps) {
   const [activeCategory, setActiveCategory] = useState<string>('All');
+  const [inspectTemplate, setInspectTemplate] = useState<TemplateDefinition | null>(null);
 
   const filteredTemplates = CV_TEMPLATES.filter((t) => {
     if (activeCategory === 'All') return true;
@@ -177,6 +179,20 @@ export default function TemplateGallery({
               <div className="relative">
                 <ScaledTemplateThumbnail Component={TemplateComponent} cv={thumbnailCv} />
 
+                {/* Quick Full-Screen Preview Affordance */}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setInspectTemplate(template);
+                  }}
+                  className="absolute top-2 left-2 z-10 w-6 h-6 rounded-full bg-white/95 hover:bg-white text-slate-700 hover:text-[#4B4DED] shadow-sm flex items-center justify-center transition-colors cursor-pointer"
+                  title={`Preview ${template.name} full size`}
+                  aria-label={`Preview ${template.name}`}
+                >
+                  <Eye className="w-3 h-3" />
+                </button>
+
                 {isSelected && (
                   <div className="absolute top-2 right-2 z-10 w-6 h-6 rounded-full bg-[#4B4DED] text-white flex items-center justify-center shadow-md">
                     <Check className="w-3.5 h-3.5 stroke-[3]" />
@@ -214,32 +230,58 @@ export default function TemplateGallery({
                   </p>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onSelectTemplate(template.id);
-                  }}
-                  className={`w-full min-h-[38px] sm:min-h-[36px] py-1.5 px-2 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap ${
-                    isSelected
-                      ? 'bg-[#4B4DED] text-white shadow-2xs'
-                      : 'bg-slate-100 hover:bg-[#4B4DED] hover:text-white text-slate-700'
-                  }`}
-                >
-                  {isSelected ? (
-                    <>
-                      <Check className="w-3.5 h-3.5 stroke-[2.8]" />
-                      <span>Selected</span>
-                    </>
-                  ) : (
-                    <span>Use Template</span>
-                  )}
-                </button>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setInspectTemplate(template);
+                    }}
+                    className="min-h-[36px] px-2.5 rounded-xl border border-slate-200 hover:border-slate-300 bg-slate-50 hover:bg-white text-slate-600 hover:text-[#0F1B4D] text-xs font-semibold flex items-center justify-center transition-colors cursor-pointer"
+                    title="Inspect A4 layout"
+                  >
+                    <Eye className="w-3.5 h-3.5" />
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onSelectTemplate(template.id);
+                    }}
+                    className={`flex-1 min-h-[36px] py-1.5 px-2 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap ${
+                      isSelected
+                        ? 'bg-[#4B4DED] text-white shadow-2xs'
+                        : 'bg-slate-100 hover:bg-[#4B4DED] hover:text-white text-slate-700'
+                    }`}
+                  >
+                    {isSelected ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 stroke-[2.8]" />
+                        <span>Selected</span>
+                      </>
+                    ) : (
+                      <span>Use Template</span>
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
           );
         })}
       </div>
+
+      {/* Full Responsive Preview Modal */}
+      <TemplatePreviewModal
+        template={inspectTemplate}
+        onClose={() => setInspectTemplate(null)}
+        onUseTemplate={(id) => {
+          onSelectTemplate(id);
+          setInspectTemplate(null);
+        }}
+        customCv={previewCv}
+        accentColor={accentColor}
+      />
     </div>
   );
 }
