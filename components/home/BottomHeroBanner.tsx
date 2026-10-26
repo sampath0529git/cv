@@ -1,11 +1,93 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { ArrowRight, Sparkles } from 'lucide-react';
+import { getTemplateById } from '@/templates/registry';
+import { SAMPLE_UK_CV } from '@/data/sampleCv';
+import { A4_WIDTH_PX, A4_HEIGHT_PX, TemplateDefinition } from '@/types/cv';
+import { useCvStore } from '@/store/useCvStore';
+
+function FannedTemplateCard({
+  template,
+  accentColor,
+  className,
+  onSelect,
+}: {
+  template: TemplateDefinition;
+  accentColor: string;
+  className?: string;
+  onSelect: (id: string) => void;
+}) {
+  const Component = template.component;
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState<number>(0.24);
+
+  useEffect(() => {
+    const el = cardRef.current;
+    if (!el) return;
+
+    const updateScale = (width: number) => {
+      if (width > 0) {
+        setScale(Number((width / A4_WIDTH_PX).toFixed(4)));
+      }
+    };
+
+    updateScale(el.clientWidth);
+
+    const observer = new ResizeObserver((entries) => {
+      const w = entries[0]?.contentRect?.width || el.clientWidth;
+      updateScale(w);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={cardRef}
+      onClick={() => onSelect(template.id)}
+      title={`Use ${template.name} template`}
+      className={`w-44 sm:w-48 aspect-[210/297] bg-white rounded-xl overflow-hidden border border-slate-200/90 select-none cursor-pointer transition-transform duration-300 ${className || ''}`}
+    >
+      <div
+        style={{
+          width: `${A4_WIDTH_PX}px`,
+          height: `${A4_HEIGHT_PX}px`,
+          transform: `scale(${scale})`,
+          transformOrigin: 'top left',
+        }}
+        className="absolute top-0 left-0 pointer-events-none bg-white text-slate-900 text-left"
+      >
+        <Component
+          cv={{
+            ...SAMPLE_UK_CV,
+            settings: {
+              ...SAMPLE_UK_CV.settings,
+              templateId: template.id,
+              accentColor,
+            },
+          }}
+        />
+      </div>
+      <div className="absolute inset-0 rounded-xl ring-1 ring-inset ring-slate-900/5 pointer-events-none" />
+    </div>
+  );
+}
 
 export default function BottomHeroBanner() {
+  const router = useRouter();
+  const setStoreTemplate = useCvStore((state) => state.setTemplate);
+
+  const backTemplate = getTemplateById('toronto');
+  const frontTemplate = getTemplateById('hopkins');
+
+  const handleSelectTemplate = (templateId: string) => {
+    setStoreTemplate(templateId as any);
+    router.push('/start');
+  };
+
   return (
     <section
       aria-label="Get Started Today"
@@ -32,7 +114,7 @@ export default function BottomHeroBanner() {
               </h2>
 
               <p className="text-xs sm:text-sm text-slate-300 max-w-lg leading-relaxed">
-                Join 1+ million people who&apos;ve already built their dream career with Makemeyour.
+                Join 1+ million people who&apos;ve already built their dream career with freecvmakeruk.co.uk.
               </p>
 
               <div className="pt-3">
@@ -46,45 +128,30 @@ export default function BottomHeroBanner() {
               </div>
             </div>
 
-            {/* Right Visual: Fanned CVs with "Build your future today" badge */}
+            {/* Right Visual: Fanned Real CV Templates with "Build your future today" badge */}
             <div className="lg:col-span-5 relative flex items-center justify-center pt-4 lg:pt-0">
-              <div className="relative w-full max-w-[340px] aspect-[4/3] flex items-center justify-center">
+              <div className="relative w-full max-w-[340px] min-h-[290px] sm:min-h-[310px] flex items-center justify-center">
                 {/* Floating Badge: Frosted Glass */}
-                <div className="absolute top-4 right-0 z-20 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-xl text-white text-[11px] font-bold flex items-center gap-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.3),inset_0_1px_1px_rgba(255,255,255,0.4)] border border-white/30">
+                <div className="absolute top-3 right-0 z-30 px-3.5 py-1.5 rounded-full bg-slate-900/65 backdrop-blur-xl text-white text-[11px] font-bold flex items-center gap-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.35)] border border-white/25 pointer-events-none">
                   <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
                   <span>Build your future today</span>
                 </div>
 
-                {/* Layered CV sheets */}
-                <div className="relative w-48 h-64 bg-white rounded-xl shadow-2xl overflow-hidden transform rotate-6 border border-slate-200 p-3 select-none">
-                  <div className="flex items-center gap-2 border-b border-slate-100 pb-2 mb-2">
-                    <div className="w-6 h-6 rounded-full bg-slate-200" />
-                    <div className="space-y-1">
-                      <div className="w-16 h-2 bg-slate-800 rounded" />
-                      <div className="w-10 h-1.5 bg-[#2563EB] rounded" />
-                    </div>
-                  </div>
-                  <div className="space-y-1.5">
-                    <div className="w-full h-1.5 bg-slate-200 rounded" />
-                    <div className="w-4/5 h-1.5 bg-slate-200 rounded" />
-                    <div className="w-3/4 h-1.5 bg-slate-200 rounded" />
-                  </div>
-                </div>
+                {/* Back CV Template Sheet (Toronto 2-column layout) */}
+                <FannedTemplateCard
+                  template={backTemplate}
+                  accentColor="#1E3A8A"
+                  onSelect={handleSelectTemplate}
+                  className="relative z-10 translate-x-7 -translate-y-2 rotate-6 hover:rotate-3 hover:-translate-y-3 shadow-[0_20px_45px_rgba(0,0,0,0.45)]"
+                />
 
-                <div className="absolute top-6 left-6 w-48 h-64 bg-white rounded-xl shadow-xl overflow-hidden transform -rotate-3 border border-slate-200 p-3 select-none">
-                  <div className="flex items-center gap-2 border-b border-slate-100 pb-2 mb-2">
-                    <div className="w-6 h-6 rounded-full bg-slate-200" />
-                    <div className="space-y-1">
-                      <div className="w-16 h-2 bg-slate-800 rounded" />
-                      <div className="w-10 h-1.5 bg-emerald-500 rounded" />
-                    </div>
-                  </div>
-                  <div className="space-y-1.5">
-                    <div className="w-full h-1.5 bg-slate-200 rounded" />
-                    <div className="w-4/5 h-1.5 bg-slate-200 rounded" />
-                    <div className="w-3/4 h-1.5 bg-slate-200 rounded" />
-                  </div>
-                </div>
+                {/* Front CV Template Sheet (Hopkins Executive layout) */}
+                <FannedTemplateCard
+                  template={frontTemplate}
+                  accentColor="#2563EB"
+                  onSelect={handleSelectTemplate}
+                  className="absolute z-20 -translate-x-8 translate-y-3 -rotate-3 hover:-rotate-1 hover:translate-y-1.5 shadow-[0_24px_50px_rgba(0,0,0,0.55)]"
+                />
               </div>
             </div>
           </div>

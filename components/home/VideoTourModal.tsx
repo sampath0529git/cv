@@ -73,7 +73,7 @@ export default function VideoTourModal({ isOpen, onClose }: VideoTourModalProps)
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
             <h3 id="tour-title" className="text-base sm:text-lg font-bold text-slate-900">
-              How Makemeyour Works in 3 Minutes
+              How freecvmakeruk.co.uk Works in 3 Minutes
             </h3>
           </div>
           <button

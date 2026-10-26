@@ -390,7 +390,12 @@ export function paginateCv(cv: CV, isTwoColumn: boolean = false): PageContent[] 
 
         if (isFirstInExp) {
           const minRequired = Math.min(itemH, estimateExperienceHeaderHeight(scaleMult) + 64);
-          if (currentHeight + titleHeight + minRequired > usableHeight - ITEM_SAFETY_BUFFER) {
+          const isAtTopOfContinuationPage =
+            !currentPage.showMainHeader && currentHeight <= CONTINUATION_HEADER_HEIGHT;
+          if (
+            (exp.forceNewPage && !isAtTopOfContinuationPage) ||
+            currentHeight + titleHeight + minRequired > usableHeight - ITEM_SAFETY_BUFFER
+          ) {
             startNewPage();
           }
           currentPage.experienceTitle = 'Work Experience';
@@ -398,7 +403,10 @@ export function paginateCv(cv: CV, isTwoColumn: boolean = false): PageContent[] 
           isFirstInExp = false;
         } else {
           const minRequired = Math.min(itemH, estimateExperienceHeaderHeight(scaleMult) + 64);
-          if (currentHeight + minRequired > usableHeight - ITEM_SAFETY_BUFFER) {
+          if (
+            exp.forceNewPage ||
+            currentHeight + minRequired > usableHeight - ITEM_SAFETY_BUFFER
+          ) {
             startNewPage();
             currentPage.experienceTitle = 'Work Experience (continued)';
             currentHeight += titleHeight;
@@ -448,13 +456,21 @@ export function paginateCv(cv: CV, isTwoColumn: boolean = false): PageContent[] 
         const itemH = estimateEducationItemHeight(edu, false, scaleMult);
 
         if (isFirstInEdu) {
-          if (currentHeight + titleHeight + itemH > usableHeight - ITEM_SAFETY_BUFFER) {
+          const isAtTopOfContinuationPage =
+            !currentPage.showMainHeader && currentHeight <= CONTINUATION_HEADER_HEIGHT;
+          if (
+            (edu.forceNewPage && !isAtTopOfContinuationPage) ||
+            currentHeight + titleHeight + itemH > usableHeight - ITEM_SAFETY_BUFFER
+          ) {
             startNewPage();
           }
           currentPage.educationTitle = 'Education';
           currentHeight += titleHeight;
           isFirstInEdu = false;
-        } else if (currentHeight + itemH > usableHeight - ITEM_SAFETY_BUFFER) {
+        } else if (
+          edu.forceNewPage ||
+          currentHeight + itemH > usableHeight - ITEM_SAFETY_BUFFER
+        ) {
           startNewPage();
           currentPage.educationTitle = 'Education (continued)';
           currentHeight += titleHeight;
@@ -633,23 +649,38 @@ export function paginateCv(cv: CV, isTwoColumn: boolean = false): PageContent[] 
 
     // 2. Sidebar Educations
     if (cv.education && cv.education.length > 0) {
-      if (sHeight + 92 > sidebarBudget) {
-        sPageIdx++;
-        sHeight = 0;
-      }
-      sHeight += 34;
+      let hasPlacedAnyEdu = false;
+      let eduHeadingAddedOnCurrentSidebar = false;
+
       for (const edu of cv.education) {
         const qualLines = Math.max(1, Math.ceil((edu.qualification || '').length / 26));
         const instLines = Math.max(1, Math.ceil((edu.institution || '').length / 28));
-        const eduH = Math.round((28 + qualLines * 16 + instLines * 15 + (edu.grade ? 16 : 0)) * scaleMult);
-        if (sHeight + eduH > sidebarBudget) {
+        const eduH = Math.round(
+          (28 + qualLines * 16 + instLines * 15 + (edu.grade ? 16 : 0)) * scaleMult
+        );
+        const headingOverhead = eduHeadingAddedOnCurrentSidebar ? 0 : 34;
+        const isAtTopOfContinuationSidebar = sPageIdx > 0 && sHeight === 0;
+
+        if (
+          (edu.forceNewPage && !isAtTopOfContinuationSidebar) ||
+          sHeight + headingOverhead + eduH > sidebarBudget
+        ) {
           sPageIdx++;
-          sHeight = 34;
+          sHeight = 0;
+          eduHeadingAddedOnCurrentSidebar = false;
         }
+
         const target = ensurePage(sPageIdx);
+        if (!eduHeadingAddedOnCurrentSidebar) {
+          sHeight += 34;
+          eduHeadingAddedOnCurrentSidebar = true;
+          target.educationTitle = hasPlacedAnyEdu ? 'Education (continued)' : 'Education';
+        }
+
         target.sidebarEducations = target.sidebarEducations || [];
         target.sidebarEducations.push(edu);
         target.educations.push(edu);
+        hasPlacedAnyEdu = true;
         sHeight += eduH;
       }
       sHeight += 24;

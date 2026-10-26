@@ -243,14 +243,21 @@ export default function ImportPage() {
                 <SampleCvPresets onSelectPreset={handleSelectPreset} />
               </div>
 
-              {/* Back link */}
-              <div className="flex items-center justify-center pt-6 mt-6 border-t border-slate-100">
+              {/* Back links */}
+              <div className="flex items-center justify-center gap-4 pt-6 mt-6 border-t border-slate-100">
                 <Link
-                  href="/start"
+                  href="/"
                   className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-slate-500 hover:text-[#4B4DED] transition-colors"
                 >
                   <ChevronLeft className="w-4 h-4 stroke-[2.5]" />
-                  <span>Back to start options</span>
+                  <span>Back to Home</span>
+                </Link>
+                <span className="text-slate-300" aria-hidden="true">·</span>
+                <Link
+                  href="/start"
+                  className="text-xs sm:text-sm font-semibold text-slate-500 hover:text-[#4B4DED] transition-colors"
+                >
+                  <span>All start options</span>
                 </Link>
               </div>
             </div>

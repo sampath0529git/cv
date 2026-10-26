@@ -602,3 +602,100 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
 }
 
+/* Proportional CV Document Letter Spacing Control */
+.cv-page[data-has-letter-spacing="true"] h1,
+.cv-page[data-has-letter-spacing="true"] h2,
+.cv-page[data-has-letter-spacing="true"] h3,
+.cv-page[data-has-letter-spacing="true"] h4,
+.cv-page[data-has-letter-spacing="true"] h5,
+.cv-page[data-has-letter-spacing="true"] h6,
+.cv-print-sheet[data-has-letter-spacing="true"] h1,
+.cv-print-sheet[data-has-letter-spacing="true"] h2,
+.cv-print-sheet[data-has-letter-spacing="true"] h3,
+.cv-print-sheet[data-has-letter-spacing="true"] h4,
+.cv-print-sheet[data-has-letter-spacing="true"] h5,
+.cv-print-sheet[data-has-letter-spacing="true"] h6 {
+  letter-spacing: calc(-0.025em + var(--cv-letter-spacing, 0px));
+}
+
+.cv-page[data-has-letter-spacing="true"] .tracking-tighter,
+.cv-print-sheet[data-has-letter-spacing="true"] .tracking-tighter {
+  letter-spacing: calc(-0.05em + var(--cv-letter-spacing, 0px)) !important;
+}
+
+.cv-page[data-has-letter-spacing="true"] .tracking-tight,
+.cv-print-sheet[data-has-letter-spacing="true"] .tracking-tight {
+  letter-spacing: calc(-0.025em + var(--cv-letter-spacing, 0px)) !important;
+}
+
+.cv-page[data-has-letter-spacing="true"] .tracking-normal,
+.cv-print-sheet[data-has-letter-spacing="true"] .tracking-normal {
+  letter-spacing: var(--cv-letter-spacing, 0px) !important;
+}
+
+.cv-page[data-has-letter-spacing="true"] .tracking-wide,
+.cv-print-sheet[data-has-letter-spacing="true"] .tracking-wide {
+  letter-spacing: calc(0.025em + var(--cv-letter-spacing, 0px)) !important;
+}
+
+.cv-page[data-has-letter-spacing="true"] .tracking-wider,
+.cv-print-sheet[data-has-letter-spacing="true"] .tracking-wider {
+  letter-spacing: calc(0.05em + var(--cv-letter-spacing, 0px)) !important;
+}
+
+.cv-page[data-has-letter-spacing="true"] .tracking-widest,
+.cv-print-sheet[data-has-letter-spacing="true"] .tracking-widest {
+  letter-spacing: calc(0.1em + var(--cv-letter-spacing, 0px)) !important;
+}
+
+/* Granular CV Document Font Boldness Controls (Header, Section Headings, Subheadings, Section Body Text) */
+.cv-page[data-bold-header="true"] header h1,
+.cv-page[data-bold-header="true"] header h1 span,
+.cv-print-sheet[data-bold-header="true"] header h1,
+.cv-print-sheet[data-bold-header="true"] header h1 span {
+  font-weight: 900 !important;
+  -webkit-text-stroke-width: 0.35px;
+  -webkit-text-stroke-color: currentColor;
+}
+
+.cv-page[data-bold-header="true"] header :is(.font-semibold, .font-medium, strong),
+.cv-print-sheet[data-bold-header="true"] header :is(.font-semibold, .font-medium, strong) {
+  font-weight: 800 !important;
+  -webkit-text-stroke-width: 0.2px;
+  -webkit-text-stroke-color: currentColor;
+}
+
+.cv-page[data-bold-headings="true"] :is(h2, h3, .cv-section-title):not(.no-print *),
+.cv-print-sheet[data-bold-headings="true"] :is(h2, h3, .cv-section-title):not(.no-print *) {
+  font-weight: 900 !important;
+  -webkit-text-stroke-width: 0.32px;
+  -webkit-text-stroke-color: currentColor;
+}
+
+.cv-page[data-bold-subheadings="true"] :is(section, aside) :is(.font-bold, strong):not(h1):not(h2):not(h3):not(.no-print *),
+.cv-print-sheet[data-bold-subheadings="true"] :is(section, aside) :is(.font-bold, strong):not(h1):not(h2):not(h3):not(.no-print *) {
+  font-weight: 900 !important;
+  -webkit-text-stroke-width: 0.28px;
+  -webkit-text-stroke-color: currentColor;
+}
+
+.cv-page[data-bold-subheadings="true"] :is(section, aside) .font-semibold:not(h1):not(h2):not(h3):not(.no-print *),
+.cv-print-sheet[data-bold-subheadings="true"] :is(section, aside) .font-semibold:not(h1):not(h2):not(h3):not(.no-print *) {
+  font-weight: 800 !important;
+  -webkit-text-stroke-width: 0.18px;
+  -webkit-text-stroke-color: currentColor;
+}
+
+.cv-page[data-bold-body="true"] :is(section, aside) :is(p, li):not(.font-bold):not(.font-semibold):not(.no-print *),
+.cv-page[data-bold-body="true"] header p:not(.font-bold):not(.font-semibold):not(.font-medium):not(.no-print *),
+.cv-page[data-bold-body="true"] :is(section, aside) .font-medium:not(h1):not(h2):not(h3):not(.no-print *),
+.cv-page[data-bold-body="true"] :is(section, aside) .cv-skill-tag:not(.no-print *),
+.cv-print-sheet[data-bold-body="true"] :is(section, aside) :is(p, li):not(.font-bold):not(.font-semibold):not(.no-print *),
+.cv-print-sheet[data-bold-body="true"] header p:not(.font-bold):not(.font-semibold):not(.font-medium):not(.no-print *),
+.cv-print-sheet[data-bold-body="true"] :is(section, aside) .font-medium:not(h1):not(h2):not(h3):not(.no-print *),
+.cv-print-sheet[data-bold-body="true"] :is(section, aside) .cv-skill-tag:not(.no-print *) {
+  font-weight: 600 !important;
+}
+
+
+

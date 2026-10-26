@@ -21,9 +21,9 @@ interface FaqItem {
 
 const UK_FAQS: FaqItem[] = [
   {
-    question: 'Is Makemeyour really a free CV maker in the UK?',
+    question: 'Is freecvmakeruk.co.uk really a free CV maker in the UK?',
     answer:
-      'Yes, 100%. Makemeyour is a completely free CV maker UK jobseekers can use to build, format, and download job-winning CVs. There are no hidden paywalls, credit card demands, or surprise fees when downloading your finished PDF.',
+      'Yes, 100%. freecvmakeruk.co.uk is a completely free CV maker UK jobseekers can use to build, format, and download job-winning CVs. There are no hidden paywalls, credit card demands, or surprise fees when downloading your finished PDF or Word document.',
   },
   {
     question: 'Does this free CV maker support standard UK CV formats?',
@@ -105,7 +105,7 @@ export default function UkCvSeoSection() {
           </h2>
 
           <p className="text-base sm:text-lg text-slate-600 mt-4 leading-relaxed max-w-2xl mx-auto">
-            Crafting a job-winning CV in the UK requires specific formatting, concise personal statements, and full ATS compatibility. Makemeyour provides the premier free CV maker UK professionals trust to secure interviews.
+            Crafting a job-winning CV in the UK requires specific formatting, concise personal statements, and full ATS compatibility. freecvmakeruk.co.uk provides the premier free CV maker UK professionals trust to secure interviews.
           </p>
         </div>
 

@@ -7,9 +7,13 @@ import {
   LanguageItem,
   ProjectItem,
   CustomSectionItem,
+  normalizeDateFormat,
+  normalizeFontBoldness,
+  normalizePdfExportSettings,
 } from '@/types/cv';
 import { CvState } from '@/store/useCvStore';
 import { SAMPLE_UK_CV } from '@/data/sampleCv';
+import { formatCvDate } from '@/lib/dateFormat';
 
 const CORE_SECTIONS = [
   'statement',
@@ -108,6 +112,8 @@ export function cvStoreToCv(
   const locationParts = [contact.city, contact.postalCode].filter(Boolean);
   const location = locationParts.join(', ');
 
+  const dateFormat = normalizeDateFormat(store.dateFormat ?? fallbackSettings?.dateFormat);
+
   // Convert experiences: prioritize live description text so typing updates bullets immediately
   const experience: ExperienceItem[] = (store.experiences || []).map((exp, index) => {
     const rawLines = (exp.description || '')
@@ -127,11 +133,12 @@ export function cvStoreToCv(
       role: exp.jobTitle || 'Role Title',
       company: exp.employer || 'Organisation',
       location: exp.city || '',
-      startDate: exp.startDate || '',
-      endDate: exp.isCurrent ? 'Present' : exp.endDate || '',
+      startDate: formatCvDate(exp.startDate, dateFormat),
+      endDate: exp.isCurrent ? 'Present' : formatCvDate(exp.endDate, dateFormat),
       current: Boolean(exp.isCurrent),
       bullets,
       description: bullets.length === 0 ? exp.description || '' : '',
+      forceNewPage: Boolean(exp.forceNewPage),
     };
   });
 
@@ -147,8 +154,8 @@ export function cvStoreToCv(
       qualification: edu.degree || 'Degree / Qualification',
       institution: edu.school || 'Institution',
       location: edu.city || undefined,
-      startDate: edu.startDate || '',
-      endDate: edu.endDate || '',
+      startDate: formatCvDate(edu.startDate, dateFormat),
+      endDate: formatCvDate(edu.endDate, dateFormat),
       grade: edu.grade || undefined,
       description: rawBullets.length > 1 ? undefined : edu.description || undefined,
       bullets:
@@ -157,6 +164,7 @@ export function cvStoreToCv(
           : edu.bullets && edu.bullets.length > 0
           ? edu.bullets
           : undefined,
+      forceNewPage: Boolean(edu.forceNewPage),
     };
   });
 
@@ -235,7 +243,7 @@ export function cvStoreToCv(
       location,
       linkedin: contact.linkedin || '',
       website: contact.website || '',
-      dateOfBirth: contact.dateOfBirth || '',
+      dateOfBirth: contact.dateOfBirth ? formatCvDate(contact.dateOfBirth, dateFormat) : '',
       nationality: contact.nationality || '',
       drivingLicence: contact.drivingLicence || '',
       photoUrl: contact.photoUrl || undefined,
@@ -258,6 +266,15 @@ export function cvStoreToCv(
       accentColor,
       fontFamily: store.fontFamily || fallbackSettings?.fontFamily || 'jakarta',
       fontScale: store.fontScale || fallbackSettings?.fontScale || 'md',
+      dateFormat,
+      letterSpacing:
+        typeof store.letterSpacing === 'number'
+          ? store.letterSpacing
+          : fallbackSettings?.letterSpacing ?? 0,
+      fontBoldness: normalizeFontBoldness(store.fontBoldness ?? fallbackSettings?.fontBoldness),
+      pdfExportSettings: normalizePdfExportSettings(
+        store.pdfExportSettings ?? fallbackSettings?.pdfExportSettings
+      ),
       showPhoto,
       sectionOrder: normalizeSectionOrder(
         store.sectionOrder || fallbackSettings?.sectionOrder || SAMPLE_UK_CV.settings.sectionOrder,
@@ -302,6 +319,7 @@ export function cvToCvStore(cv: CV): Partial<CvState> {
       isCurrent: exp.current,
       description: exp.bullets ? exp.bullets.join('\n') : exp.description || '',
       bullets: exp.bullets ? [...exp.bullets] : [],
+      forceNewPage: Boolean(exp.forceNewPage),
     })),
     educations: (cv.education || []).map((edu) => ({
       id: edu.id,
@@ -313,6 +331,7 @@ export function cvToCvStore(cv: CV): Partial<CvState> {
       grade: edu.grade || '',
       description: edu.description || (edu.bullets ? edu.bullets.join('\n') : ''),
       bullets: edu.bullets ? [...edu.bullets] : undefined,
+      forceNewPage: Boolean(edu.forceNewPage),
     })),
     skills: (cv.skills || []).flatMap((group) =>
       group.items.map((item, idx) => ({
@@ -334,6 +353,10 @@ export function cvToCvStore(cv: CV): Partial<CvState> {
     themeColor: cv.settings.accentColor,
     fontFamily: cv.settings.fontFamily || 'jakarta',
     fontScale: cv.settings.fontScale || 'md',
+    dateFormat: normalizeDateFormat(cv.settings.dateFormat),
+    letterSpacing: typeof cv.settings.letterSpacing === 'number' ? cv.settings.letterSpacing : 0,
+    fontBoldness: normalizeFontBoldness(cv.settings.fontBoldness),
+    pdfExportSettings: normalizePdfExportSettings(cv.settings.pdfExportSettings),
     showPhoto: cv.settings.showPhoto ?? Boolean(cv.personal.photoUrl),
     activeTemplate: cv.settings.templateId as any,
     sectionOrder: normalizeSectionOrder(cv.settings.sectionOrder),

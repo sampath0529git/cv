@@ -13,7 +13,7 @@ function buildPopupCallbackHtml(messagePayload: Record<string, unknown>, isSucce
     ? 'LinkedIn Connected'
     : 'LinkedIn Sign-In Incomplete';
   const subtitleText = isSuccess
-    ? 'Your LinkedIn profile was verified. Returning to Makemycv...'
+    ? 'Your LinkedIn profile was verified. Returning to freecvmakeruk.co.uk...'
     : String(messagePayload.error || 'Could not complete LinkedIn authentication.');
   const accentColor = isSuccess ? '#16A34A' : '#DC2626';
 

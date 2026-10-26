@@ -1,15 +1,17 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { CV } from '@/types/cv';
+import { CV, DateFormatOption, normalizeFontBoldness } from '@/types/cv';
 import { CV_TEMPLATES, TEMPLATE_CATEGORIES } from '@/templates/registry';
 import { SAMPLE_UK_CV } from '@/data/sampleCv';
+import { applyDateFormatToCv } from '@/lib/dateFormat';
 import { Check, Camera, ShieldCheck } from 'lucide-react';
 
 interface TemplateGalleryProps {
   selectedTemplateId: string;
   onSelectTemplate: (templateId: string) => void;
   accentColor?: string;
+  dateFormat?: DateFormatOption;
   customCv?: CV;
   className?: string;
 }
@@ -40,12 +42,21 @@ function ScaledTemplateThumbnail({
     return () => observer.disconnect();
   }, []);
 
+  const spacingVal = Number(cv.settings.letterSpacing ?? 0);
+  const hasSpacing = Math.abs(spacingVal) > 0.001;
+  const thumbBold = normalizeFontBoldness(cv.settings.fontBoldness);
+
   return (
     <div
       ref={boxRef}
       className="relative w-full aspect-[210/297] rounded-xl overflow-hidden bg-slate-50 border border-slate-100 shadow-2xs"
     >
       <div
+        data-has-letter-spacing={hasSpacing ? 'true' : undefined}
+        data-bold-header={thumbBold.enabled && thumbBold.header ? 'true' : undefined}
+        data-bold-headings={thumbBold.enabled && thumbBold.headings ? 'true' : undefined}
+        data-bold-subheadings={thumbBold.enabled && thumbBold.subheadings ? 'true' : undefined}
+        data-bold-body={thumbBold.enabled && thumbBold.sectionText ? 'true' : undefined}
         style={{
           width: '794px',
           height: '1123px',
@@ -53,8 +64,10 @@ function ScaledTemplateThumbnail({
           transformOrigin: 'top left',
           pointerEvents: 'none',
           userSelect: 'none',
+          letterSpacing: hasSpacing ? `${spacingVal}px` : undefined,
+          ['--cv-letter-spacing' as any]: `${spacingVal}px`,
         }}
-        className="absolute left-0 top-0 bg-white"
+        className="cv-page absolute left-0 top-0 bg-white"
       >
         <Component cv={cv} />
       </div>
@@ -66,6 +79,7 @@ export default function TemplateGallery({
   selectedTemplateId,
   onSelectTemplate,
   accentColor = '#4B4DED',
+  dateFormat,
   customCv,
   className = '',
 }: TemplateGalleryProps) {
@@ -78,14 +92,18 @@ export default function TemplateGallery({
 
   const previewCv: CV = React.useMemo(() => {
     const base = customCv || SAMPLE_UK_CV;
-    return {
-      ...base,
-      settings: {
-        ...base.settings,
-        accentColor,
+    return applyDateFormatToCv(
+      {
+        ...base,
+        settings: {
+          ...base.settings,
+          accentColor,
+          ...(dateFormat ? { dateFormat } : {}),
+        },
       },
-    };
-  }, [customCv, accentColor]);
+      dateFormat
+    );
+  }, [customCv, accentColor, dateFormat]);
 
   return (
     <div className={`space-y-4 sm:space-y-5 ${className}`}>

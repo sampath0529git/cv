@@ -13,7 +13,7 @@ export default function StartPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f4f7fe] text-slate-900">
-      {/* 1. Header with Makemycv Logo */}
+      {/* 1. Header with freecvmakeruk.co.uk Logo */}
       <header className="w-full bg-white border-b border-slate-200/80 px-6 sm:px-12 lg:px-16 py-4 flex items-center justify-between sticky top-0 z-30">
         <Logo variant="dark" href="/" />
       </header>

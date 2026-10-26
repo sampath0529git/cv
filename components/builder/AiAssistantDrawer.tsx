@@ -233,7 +233,7 @@ export default function AiAssistantDrawer({ isOpen, onClose }: AiAssistantDrawer
           </div>
           <div>
             <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-              <span>Makemycv AI Assistant</span>
+              <span>freecvmakeruk.co.uk AI Assistant</span>
               <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-indigo-100 text-indigo-700">
                 PRO
               </span>

@@ -432,7 +432,7 @@ export default function TorontoTemplate({
                   style={{ color: accent }}
                   className="text-[10.5px] font-bold uppercase tracking-[0.08em] pb-1 border-b border-slate-200"
                 >
-                  Education
+                  {pageData?.educationTitle || 'Education'}
                 </h2>
                 <div className="space-y-3 text-[10px]">
                   {educations.map((edu: any, idx: number) => {

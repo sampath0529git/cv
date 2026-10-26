@@ -1,8 +1,17 @@
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas-pro';
-import { A4_WIDTH_PX, A4_HEIGHT_PX, A4_WIDTH_MM, A4_HEIGHT_MM, CV } from '@/types/cv';
+import {
+  A4_WIDTH_PX,
+  A4_HEIGHT_PX,
+  A4_WIDTH_MM,
+  A4_HEIGHT_MM,
+  CV,
+  PdfExportSettings,
+  normalizePdfExportSettings,
+} from '@/types/cv';
 import { useCvStore } from '@/store/useCvStore';
 import { cvStoreToCv } from '@/lib/cvAdapter';
+import { applyDateFormatToCv } from '@/lib/dateFormat';
 
 export interface PdfProgressInfo {
   stage: 'Rendering layout' | 'Optimizing quality' | 'Finalizing' | 'Downloaded';
@@ -14,6 +23,7 @@ export interface PdfProgressInfo {
 export interface ExportPdfOptions {
   fileName?: string;
   cv?: CV;
+  exportSettings?: Partial<PdfExportSettings>;
   onProgress?: (info: PdfProgressInfo | string, percent?: number) => void;
 }
 
@@ -251,7 +261,7 @@ function triggerPdfBlobDownload(pdf: jsPDF, sanitizedFileName: string): boolean 
     if (typeof window !== 'undefined') {
       window.dispatchEvent(
         new CustomEvent('applet-pdf-blob-ready', {
-          detail: { blobUrl, fileName: sanitizedFileName },
+          detail: { blobUrl, fileName: sanitizedFileName, byteSize: blob.size },
         })
       );
     }
@@ -301,12 +311,168 @@ function triggerPdfBlobDownload(pdf: jsPDF, sanitizedFileName: string): boolean 
   }
 }
 
+function normalizeActionableUrl(raw?: string | null, forceWebUrl: boolean = false): string | null {
+  if (!raw) return null;
+  const cleaned = raw
+    .trim()
+    .replace(/^[("'<]+/, '')
+    .replace(/[.,;|·)"'>]+$/, '')
+    .trim();
+  if (!cleaned) return null;
+
+  if (/^(mailto:|tel:|https?:\/\/)/i.test(cleaned)) {
+    return cleaned;
+  }
+  if (/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(cleaned)) {
+    return `mailto:${cleaned}`;
+  }
+  if (
+    forceWebUrl ||
+    /^(?:www\.|linkedin\.com\/|github\.com\/|[a-zA-Z0-9-]+\.(?:co\.uk|org\.uk|ac\.uk|gov\.uk|com|io|dev|net|org|me|ai|app))(?:\/[^\s]*)?$/i.test(
+      cleaned
+    )
+  ) {
+    if (cleaned.includes('.') && !/\s/.test(cleaned)) {
+      return `https://${cleaned}`;
+    }
+  }
+  return null;
+}
+
+interface PdfLinkRect {
+  xMm: number;
+  yMm: number;
+  wMm: number;
+  hMm: number;
+  url: string;
+}
+
+function collectPageHyperlinkAnnotations(pageClone: HTMLElement, cv: CV): PdfLinkRect[] {
+  const results: PdfLinkRect[] = [];
+  const pageRect = pageClone.getBoundingClientRect();
+  if (pageRect.width <= 0 || pageRect.height <= 0) {
+    return results;
+  }
+
+  const pushDomRect = (rect: DOMRect, url: string) => {
+    if (rect.width < 4 || rect.height < 3) return;
+    const xMm = Math.max(0, ((rect.left - pageRect.left) / pageRect.width) * A4_WIDTH_MM);
+    const yMm = Math.max(0, ((rect.top - pageRect.top) / pageRect.height) * A4_HEIGHT_MM);
+    const wMm = Math.min(A4_WIDTH_MM - xMm, (rect.width / pageRect.width) * A4_WIDTH_MM);
+    const hMm = Math.min(A4_HEIGHT_MM - yMm, (rect.height / pageRect.height) * A4_HEIGHT_MM);
+    if (wMm <= 0.5 || hMm <= 0.5) return;
+
+    const duplicate = results.some(
+      (existing) =>
+        existing.url === url &&
+        Math.abs(existing.xMm - xMm) < 1.2 &&
+        Math.abs(existing.yMm - yMm) < 1.2
+    );
+    if (!duplicate) {
+      results.push({ xMm, yMm, wMm, hMm, url });
+    }
+  };
+
+  // 1. Collect explicit <a href="..."> elements
+  const anchors = Array.from(pageClone.querySelectorAll<HTMLAnchorElement>('a[href]'));
+  for (const anchor of anchors) {
+    const rawHref = anchor.getAttribute('href') || '';
+    const resolved = normalizeActionableUrl(rawHref, false);
+    if (!resolved) continue;
+    const rects = Array.from(anchor.getClientRects());
+    for (const r of rects) {
+      pushDomRect(r, resolved);
+    }
+  }
+
+  // 2. Build candidate link targets from CV fields (email, LinkedIn, website, project links)
+  const knownTargets: Array<{ token: string; url: string }> = [];
+  const registerKnown = (rawVal?: string, isWeb: boolean = false) => {
+    const trimmed = rawVal?.trim();
+    if (!trimmed || trimmed.length < 4) return;
+    const url = normalizeActionableUrl(trimmed, isWeb);
+    if (url && !knownTargets.some((t) => t.token === trimmed)) {
+      knownTargets.push({ token: trimmed, url });
+    }
+  };
+
+  registerKnown(cv.personal.email, false);
+  registerKnown(cv.personal.linkedin, true);
+  registerKnown(cv.personal.website, true);
+  for (const proj of cv.projects || []) {
+    registerKnown(proj.link, true);
+  }
+
+  // 3. Scan text nodes not inside <a> tags for known CV links and inline URLs/emails
+  const inlinePattern =
+    /(?:https?:\/\/[^\s|,;·)]+|(?:www\.|linkedin\.com\/in\/|github\.com\/)[^\s|,;·)]+|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/gi;
+
+  const walker = document.createTreeWalker(pageClone, NodeFilter.SHOW_TEXT);
+  let currentNode = walker.nextNode();
+  while (currentNode) {
+    const textNode = currentNode as Text;
+    currentNode = walker.nextNode();
+    const parentEl = textNode.parentElement;
+    if (!parentEl || parentEl.closest('a[href]')) continue;
+    const content = textNode.nodeValue || '';
+    if (!content.trim()) continue;
+
+    // Match explicit CV contact/project tokens first
+    for (const { token, url } of knownTargets) {
+      let fromIdx = 0;
+      while (fromIdx < content.length) {
+        const hit = content.indexOf(token, fromIdx);
+        if (hit === -1) break;
+        try {
+          const range = document.createRange();
+          range.setStart(textNode, hit);
+          range.setEnd(textNode, hit + token.length);
+          for (const r of Array.from(range.getClientRects())) {
+            pushDomRect(r, url);
+          }
+        } catch {
+          // Ignore range measurement edge cases
+        }
+        fromIdx = hit + token.length;
+      }
+    }
+
+    // Match any inline URLs or emails in body/summary/project descriptions
+    inlinePattern.lastIndex = 0;
+    let match: RegExpExecArray | null;
+    while ((match = inlinePattern.exec(content)) !== null) {
+      const matchedStr = match[0];
+      const url = normalizeActionableUrl(matchedStr, false);
+      if (!url) continue;
+      try {
+        const range = document.createRange();
+        range.setStart(textNode, match.index);
+        range.setEnd(textNode, match.index + matchedStr.length);
+        for (const r of Array.from(range.getClientRects())) {
+          pushDomRect(r, url);
+        }
+      } catch {
+        // Ignore range measurement edge cases
+      }
+    }
+  }
+
+  return results;
+}
+
 /**
  * Pure vector jsPDF fallback renderer used ONLY if DOM canvas capture ever throws an unrecoverable error.
  */
-function generateVectorFallbackPdf(sanitizedFileName: string, overrideCv?: CV): boolean {
+function generateVectorFallbackPdf(
+  sanitizedFileName: string,
+  overrideCv?: CV,
+  exportSettings?: PdfExportSettings
+): boolean {
   try {
-    const cv = overrideCv || cvStoreToCv(useCvStore.getState());
+    const cv = applyDateFormatToCv(overrideCv || cvStoreToCv(useCvStore.getState()));
+    const resolvedSettings = normalizePdfExportSettings(
+      exportSettings ?? cv.settings.pdfExportSettings
+    );
     const [ar, ag, ab] = hexToRgb(cv.settings.accentColor);
     const scaleFactor =
       cv.settings.fontScale === 'sm' ? 0.92 : cv.settings.fontScale === 'lg' ? 1.08 : 1;
@@ -686,6 +852,15 @@ function generateVectorFallbackPdf(sanitizedFileName: string, overrideCv?: CV): 
             pdf.setFontSize(8.4 * scaleFactor);
             pdf.setTextColor(ar, ag, ab);
             pdf.text(proj.link, rightLimit, y, { align: 'right' });
+            if (resolvedSettings.includeHyperlinks) {
+              const linkUrl = normalizeActionableUrl(proj.link, true);
+              if (linkUrl) {
+                const linkW = pdf.getTextWidth(proj.link);
+                pdf.link(Math.max(marginX, rightLimit - linkW), y - 3.2, linkW, 4, {
+                  url: linkUrl,
+                });
+              }
+            }
           }
           y += 4.3;
           pdf.setFont('helvetica', 'normal');
@@ -797,7 +972,46 @@ function generateVectorFallbackPdf(sanitizedFileName: string, overrideCv?: CV): 
   }
 }
 
-async function prepareImagesForCanvas(root: HTMLElement): Promise<void> {
+async function compressImageInPlace(img: HTMLImageElement): Promise<void> {
+  try {
+    const natW = img.naturalWidth || img.width || 0;
+    const natH = img.naturalHeight || img.height || 0;
+    if (natW <= 0 || natH <= 0) return;
+
+    const maxEdge = 240;
+    const ratio = Math.min(1, maxEdge / Math.max(natW, natH));
+    const targetW = Math.max(1, Math.round(natW * ratio));
+    const targetH = Math.max(1, Math.round(natH * ratio));
+
+    const offscreen = document.createElement('canvas');
+    offscreen.width = targetW;
+    offscreen.height = targetH;
+    const ctx = offscreen.getContext('2d');
+    if (!ctx) return;
+
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, targetW, targetH);
+    ctx.drawImage(img, 0, 0, targetW, targetH);
+
+    const compressedUrl = offscreen.toDataURL('image/jpeg', 0.72);
+    if (compressedUrl && compressedUrl.startsWith('data:image/jpeg')) {
+      img.src = compressedUrl;
+      if (typeof img.decode === 'function') {
+        await Promise.race([
+          img.decode().catch(() => {}),
+          new Promise<void>((r) => setTimeout(r, 180)),
+        ]);
+      }
+    }
+  } catch {
+    // Keep original image if canvas re-encoding is blocked
+  }
+}
+
+async function prepareImagesForCanvas(
+  root: HTMLElement,
+  compressImages: boolean = false
+): Promise<void> {
   const images = Array.from(root.querySelectorAll('img'));
   if (images.length === 0) return;
 
@@ -813,6 +1027,9 @@ async function prepareImagesForCanvas(root: HTMLElement): Promise<void> {
               img.decode().catch(() => {}),
               new Promise<void>((r) => setTimeout(r, 250)),
             ]);
+          }
+          if (compressImages) {
+            await compressImageInPlace(img);
           }
         } catch {
           // Ignore decode warnings
@@ -845,6 +1062,9 @@ async function prepareImagesForCanvas(root: HTMLElement): Promise<void> {
               new Promise<void>((r) => setTimeout(r, 250)),
             ]);
           }
+          if (compressImages) {
+            await compressImageInPlace(img);
+          }
           return;
         }
       } catch {
@@ -866,6 +1086,9 @@ async function prepareImagesForCanvas(root: HTMLElement): Promise<void> {
           };
         });
       }
+      if (compressImages && img.complete) {
+        await compressImageInPlace(img);
+      }
     })
   );
 }
@@ -881,7 +1104,12 @@ export async function downloadCvPdf(options: ExportPdfOptions = {}): Promise<boo
     return false;
   }
 
-  const { fileName = 'Curriculum_Vitae.pdf', cv: customCv, onProgress } = options;
+  const {
+    fileName = 'Curriculum_Vitae.pdf',
+    cv: customCv,
+    exportSettings,
+    onProgress,
+  } = options;
   const sanitizedFileName = fileName.toLowerCase().endsWith('.pdf')
     ? fileName
     : `${fileName}.pdf`;
@@ -889,6 +1117,12 @@ export async function downloadCvPdf(options: ExportPdfOptions = {}): Promise<boo
   if (typeof window === 'undefined' || typeof document === 'undefined') {
     return false;
   }
+
+  const storeSnapshot = useCvStore.getState();
+  const activeCvModel = customCv || cvStoreToCv(storeSnapshot);
+  const resolvedSettings = normalizePdfExportSettings(
+    exportSettings ?? customCv?.settings?.pdfExportSettings ?? storeSnapshot.pdfExportSettings
+  );
 
   const notify = (
     stage: 'Rendering layout' | 'Optimizing quality' | 'Finalizing' | 'Downloaded',
@@ -953,7 +1187,7 @@ export async function downloadCvPdf(options: ExportPdfOptions = {}): Promise<boo
     );
 
     if (pageElements.length === 0) {
-      return generateVectorFallbackPdf(sanitizedFileName, customCv);
+      return generateVectorFallbackPdf(sanitizedFileName, customCv, resolvedSettings);
     }
 
     // 4. Create an isolated 1:1 unscaled A4 staging container off-screen
@@ -1028,6 +1262,23 @@ export async function downloadCvPdf(options: ExportPdfOptions = {}): Promise<boo
           pageClone.setAttribute('data-font-scale', fontScaleAttr);
         }
 
+        const hasLetterSpacingAttr = originalPage.getAttribute('data-has-letter-spacing');
+        if (hasLetterSpacingAttr) {
+          pageClone.setAttribute('data-has-letter-spacing', hasLetterSpacingAttr);
+        }
+
+        for (const boldAttr of [
+          'data-bold-header',
+          'data-bold-headings',
+          'data-bold-subheadings',
+          'data-bold-body',
+        ]) {
+          const val = originalPage.getAttribute(boldAttr);
+          if (val) {
+            pageClone.setAttribute(boldAttr, val);
+          }
+        }
+
         // Strip screen scale transforms & enforce exact 1:1 A4 pixel geometry (794 × 1123)
         pageClone.style.position = 'relative';
         pageClone.style.top = '0px';
@@ -1056,9 +1307,17 @@ export async function downloadCvPdf(options: ExportPdfOptions = {}): Promise<boo
           originalPage.style.fontSize || originalComputed.fontSize;
         pageClone.style.lineHeight =
           originalPage.style.lineHeight || originalComputed.lineHeight;
-        pageClone.style.letterSpacing = originalComputed.letterSpacing || 'normal';
+        pageClone.style.letterSpacing =
+          originalPage.style.letterSpacing || originalComputed.letterSpacing || 'normal';
         pageClone.style.setProperty('-webkit-font-smoothing', 'antialiased');
         pageClone.style.setProperty('text-rendering', 'geometricPrecision');
+
+        const cvLetterSpacing =
+          originalPage.style.getPropertyValue('--cv-letter-spacing') ||
+          originalComputed.getPropertyValue('--cv-letter-spacing');
+        if (cvLetterSpacing) {
+          pageClone.style.setProperty('--cv-letter-spacing', cvLetterSpacing.trim());
+        }
 
         const accent =
           originalPage.style.getPropertyValue('--accent') ||
@@ -1082,10 +1341,23 @@ export async function downloadCvPdf(options: ExportPdfOptions = {}): Promise<boo
         styleProbe.style.pointerEvents = 'none';
         styleProbe.style.visibility = 'hidden';
 
+        if (!resolvedSettings.includeHyperlinks) {
+          pageClone.querySelectorAll('a[href]').forEach((a) => {
+            a.removeAttribute('href');
+            if (a instanceof HTMLElement) {
+              a.style.textDecoration = 'none';
+            }
+          });
+        }
+
         stagingContainer.appendChild(pageClone);
         stagingContainer.appendChild(styleProbe);
 
-        await prepareImagesForCanvas(pageClone);
+        await prepareImagesForCanvas(pageClone, resolvedSettings.compressImages);
+
+        const pageLinks: PdfLinkRect[] = resolvedSettings.includeHyperlinks
+          ? collectPageHyperlinkAnnotations(pageClone, activeCvModel)
+          : [];
 
         notify(
           'Optimizing quality',
@@ -1095,6 +1367,8 @@ export async function downloadCvPdf(options: ExportPdfOptions = {}): Promise<boo
             : 'Optimizing quality...'
         );
 
+        const captureScale = resolvedSettings.compressImages ? 1.65 : 2.2;
+
         // Bound html2canvas per-page execution so off-screen iframe resources can never deadlock
         const abortController = new AbortController();
         const pageWatchdog = setTimeout(() => abortController.abort(), 4500);
@@ -1102,7 +1376,7 @@ export async function downloadCvPdf(options: ExportPdfOptions = {}): Promise<boo
         let canvas: HTMLCanvasElement;
         try {
           canvas = await html2canvas(pageClone, {
-            scale: 2.2,
+            scale: captureScale,
             width: A4_WIDTH_PX,
             height: A4_HEIGHT_PX,
             windowWidth: A4_WIDTH_PX,
@@ -1204,10 +1478,12 @@ export async function downloadCvPdf(options: ExportPdfOptions = {}): Promise<boo
 
         // Guard against any blank rasterization edge case
         if (pageClone.innerText.trim().length > 0 && !isCanvasVisiblyRendered(canvas)) {
-          return generateVectorFallbackPdf(sanitizedFileName, customCv);
+          return generateVectorFallbackPdf(sanitizedFileName, customCv, resolvedSettings);
         }
 
-        const imgData = canvas.toDataURL('image/jpeg', 0.95);
+        const jpegQuality = resolvedSettings.compressImages ? 0.74 : 0.95;
+        const imgCompression = resolvedSettings.compressImages ? 'MEDIUM' : 'FAST';
+        const imgData = canvas.toDataURL('image/jpeg', jpegQuality);
 
         if (i > 0) {
           pdf.addPage('a4', 'portrait');
@@ -1221,14 +1497,22 @@ export async function downloadCvPdf(options: ExportPdfOptions = {}): Promise<boo
           A4_WIDTH_MM,
           A4_HEIGHT_MM,
           `cv-page-${i + 1}`,
-          'FAST'
+          imgCompression
         );
+
+        if (resolvedSettings.includeHyperlinks && pageLinks.length > 0) {
+          for (const linkRect of pageLinks) {
+            pdf.link(linkRect.xMm, linkRect.yMm, linkRect.wMm, linkRect.hMm, {
+              url: linkRect.url,
+            });
+          }
+        }
       }
 
       notify('Finalizing', 92);
       const saved = triggerPdfBlobDownload(pdf, sanitizedFileName);
       if (!saved) {
-        return generateVectorFallbackPdf(sanitizedFileName, customCv);
+        return generateVectorFallbackPdf(sanitizedFileName, customCv, resolvedSettings);
       }
       notify('Downloaded', 100, 'Downloaded!');
       return true;
@@ -1239,7 +1523,7 @@ export async function downloadCvPdf(options: ExportPdfOptions = {}): Promise<boo
     }
   } catch (error) {
     console.error('Canvas PDF capture failed, executing pure vector PDF fallback:', error);
-    return generateVectorFallbackPdf(sanitizedFileName, customCv);
+    return generateVectorFallbackPdf(sanitizedFileName, customCv, resolvedSettings);
   } finally {
     isGenerating = false;
   }

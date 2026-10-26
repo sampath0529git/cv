@@ -41,6 +41,15 @@ export default function TemplateModal({ isOpen, onClose }: TemplateModalProps) {
     if (updated.fontScale) {
       store.setFontScale(updated.fontScale);
     }
+    if (updated.dateFormat) {
+      store.setDateFormat(updated.dateFormat);
+    }
+    if (updated.letterSpacing !== undefined) {
+      store.setLetterSpacing(updated.letterSpacing);
+    }
+    if (updated.fontBoldness !== undefined) {
+      store.setFontBoldness(updated.fontBoldness);
+    }
     if (updated.showPhoto !== undefined) {
       store.setShowPhoto(updated.showPhoto);
     }
@@ -145,6 +154,7 @@ export default function TemplateModal({ isOpen, onClose }: TemplateModalProps) {
                 selectedTemplateId={currentTemplateId}
                 onSelectTemplate={handleSelectTemplate}
                 accentColor={activeCv.settings.accentColor}
+                dateFormat={activeCv.settings.dateFormat}
               />
             ) : (
               <TemplateControls

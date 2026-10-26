@@ -1,37 +1,47 @@
 import type { Metadata } from 'next';
 import { BRAND_CONFIG } from '@/lib/config';
 
+const canonicalDomainUrl = `https://${BRAND_CONFIG.domain}`;
+
 export const metadata: Metadata = {
-  title: `Free CV Templates UK | ATS-Friendly British Layouts – ${BRAND_CONFIG.name}`,
+  title: 'Free UK CV Templates – ATS-Friendly British Layouts',
   description:
-    'Browse recruiter-approved free CV templates in the UK. Choose from graduate, executive, minimal, and modern ISO A4 formats with instant free PDF download.',
+    'Browse recruiter-approved free UK CV templates on freecvmakeruk.co.uk. Choose graduate, executive, corporate, and modern ISO A4 layouts with free PDF download.',
   keywords: [
-    'free cv templates',
-    'free CV templates UK',
-    'graduate cv templates',
-    'school leaver cv template',
-    'finance cv template',
-    'ATS friendly CV templates',
-    'British CV format download',
-    'UK resume templates free',
+    'free cv templates uk',
+    'uk cv templates free download',
+    'ats friendly cv templates uk',
+    'british cv format templates',
+    'graduate cv template uk',
+    'corporate cv template uk',
+    'freecvmakeruk.co.uk templates',
   ],
   alternates: {
-    canonical: `https://${BRAND_CONFIG.domain}/templates`,
+    canonical: '/templates',
   },
   openGraph: {
-    title: `Free CV Templates UK | ATS-Friendly British Layouts – ${BRAND_CONFIG.name}`,
+    title: 'Free UK CV Templates – ATS-Friendly British Layouts | freecvmakeruk.co.uk',
     description:
-      'Browse recruiter-approved free CV templates in the UK. Choose from graduate, executive, and corporate ISO A4 formats with instant free PDF download.',
-    url: `https://${BRAND_CONFIG.domain}/templates`,
-    siteName: `${BRAND_CONFIG.name} - Free CV Maker UK`,
+      'Browse recruiter-approved free UK CV templates on freecvmakeruk.co.uk. Choose graduate, executive, and corporate ISO A4 layouts with free PDF download.',
+    url: '/templates',
+    siteName: BRAND_CONFIG.name,
     locale: 'en_GB',
     type: 'website',
+    images: [
+      {
+        url: '/assets/hero-backdrop-clean.png',
+        width: 1200,
+        height: 630,
+        alt: 'Free UK CV Templates – Recruiter-Approved British A4 Layouts on freecvmakeruk.co.uk',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: `Free CV Templates UK | ATS-Friendly British Layouts – ${BRAND_CONFIG.name}`,
+    title: 'Free UK CV Templates – ATS-Friendly British Layouts | freecvmakeruk.co.uk',
     description:
-      'Recruiter-approved free CV templates calibrated for the UK job market and ATS compliance.',
+      'Recruiter-approved free UK CV templates calibrated for the British job market and ATS compliance.',
+    images: ['/assets/hero-backdrop-clean.png'],
   },
 };
 
@@ -39,19 +49,20 @@ export default function TemplatesLayout({ children }: { children: React.ReactNod
   const collectionSchema = {
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
-    '@id': `https://${BRAND_CONFIG.domain}/templates/#webpage`,
-    name: 'Free CV Templates UK - Recruiter-Approved British Formats',
+    '@id': `${canonicalDomainUrl}/templates/#webpage`,
+    name: 'Free UK CV Templates – Recruiter-Approved British A4 Layouts',
     description:
-      'Collection of free, ATS-optimised CV templates calibrated to British hiring standards and ISO A4 dimensions.',
-    url: `https://${BRAND_CONFIG.domain}/templates`,
+      'Collection of free, ATS-optimised CV templates calibrated to British hiring standards and ISO A4 dimensions on freecvmakeruk.co.uk.',
+    url: `${canonicalDomainUrl}/templates`,
+    inLanguage: 'en-GB',
     isPartOf: {
       '@type': 'WebSite',
-      '@id': `https://${BRAND_CONFIG.domain}/#website`,
-      name: `${BRAND_CONFIG.name} - Free CV Maker UK`,
+      '@id': `${canonicalDomainUrl}/#website`,
+      name: `${BRAND_CONFIG.name} – Free CV Maker UK`,
     },
     about: {
       '@type': 'Thing',
-      name: 'Free CV Templates',
+      name: 'Free UK CV Templates',
     },
   };
 
@@ -63,13 +74,13 @@ export default function TemplatesLayout({ children }: { children: React.ReactNod
         '@type': 'ListItem',
         position: 1,
         name: 'Home',
-        item: `https://${BRAND_CONFIG.domain}`,
+        item: canonicalDomainUrl,
       },
       {
         '@type': 'ListItem',
         position: 2,
-        name: 'CV Templates',
-        item: `https://${BRAND_CONFIG.domain}/templates`,
+        name: 'UK CV Templates',
+        item: `${canonicalDomainUrl}/templates`,
       },
     ],
   };

@@ -1,17 +1,19 @@
 import type { MetadataRoute } from 'next';
-import { BRAND_CONFIG } from '@/lib/config';
+import { BRAND_CONFIG, getSiteUrl } from '@/lib/config';
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = `https://${BRAND_CONFIG.domain}`;
+  const baseUrl = getSiteUrl();
 
   return {
     rules: [
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/api/'],
+        disallow: ['/api/', '/share'],
       },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,
+    host: `https://${BRAND_CONFIG.domain}`,
   };
 }
+

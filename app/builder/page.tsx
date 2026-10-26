@@ -13,10 +13,27 @@ import ImportStatusBanner from '@/components/builder/ImportStatusBanner';
 import SaveToast from '@/components/common/SaveToast';
 import WordCountBadge from '@/components/common/WordCountBadge';
 import PdfDownloadButton from '@/components/builder/PdfDownloadButton';
+import PdfExportSettingsModal from '@/components/builder/PdfExportSettingsModal';
 import { CV_TEMPLATES } from '@/templates/registry';
 import { SAMPLE_UK_CV } from '@/data/sampleCv';
 import { cvToCvStore, normalizeSectionOrder } from '@/lib/cvAdapter';
-import { A4_WIDTH_PX, CV, FontScale } from '@/types/cv';
+import {
+  A4_WIDTH_PX,
+  CV,
+  DateFormatOption,
+  DEFAULT_DATE_FORMAT,
+  FontBoldnessTarget,
+  FontScale,
+  normalizeDateFormat,
+  normalizeFontBoldness,
+  normalizePdfExportSettings,
+} from '@/types/cv';
+import {
+  DATE_FORMAT_OPTIONS,
+  applyDateFormatToCv,
+  formatCvDateRange,
+  getDateFormatMeta,
+} from '@/lib/dateFormat';
 import {
   Download,
   ChevronLeft,
@@ -47,6 +64,15 @@ import {
   FileText,
   Linkedin,
   FileCheck2,
+  Bold,
+  Calendar,
+  SeparatorHorizontal,
+  Ruler,
+  Minimize2,
+  MoreHorizontal,
+  Copy,
+  Eraser,
+  Sliders,
 } from 'lucide-react';
 import { downloadCvPdf, triggerBrowserPrint } from '@/lib/pdfGenerator';
 import { downloadCvDocx } from '@/lib/docxGenerator';
@@ -160,20 +186,31 @@ function DesignTemplateThumb({
     return () => ro.disconnect();
   }, []);
 
+  const spacingVal = Number(cv.settings.letterSpacing ?? 0);
+  const hasSpacing = Math.abs(spacingVal) > 0.001;
+  const thumbBold = normalizeFontBoldness(cv.settings.fontBoldness);
+
   return (
     <div
       ref={thumbRef}
       className="relative w-full aspect-[210/297] rounded-xl bg-slate-50 border border-slate-100 overflow-hidden mb-2"
     >
       <div
+        data-has-letter-spacing={hasSpacing ? 'true' : undefined}
+        data-bold-header={thumbBold.enabled && thumbBold.header ? 'true' : undefined}
+        data-bold-headings={thumbBold.enabled && thumbBold.headings ? 'true' : undefined}
+        data-bold-subheadings={thumbBold.enabled && thumbBold.subheadings ? 'true' : undefined}
+        data-bold-body={thumbBold.enabled && thumbBold.sectionText ? 'true' : undefined}
         style={{
           width: '794px',
           height: '1123px',
           transform: `scale(${thumbScale})`,
           transformOrigin: 'top left',
           pointerEvents: 'none',
+          letterSpacing: hasSpacing ? `${spacingVal}px` : undefined,
+          ['--cv-letter-spacing' as any]: `${spacingVal}px`,
         }}
-        className="absolute top-0 left-0 bg-white select-none"
+        className="cv-page absolute top-0 left-0 bg-white select-none"
       >
         <Component cv={cv} />
       </div>
@@ -206,6 +243,7 @@ export default function BuilderPage() {
   // Collapsible Experience & Education cards (new entries default to expanded automatically)
   const [collapsedExpIds, setCollapsedExpIds] = useState<Record<string, boolean>>({});
   const [collapsedEduIds, setCollapsedEduIds] = useState<Record<string, boolean>>({});
+  const [openQuickActionsId, setOpenQuickActionsId] = useState<string | null>(null);
 
   // Step button refs for smooth horizontal auto-centering on mobile
   const stepButtonRefs = useRef<Record<number, HTMLButtonElement | null>>({});
@@ -217,24 +255,30 @@ export default function BuilderPage() {
   // Preview auto-fit & zoom state
   const previewContainerRef = useRef<HTMLDivElement>(null);
   const customColorInputRef = useRef<HTMLInputElement>(null);
-  const [fitScale, setFitScale] = useState<number>(0.68);
+  const [fitScale, setFitScale] = useState<number>(0.76);
   const [manualZoom, setManualZoom] = useState<number | null>(null); // null = Auto-Fit
   const [totalPages, setTotalPages] = useState<number>(1);
   const [activePreviewPage, setActivePreviewPage] = useState<number>(1);
+  const [showMarginGuides, setShowMarginGuides] = useState<boolean>(false);
+  const [isFullscreenPreviewOpen, setIsFullscreenPreviewOpen] = useState<boolean>(false);
+  const [fullscreenZoom, setFullscreenZoom] = useState<number>(100);
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState<boolean>(false);
 
   // PDF & Word (.docx) Export state
   const [isDownloading, setIsDownloading] = useState<boolean>(false);
   const [downloadDone, setDownloadDone] = useState<boolean>(false);
-  const [readyPdfBlob, setReadyPdfBlob] = useState<{ blobUrl: string; fileName: string } | null>(
-    null
-  );
+  const [readyPdfBlob, setReadyPdfBlob] = useState<{
+    blobUrl: string;
+    fileName: string;
+    byteSize?: number;
+  } | null>(null);
   const [isDownloadingDocx, setIsDownloadingDocx] = useState<boolean>(false);
   const [docxDownloadDone, setDocxDownloadDone] = useState<boolean>(false);
   const [readyDocxBlob, setReadyDocxBlob] = useState<{ blobUrl: string; fileName: string } | null>(
     null
   );
   const [showPrintSettingsTip, setShowPrintSettingsTip] = useState<boolean>(false);
+  const [isPdfSettingsModalOpen, setIsPdfSettingsModalOpen] = useState<boolean>(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState<boolean>(false);
   const [isLinkedInModalOpen, setIsLinkedInModalOpen] = useState<boolean>(false);
   const [linkedInImportedNotice, setLinkedInImportedNotice] = useState<boolean>(false);
@@ -253,6 +297,7 @@ export default function BuilderPage() {
   const bulletGen = useBulletGenerator();
 
   const contact = store.contact;
+  const activePdfExportSettings = normalizePdfExportSettings(store.pdfExportSettings);
   const activeTemplate =
     CV_TEMPLATES.find((t) => t.id === store.activeTemplate) || CV_TEMPLATES[0];
 
@@ -298,9 +343,9 @@ export default function BuilderPage() {
     if (!previewContainerRef.current) return;
     const width = previewContainerRef.current.clientWidth;
     if (width > 0) {
-      const horizontalPadding = width < 640 ? 16 : 40;
+      const horizontalPadding = width < 640 ? 20 : 48;
       const available = Math.max(220, width - horizontalPadding);
-      const computed = Math.min(0.88, Math.max(0.28, available / A4_WIDTH_PX));
+      const computed = Math.min(1.0, Math.max(0.28, available / A4_WIDTH_PX));
       setFitScale(Number(computed.toFixed(3)));
     }
   }, []);
@@ -327,6 +372,41 @@ export default function BuilderPage() {
       return () => window.cancelAnimationFrame(raf);
     }
   }, [mobileMode, recalculateFitScale]);
+
+  // Close Fullscreen Preview on Escape key
+  useEffect(() => {
+    if (!isFullscreenPreviewOpen || isTemplateModalOpen) return;
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsFullscreenPreviewOpen(false);
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [isFullscreenPreviewOpen, isTemplateModalOpen]);
+
+  // Dismiss Quick Actions floating menu on outside click or Escape key
+  useEffect(() => {
+    if (!openQuickActionsId) return;
+    const handlePointerDown = (e: MouseEvent | TouchEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (target?.closest('[data-quick-actions-root]')) return;
+      setOpenQuickActionsId(null);
+    };
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setOpenQuickActionsId(null);
+      }
+    };
+    document.addEventListener('mousedown', handlePointerDown);
+    document.addEventListener('touchstart', handlePointerDown);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown);
+      document.removeEventListener('touchstart', handlePointerDown);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [openQuickActionsId]);
 
   const resolvedFileName = useCallback(() => {
     const custom = store.customPdfFileName?.trim();
@@ -392,6 +472,7 @@ export default function BuilderPage() {
         setReadyPdfBlob({
           blobUrl: e.detail.blobUrl,
           fileName: e.detail.fileName,
+          byteSize: typeof e.detail.byteSize === 'number' ? e.detail.byteSize : undefined,
         });
       }
     };
@@ -535,6 +616,49 @@ export default function BuilderPage() {
     store.updateExperience(expId, { description: nextValue });
   };
 
+  const handleDuplicateExperience = (expId: string) => {
+    const newId = store.duplicateExperience(expId);
+    if (newId) {
+      setCollapsedExpIds((prev) => ({
+        ...prev,
+        [newId]: false,
+      }));
+    }
+    setOpenQuickActionsId(null);
+  };
+
+  const handleClearExperienceFields = (expId: string) => {
+    if (bulletGen.errorMap[expId]) {
+      bulletGen.clearError(expId);
+    }
+    store.clearExperienceFields(expId);
+    setCollapsedExpIds((prev) => ({
+      ...prev,
+      [expId]: false,
+    }));
+    setOpenQuickActionsId(null);
+  };
+
+  const handleDuplicateEducation = (eduId: string) => {
+    const newId = store.duplicateEducation(eduId);
+    if (newId) {
+      setCollapsedEduIds((prev) => ({
+        ...prev,
+        [newId]: false,
+      }));
+    }
+    setOpenQuickActionsId(null);
+  };
+
+  const handleClearEducationFields = (eduId: string) => {
+    store.clearEducationFields(eduId);
+    setCollapsedEduIds((prev) => ({
+      ...prev,
+      [eduId]: false,
+    }));
+    setOpenQuickActionsId(null);
+  };
+
   const handleGenerateExperienceBullet = async (exp: {
     id: string;
     jobTitle: string;
@@ -567,6 +691,30 @@ export default function BuilderPage() {
       pageEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
+
+  const handlePreviewScroll = useCallback(() => {
+    const container = previewContainerRef.current;
+    if (!container || totalPages <= 1) return;
+    const containerRect = container.getBoundingClientRect();
+    const probeY = containerRect.top + containerRect.height * 0.35;
+    let closestPage = 1;
+    let minDistance = Infinity;
+    for (let p = 1; p <= totalPages; p++) {
+      const el = document.getElementById(`cv-preview-page-${p}`);
+      if (!el) continue;
+      const rect = el.getBoundingClientRect();
+      if (rect.top <= probeY && rect.bottom >= probeY) {
+        closestPage = p;
+        break;
+      }
+      const dist = Math.abs(rect.top - probeY);
+      if (dist < minDistance) {
+        minDistance = dist;
+        closestPage = p;
+      }
+    }
+    setActivePreviewPage((prev) => (prev === closestPage ? prev : closestPage));
+  }, [totalPages]);
 
   const handleSwitchDesktopTab = (tab: 'content' | 'design') => {
     commitPendingInputs();
@@ -664,164 +812,91 @@ export default function BuilderPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#F4F7FE] text-slate-900 font-sans pb-[66px] lg:pb-0">
-      {/* Compact Sticky Top App Bar */}
-      <header className="w-full bg-white/95 backdrop-blur-md border-b border-[#E8EAF5] sticky top-0 z-40">
-        <div className="max-w-[1600px] mx-auto px-3.5 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-2.5 sm:gap-4">
-          {/* Left: Brand Logo + Document Badge */}
+      {/* Clean Minimal Sticky Top App Bar (Top Bar Contract: Brand — Studio Switch — Single Primary CTA) */}
+      <header className="w-full bg-white/95 backdrop-blur-md border-b border-slate-200/90 sticky top-0 z-40">
+        <div className="max-w-[1640px] mx-auto px-3.5 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-3 sm:gap-4">
+          {/* Left: Brand Logo + Clean Typographic Document Title */}
           <div className="flex items-center gap-3 min-w-0 shrink-0">
             <Logo variant="dark" href="/" />
-            <div className="hidden xl:flex items-center gap-2 pl-3.5 border-l border-slate-200">
-              <span className="text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200/80 px-2.5 py-1 rounded-lg flex items-center gap-1.5 transition-colors">
-                <FileText className="w-3.5 h-3.5 text-[#4a4df2]" />
-                <span className="truncate max-w-[140px]">
-                  {contact.firstName ? `${contact.firstName} ${contact.lastName || ''}`.trim() + ' CV' : 'My Professional CV'}
-                </span>
+            <div className="hidden md:flex items-center gap-2.5 pl-3.5 border-l border-slate-200 min-w-0">
+              <span className="text-xs sm:text-[13px] font-semibold text-slate-700 truncate max-w-[180px]">
+                {contact.firstName
+                  ? `${contact.firstName} ${contact.lastName || ''}`.trim() + ' CV'
+                  : 'My Professional CV'}
               </span>
-              <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/80">
-                <Check className="w-3 h-3 text-emerald-600 stroke-[2.5]" />
-                <span>ATS Ready</span>
-              </span>
+              {renderAutoSaveStatus(true)}
             </div>
           </div>
 
-          {/* Center (Desktop lg+): Content | Design Segmented Switch */}
-          <div className="hidden lg:flex items-center bg-[#F1F4FD] p-1 rounded-xl border border-[#DCE3F7] shadow-inner">
+          {/* Center (Desktop lg+): Clean Icon-Free Content | Design Segmented Switch */}
+          <div className="hidden lg:flex items-center bg-slate-100/90 p-1 rounded-xl border border-slate-200/80">
             <button
               type="button"
               onClick={() => handleSwitchDesktopTab('content')}
-              className={`min-h-[38px] px-5 py-1.5 rounded-lg text-xs xl:text-sm font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-2 ${
+              className={`min-h-[36px] px-5 py-1.5 rounded-lg text-xs xl:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap ${
                 editorTab === 'content'
-                  ? 'bg-gradient-to-r from-[#4a4df2] to-[#6366f1] text-white shadow-sm shadow-[#4a4df2]/20'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+                  ? 'bg-white text-[#0F1B4D] shadow-2xs border border-slate-200/70'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              <FileEdit className="w-4 h-4" />
-              <span>Content Studio</span>
+              Content Studio
             </button>
             <button
               type="button"
               onClick={() => handleSwitchDesktopTab('design')}
-              className={`min-h-[38px] px-5 py-1.5 rounded-lg text-xs xl:text-sm font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-2 ${
+              className={`min-h-[36px] px-5 py-1.5 rounded-lg text-xs xl:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap ${
                 editorTab === 'design'
-                  ? 'bg-gradient-to-r from-[#4a4df2] to-[#6366f1] text-white shadow-sm shadow-[#4a4df2]/20'
-                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
+                  ? 'bg-white text-[#0F1B4D] shadow-2xs border border-slate-200/70'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
-              <Palette className="w-4 h-4" />
-              <span>Design &amp; Layout</span>
+              Design &amp; Layout
             </button>
           </div>
 
-          {/* Right: Save Status + Desktop Progress + Download CTA */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-            {renderAutoSaveStatus(true)}
+          {/* Right: Clean Step Counter + Single Primary Download PDF CTA */}
+          <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+            <div className="md:hidden">{renderAutoSaveStatus(true)}</div>
 
-            <div className="hidden xl:flex items-center gap-2 bg-slate-50 border border-slate-200/80 px-2.5 py-1.5 rounded-xl">
-              <div className="w-20 bg-slate-200 h-2 rounded-full overflow-hidden">
-                <div
-                  className="bg-gradient-to-r from-[#4a4df2] to-[#6366f1] h-full rounded-full transition-all duration-300"
-                  style={{ width: `${progressPercent}%` }}
-                />
-              </div>
-              <span className="text-[11px] font-bold text-slate-700 tabular-nums">
-                {progressPercent}%
-              </span>
-            </div>
+            <span className="hidden xl:inline text-xs font-medium text-slate-500 tabular-nums whitespace-nowrap">
+              Step {currentStep} of {STEPS.length} · {progressPercent}%
+            </span>
 
             {downloadDone && readyPdfBlob && (
               <a
                 href={readyPdfBlob.blobUrl}
                 download={readyPdfBlob.fileName}
-                className="hidden md:inline-flex items-center gap-1 text-xs font-semibold text-[#4a4df2] hover:underline whitespace-nowrap"
+                className="hidden md:inline-flex items-center text-xs font-semibold text-[#4B4DED] hover:underline whitespace-nowrap"
                 title={`Save ${readyPdfBlob.fileName}`}
               >
-                <span>Save copy</span>
+                Save copy
               </a>
             )}
-
-            <button
-              type="button"
-              onClick={handleOpenLinkedInModal}
-              className="hidden md:flex min-h-[40px] sm:min-h-[42px] items-center justify-center gap-1.5 px-3 py-2 rounded-xl border border-slate-200/90 bg-white hover:bg-[#0A66C2]/6 hover:border-[#0A66C2]/50 text-slate-700 hover:text-slate-900 text-xs sm:text-[13px] font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xs cursor-pointer whitespace-nowrap shrink-0"
-              title="Authenticate and import profile data from LinkedIn"
-            >
-              <Linkedin className="w-4 h-4 text-[#0A66C2] shrink-0" />
-              <span>LinkedIn</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setIsAiAssistantOpen(true)}
-              className="min-h-[40px] sm:min-h-[42px] flex items-center justify-center gap-1.5 px-3 sm:px-3.5 py-2 rounded-xl bg-gradient-to-r from-indigo-600 via-[#4a4df2] to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white text-xs sm:text-[13px] font-bold shadow-xs hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 cursor-pointer whitespace-nowrap shrink-0"
-              title="Open AI Assistant for bullet suggestions, executive summary & ATS skills"
-            >
-              <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-300 shrink-0" />
-              <span>AI Assistant</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={handleOpenShareModal}
-              className="min-h-[40px] sm:min-h-[42px] flex items-center justify-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-xl border border-slate-200/90 bg-white hover:bg-slate-50 hover:border-slate-300 text-slate-700 hover:text-slate-900 text-xs sm:text-[13px] font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xs cursor-pointer whitespace-nowrap shrink-0"
-              title="Generate a temporary public preview link"
-            >
-              <Share2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#4a4df2] shrink-0" />
-              <span className="hidden sm:inline">Share</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={handleDownloadDocx}
-              disabled={isDownloadingDocx}
-              className={`min-h-[40px] sm:min-h-[42px] flex items-center justify-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-xl border text-xs sm:text-[13px] font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xs cursor-pointer disabled:opacity-70 whitespace-nowrap shrink-0 ${
-                docxDownloadDone
-                  ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
-                  : 'border-slate-200/90 bg-white hover:bg-slate-50 hover:border-slate-300 text-slate-700'
-              }`}
-              title="Export editable Microsoft Word (.docx)"
-            >
-              {isDownloadingDocx ? (
-                <>
-                  <Loader2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-spin text-[#4a4df2] shrink-0" />
-                  <span>DOCX...</span>
-                </>
-              ) : docxDownloadDone ? (
-                <>
-                  <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-600 shrink-0" />
-                  <span>DOCX</span>
-                </>
-              ) : (
-                <>
-                  <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#4a4df2] shrink-0" />
-                  <span className="sm:hidden">DOCX</span>
-                  <span className="hidden sm:inline">Word</span>
-                </>
-              )}
-            </button>
 
             <PdfDownloadButton
               fileName={resolvedFileName}
               onBeforeDownload={commitPendingInputs}
               variant="header"
               label="Download PDF"
+              showIcon={false}
             />
           </div>
         </div>
 
         {/* Hairline Step Progress Track */}
-        <div className="w-full h-[2.5px] bg-[#EEF1FF] overflow-hidden">
+        <div className="w-full h-[2px] bg-slate-100 overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-[#4a4df2] to-[#6366f1] transition-all duration-300"
+            className="h-full bg-[#4B4DED] transition-all duration-300"
             style={{ width: `${progressPercent}%` }}
           />
         </div>
       </header>
 
       {/* Main Responsive Studio Workspace */}
-      <main className="flex-1 max-w-[1600px] w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-7 xl:gap-8 items-start">
+      <main className="flex-1 max-w-[1640px] w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 xl:gap-7 items-start">
         {/* Left Panel: Content Editor or Design Studio (Hidden on mobile ONLY when Preview mode is active) */}
         <div
-          className={`lg:col-span-6 bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 shadow-[0_4px_24px_rgba(15,27,77,0.05)] p-4 sm:p-7 lg:p-8 ${
+          className={`lg:col-span-6 xl:col-span-5 bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 shadow-[0_4px_24px_rgba(15,27,77,0.04)] p-4 sm:p-6 lg:p-7 ${
             mobileMode === 'preview' ? 'hidden lg:block' : 'block'
           }`}
         >
@@ -955,18 +1030,26 @@ export default function BuilderPage() {
                       </h2>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2">
                     {isCvEmpty && currentStep === 1 && (
                       <button
                         type="button"
                         onClick={handleLoadSampleData}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#EEF1FF] hover:bg-[#E0E5FA] text-[#4a4df2] text-xs font-bold transition-colors cursor-pointer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-semibold transition-colors cursor-pointer whitespace-nowrap"
                       >
-                        <Sparkles className="w-3.5 h-3.5" />
-                        <span>Try sample CV</span>
+                        <RefreshCw className="w-3.5 h-3.5 text-[#4B4DED]" />
+                        <span>Sample CV</span>
                       </button>
                     )}
-                    {renderAutoSaveStatus(false)}
+                    <button
+                      type="button"
+                      onClick={() => setIsAiAssistantOpen(true)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#EEF1FF] hover:bg-[#4B4DED] text-[#4B4DED] hover:text-white text-xs font-semibold transition-colors cursor-pointer whitespace-nowrap"
+                      title="Open AI Writing Assistant for bullets, summary & skills"
+                    >
+                      <Sparkles className="w-3.5 h-3.5 shrink-0" />
+                      <span>AI Assistant</span>
+                    </button>
                   </div>
                 </div>
                 <p className="text-xs sm:text-[13px] text-slate-500 mt-1.5 pl-8 leading-relaxed">
@@ -1306,44 +1389,150 @@ export default function BuilderPage() {
 
                   {store.experiences.map((exp, idx) => {
                     const isCollapsed = Boolean(collapsedExpIds[exp.id]);
-                    const dateRange = [exp.startDate, exp.isCurrent ? 'Present' : exp.endDate]
-                      .filter(Boolean)
-                      .join(' – ');
+                    const expMenuKey = `exp:${exp.id}`;
+                    const isQuickMenuOpen = openQuickActionsId === expMenuKey;
+                    const dateRange = formatCvDateRange(
+                      exp.startDate,
+                      exp.endDate,
+                      exp.isCurrent,
+                      store.dateFormat
+                    );
 
                     return (
                       <div
                         key={exp.id}
-                        className="rounded-2xl border border-slate-200 bg-[#F8F9FE]/65 overflow-hidden transition-colors"
+                        className={`space-y-1.5 relative ${isQuickMenuOpen ? 'z-30' : 'z-0'}`}
                       >
-                        {/* Card Accordion Header */}
-                        <div
-                          onClick={() =>
-                            setCollapsedExpIds((prev) => ({
-                              ...prev,
-                              [exp.id]: !prev[exp.id],
-                            }))
-                          }
-                          className="px-4 py-3 sm:px-5 sm:py-3.5 flex items-center justify-between gap-2 cursor-pointer hover:bg-white/60 transition-colors"
-                        >
-                          <div className="min-w-0 flex-1">
-                            <div className="font-bold text-sm text-[#0F1B4D] truncate">
-                              {exp.jobTitle || `Position ${idx + 1}`}
-                              {exp.employer ? ` · ${exp.employer}` : ''}
-                            </div>
-                            <div className="text-[11px] text-slate-500 truncate mt-0.5 tabular-nums">
-                              {dateRange || 'Tap to edit role details & achievements'}
-                              {exp.city ? ` · ${exp.city}` : ''}
-                            </div>
+                        {exp.forceNewPage && (
+                          <div className="flex items-center gap-2.5 px-1 text-[11px] font-medium text-[#4B4DED] select-none">
+                            <div className="h-px flex-1 border-t border-dashed border-[#4B4DED]/45" />
+                            <span className="inline-flex items-center gap-1.5">
+                              <SeparatorHorizontal className="w-3.5 h-3.5 shrink-0" />
+                              <span>Page break · Starts on new page</span>
+                            </span>
+                            <div className="h-px flex-1 border-t border-dashed border-[#4B4DED]/45" />
                           </div>
+                        )}
 
+                        <div
+                          className={`rounded-2xl border transition-colors ${
+                            exp.forceNewPage
+                              ? 'border-[#4B4DED]/45 bg-[#F8F9FE]'
+                              : 'border-slate-200 bg-[#F8F9FE]/65'
+                          }`}
+                        >
+                          {/* Card Accordion Header */}
                           <div
-                            className="flex items-center gap-0.5 shrink-0"
-                            onClick={(e) => e.stopPropagation()}
+                            onClick={() =>
+                              setCollapsedExpIds((prev) => ({
+                                ...prev,
+                                [exp.id]: !prev[exp.id],
+                              }))
+                            }
+                            className={`px-4 py-3 sm:px-5 sm:py-3.5 flex items-center justify-between gap-2 cursor-pointer hover:bg-white/60 transition-colors ${
+                              isCollapsed ? 'rounded-2xl' : 'rounded-t-2xl'
+                            }`}
                           >
-                            <button
-                              type="button"
-                              disabled={idx === 0}
-                              onClick={() => store.moveExperience(exp.id, 'up')}
+                            <div className="min-w-0 flex-1">
+                              <div className="font-bold text-sm text-[#0F1B4D] truncate">
+                                {exp.jobTitle || `Position ${idx + 1}`}
+                                {exp.employer ? ` · ${exp.employer}` : ''}
+                              </div>
+                              <div className="text-[11px] text-slate-500 truncate mt-0.5 tabular-nums">
+                                {dateRange || 'Tap to edit role details & achievements'}
+                                {exp.city ? ` · ${exp.city}` : ''}
+                                {exp.forceNewPage ? ' · Starts on new page' : ''}
+                              </div>
+                            </div>
+
+                            <div
+                              className="flex items-center gap-0.5 shrink-0"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {/* Floating Quick Actions Menu */}
+                              <div className="relative mr-0.5" data-quick-actions-root>
+                                <button
+                                  type="button"
+                                  aria-haspopup="menu"
+                                  aria-expanded={isQuickMenuOpen}
+                                  onClick={() =>
+                                    setOpenQuickActionsId((prev) =>
+                                      prev === expMenuKey ? null : expMenuKey
+                                    )
+                                  }
+                                  className={`min-h-[36px] min-w-[36px] sm:px-2.5 py-1.5 rounded-lg border text-xs font-semibold inline-flex items-center justify-center gap-1.5 transition-colors duration-150 cursor-pointer whitespace-nowrap ${
+                                    isQuickMenuOpen
+                                      ? 'bg-[#EEF1FF] border-[#4B4DED]/40 text-[#4B4DED]'
+                                      : 'bg-white/90 hover:bg-white border-slate-200/90 text-slate-600 hover:text-[#0F1B4D] hover:border-slate-300'
+                                  }`}
+                                  title="Quick Actions"
+                                  aria-label="Quick Actions"
+                                >
+                                  <MoreHorizontal className="w-4 h-4 shrink-0" />
+                                  <span className="hidden sm:inline text-[11px]">
+                                    Quick Actions
+                                  </span>
+                                </button>
+
+                                {isQuickMenuOpen && (
+                                  <div
+                                    role="menu"
+                                    aria-label="Work experience quick actions"
+                                    className="absolute right-0 top-full mt-1.5 w-52 rounded-xl bg-white border border-slate-200 shadow-lg py-1.5 z-40 animate-in fade-in zoom-in-95 duration-150 origin-top-right"
+                                  >
+                                    <div className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 select-none border-b border-slate-100 mb-1">
+                                      Quick Actions
+                                    </div>
+                                    <button
+                                      type="button"
+                                      role="menuitem"
+                                      onClick={() => handleDuplicateExperience(exp.id)}
+                                      className="group w-full px-3 py-2 text-left text-xs font-semibold text-slate-700 hover:bg-[#EEF1FF]/70 hover:text-[#4B4DED] flex items-center gap-2.5 transition-colors duration-150 cursor-pointer whitespace-nowrap"
+                                    >
+                                      <Copy className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#4B4DED] shrink-0 transition-colors" />
+                                      <span>Duplicate Entry</span>
+                                    </button>
+                                    <button
+                                      type="button"
+                                      role="menuitem"
+                                      onClick={() => handleClearExperienceFields(exp.id)}
+                                      className="group w-full px-3 py-2 text-left text-xs font-semibold text-slate-700 hover:bg-amber-50 hover:text-amber-700 flex items-center gap-2.5 transition-colors duration-150 cursor-pointer whitespace-nowrap"
+                                    >
+                                      <Eraser className="w-3.5 h-3.5 text-slate-400 group-hover:text-amber-600 shrink-0 transition-colors" />
+                                      <span>Clear All Fields</span>
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+
+                              {isCollapsed && (
+                                <button
+                                  type="button"
+                                  aria-pressed={Boolean(exp.forceNewPage)}
+                                  onClick={() =>
+                                    store.updateExperience(exp.id, {
+                                      forceNewPage: !exp.forceNewPage,
+                                    })
+                                  }
+                                  className={`min-h-[38px] min-w-[36px] flex items-center justify-center rounded-lg transition-colors cursor-pointer ${
+                                    exp.forceNewPage
+                                      ? 'text-[#4B4DED] bg-[#EEF1FF]'
+                                      : 'text-slate-400 hover:text-[#4B4DED] hover:bg-white'
+                                  }`}
+                                  title={
+                                    exp.forceNewPage
+                                      ? 'Force New Page (Active — click to disable)'
+                                      : 'Force New Page'
+                                  }
+                                  aria-label="Force New Page"
+                                >
+                                  <SeparatorHorizontal className="w-4 h-4" />
+                                </button>
+                              )}
+                              <button
+                                type="button"
+                                disabled={idx === 0}
+                                onClick={() => store.moveExperience(exp.id, 'up')}
                               className="min-h-[38px] min-w-[36px] flex items-center justify-center rounded-lg text-slate-400 hover:text-[#0F1B4D] hover:bg-white disabled:opacity-30 cursor-pointer"
                               title="Move up"
                               aria-label="Move position up"
@@ -1391,7 +1580,7 @@ export default function BuilderPage() {
 
                         {/* Collapsible Body */}
                         {!isCollapsed && (
-                          <div className="px-4 pb-4 pt-2 sm:px-5 sm:pb-5 border-t border-slate-200/70 bg-white space-y-3.5">
+                          <div className="px-4 pb-4 pt-2 sm:px-5 sm:pb-5 border-t border-slate-200/70 bg-white rounded-b-2xl space-y-3.5">
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                               <div>
                                 <label className="block text-[11px] font-semibold text-slate-600 mb-1">
@@ -1449,7 +1638,7 @@ export default function BuilderPage() {
                                     onChange={(e) =>
                                       store.updateExperience(exp.id, { startDate: e.target.value })
                                     }
-                                    placeholder="e.g. Jan 2022"
+                                    placeholder={getDateFormatMeta(store.dateFormat).startPlaceholder}
                                     className={inputClass}
                                   />
                                 </div>
@@ -1480,7 +1669,7 @@ export default function BuilderPage() {
                                     onChange={(e) =>
                                       store.updateExperience(exp.id, { endDate: e.target.value })
                                     }
-                                    placeholder="e.g. Dec 2024"
+                                    placeholder={getDateFormatMeta(store.dateFormat).endPlaceholder}
                                     className={`${inputClass} disabled:bg-slate-100 disabled:text-slate-500`}
                                   />
                                 </div>
@@ -1572,8 +1761,42 @@ export default function BuilderPage() {
                                 </div>
                               )}
                             </div>
+
+                            {/* Per-Entry Manual Pagination Control */}
+                            <div className="pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+                              <div className="min-w-0">
+                                <div className="text-xs font-semibold text-[#0F1B4D] flex items-center gap-1.5">
+                                  <SeparatorHorizontal className="w-3.5 h-3.5 text-[#4B4DED] shrink-0" />
+                                  <span>Page Break</span>
+                                </div>
+                                <p className="text-[11px] text-slate-500 mt-0.5">
+                                  Start this position at the top of a new A4 page
+                                </p>
+                              </div>
+                              <button
+                                type="button"
+                                aria-pressed={Boolean(exp.forceNewPage)}
+                                onClick={() =>
+                                  store.updateExperience(exp.id, {
+                                    forceNewPage: !exp.forceNewPage,
+                                  })
+                                }
+                                className={`min-h-[40px] px-3.5 py-2 rounded-xl border text-xs font-semibold inline-flex items-center gap-2 transition-all cursor-pointer shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4B4DED]/40 ${
+                                  exp.forceNewPage
+                                    ? 'bg-[#4B4DED] border-[#4B4DED] text-white shadow-2xs'
+                                    : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-white hover:border-[#4B4DED]/50 hover:text-[#0F1B4D]'
+                                }`}
+                              >
+                                <SeparatorHorizontal className="w-3.5 h-3.5 shrink-0" />
+                                <span>Force New Page</span>
+                                {exp.forceNewPage && (
+                                  <Check className="w-3.5 h-3.5 stroke-[2.75] shrink-0" />
+                                )}
+                              </button>
+                            </div>
                           </div>
                         )}
+                        </div>
                       </div>
                     );
                   })}
@@ -1614,41 +1837,149 @@ export default function BuilderPage() {
 
                   {store.educations.map((edu, idx) => {
                     const isCollapsed = Boolean(collapsedEduIds[edu.id]);
-                    const dateRange = [edu.startDate, edu.endDate].filter(Boolean).join(' – ');
+                    const eduMenuKey = `edu:${edu.id}`;
+                    const isQuickMenuOpen = openQuickActionsId === eduMenuKey;
+                    const dateRange = formatCvDateRange(
+                      edu.startDate,
+                      edu.endDate,
+                      false,
+                      store.dateFormat
+                    );
 
                     return (
                       <div
                         key={edu.id}
-                        className="rounded-2xl border border-slate-200 bg-[#F8F9FE]/65 overflow-hidden transition-colors"
+                        className={`space-y-1.5 relative ${isQuickMenuOpen ? 'z-30' : 'z-0'}`}
                       >
-                        <div
-                          onClick={() =>
-                            setCollapsedEduIds((prev) => ({
-                              ...prev,
-                              [edu.id]: !prev[edu.id],
-                            }))
-                          }
-                          className="px-4 py-3 sm:px-5 sm:py-3.5 flex items-center justify-between gap-2 cursor-pointer hover:bg-white/60 transition-colors"
-                        >
-                          <div className="min-w-0 flex-1">
-                            <div className="font-bold text-sm text-[#0F1B4D] truncate">
-                              {edu.degree || `Qualification ${idx + 1}`}
-                              {edu.school ? ` · ${edu.school}` : ''}
-                            </div>
-                            <div className="text-[11px] text-slate-500 truncate mt-0.5 tabular-nums">
-                              {[edu.grade, dateRange].filter(Boolean).join(' · ') ||
-                                'Tap to edit institution, dates & grade'}
-                            </div>
+                        {edu.forceNewPage && (
+                          <div className="flex items-center gap-2.5 px-1 text-[11px] font-medium text-[#4B4DED] select-none">
+                            <div className="h-px flex-1 border-t border-dashed border-[#4B4DED]/45" />
+                            <span className="inline-flex items-center gap-1.5">
+                              <SeparatorHorizontal className="w-3.5 h-3.5 shrink-0" />
+                              <span>Page break · Starts on new page</span>
+                            </span>
+                            <div className="h-px flex-1 border-t border-dashed border-[#4B4DED]/45" />
                           </div>
+                        )}
 
+                        <div
+                          className={`rounded-2xl border transition-colors ${
+                            edu.forceNewPage
+                              ? 'border-[#4B4DED]/45 bg-[#F8F9FE]'
+                              : 'border-slate-200 bg-[#F8F9FE]/65'
+                          }`}
+                        >
                           <div
-                            className="flex items-center gap-0.5 shrink-0"
-                            onClick={(e) => e.stopPropagation()}
+                            onClick={() =>
+                              setCollapsedEduIds((prev) => ({
+                                ...prev,
+                                [edu.id]: !prev[edu.id],
+                              }))
+                            }
+                            className={`px-4 py-3 sm:px-5 sm:py-3.5 flex items-center justify-between gap-2 cursor-pointer hover:bg-white/60 transition-colors ${
+                              isCollapsed ? 'rounded-2xl' : 'rounded-t-2xl'
+                            }`}
                           >
-                            <button
-                              type="button"
-                              disabled={idx === 0}
-                              onClick={() => store.moveEducation(edu.id, 'up')}
+                            <div className="min-w-0 flex-1">
+                              <div className="font-bold text-sm text-[#0F1B4D] truncate">
+                                {edu.degree || `Qualification ${idx + 1}`}
+                                {edu.school ? ` · ${edu.school}` : ''}
+                              </div>
+                              <div className="text-[11px] text-slate-500 truncate mt-0.5 tabular-nums">
+                                {[edu.grade, dateRange].filter(Boolean).join(' · ') ||
+                                  'Tap to edit institution, dates & grade'}
+                                {edu.forceNewPage ? ' · Starts on new page' : ''}
+                              </div>
+                            </div>
+
+                            <div
+                              className="flex items-center gap-0.5 shrink-0"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {/* Floating Quick Actions Menu */}
+                              <div className="relative mr-0.5" data-quick-actions-root>
+                                <button
+                                  type="button"
+                                  aria-haspopup="menu"
+                                  aria-expanded={isQuickMenuOpen}
+                                  onClick={() =>
+                                    setOpenQuickActionsId((prev) =>
+                                      prev === eduMenuKey ? null : eduMenuKey
+                                    )
+                                  }
+                                  className={`min-h-[36px] min-w-[36px] sm:px-2.5 py-1.5 rounded-lg border text-xs font-semibold inline-flex items-center justify-center gap-1.5 transition-colors duration-150 cursor-pointer whitespace-nowrap ${
+                                    isQuickMenuOpen
+                                      ? 'bg-[#EEF1FF] border-[#4B4DED]/40 text-[#4B4DED]'
+                                      : 'bg-white/90 hover:bg-white border-slate-200/90 text-slate-600 hover:text-[#0F1B4D] hover:border-slate-300'
+                                  }`}
+                                  title="Quick Actions"
+                                  aria-label="Quick Actions"
+                                >
+                                  <MoreHorizontal className="w-4 h-4 shrink-0" />
+                                  <span className="hidden sm:inline text-[11px]">
+                                    Quick Actions
+                                  </span>
+                                </button>
+
+                                {isQuickMenuOpen && (
+                                  <div
+                                    role="menu"
+                                    aria-label="Education quick actions"
+                                    className="absolute right-0 top-full mt-1.5 w-52 rounded-xl bg-white border border-slate-200 shadow-lg py-1.5 z-40 animate-in fade-in zoom-in-95 duration-150 origin-top-right"
+                                  >
+                                    <div className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 select-none border-b border-slate-100 mb-1">
+                                      Quick Actions
+                                    </div>
+                                    <button
+                                      type="button"
+                                      role="menuitem"
+                                      onClick={() => handleDuplicateEducation(edu.id)}
+                                      className="group w-full px-3 py-2 text-left text-xs font-semibold text-slate-700 hover:bg-[#EEF1FF]/70 hover:text-[#4B4DED] flex items-center gap-2.5 transition-colors duration-150 cursor-pointer whitespace-nowrap"
+                                    >
+                                      <Copy className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#4B4DED] shrink-0 transition-colors" />
+                                      <span>Duplicate Entry</span>
+                                    </button>
+                                    <button
+                                      type="button"
+                                      role="menuitem"
+                                      onClick={() => handleClearEducationFields(edu.id)}
+                                      className="group w-full px-3 py-2 text-left text-xs font-semibold text-slate-700 hover:bg-amber-50 hover:text-amber-700 flex items-center gap-2.5 transition-colors duration-150 cursor-pointer whitespace-nowrap"
+                                    >
+                                      <Eraser className="w-3.5 h-3.5 text-slate-400 group-hover:text-amber-600 shrink-0 transition-colors" />
+                                      <span>Clear All Fields</span>
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+
+                              {isCollapsed && (
+                                <button
+                                  type="button"
+                                  aria-pressed={Boolean(edu.forceNewPage)}
+                                  onClick={() =>
+                                    store.updateEducation(edu.id, {
+                                      forceNewPage: !edu.forceNewPage,
+                                    })
+                                  }
+                                  className={`min-h-[38px] min-w-[36px] flex items-center justify-center rounded-lg transition-colors cursor-pointer ${
+                                    edu.forceNewPage
+                                      ? 'text-[#4B4DED] bg-[#EEF1FF]'
+                                      : 'text-slate-400 hover:text-[#4B4DED] hover:bg-white'
+                                  }`}
+                                  title={
+                                    edu.forceNewPage
+                                      ? 'Force New Page (Active — click to disable)'
+                                      : 'Force New Page'
+                                  }
+                                  aria-label="Force New Page"
+                                >
+                                  <SeparatorHorizontal className="w-4 h-4" />
+                                </button>
+                              )}
+                              <button
+                                type="button"
+                                disabled={idx === 0}
+                                onClick={() => store.moveEducation(edu.id, 'up')}
                               className="min-h-[38px] min-w-[36px] flex items-center justify-center rounded-lg text-slate-400 hover:text-[#0F1B4D] hover:bg-white disabled:opacity-30 cursor-pointer"
                               title="Move up"
                               aria-label="Move qualification up"
@@ -1697,7 +2028,7 @@ export default function BuilderPage() {
                         </div>
 
                         {!isCollapsed && (
-                          <div className="px-4 pb-4 pt-2 sm:px-5 sm:pb-5 border-t border-slate-200/70 bg-white space-y-3.5">
+                          <div className="px-4 pb-4 pt-2 sm:px-5 sm:pb-5 border-t border-slate-200/70 bg-white rounded-b-2xl space-y-3.5">
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                               <div>
                                 <label className="block text-[11px] font-semibold text-slate-600 mb-1">
@@ -1747,7 +2078,7 @@ export default function BuilderPage() {
                               <div className="grid grid-cols-2 sm:contents gap-3">
                                 <div>
                                   <label className="block text-[11px] font-semibold text-slate-600 mb-1">
-                                    Start Year
+                                    Start Date
                                   </label>
                                   <input
                                     type="text"
@@ -1755,13 +2086,13 @@ export default function BuilderPage() {
                                     onChange={(e) =>
                                       store.updateEducation(edu.id, { startDate: e.target.value })
                                     }
-                                    placeholder="e.g. Sep 2019"
+                                    placeholder={getDateFormatMeta(store.dateFormat).eduStartPlaceholder}
                                     className={inputClass}
                                   />
                                 </div>
                                 <div>
                                   <label className="block text-[11px] font-semibold text-slate-600 mb-1">
-                                    Graduation Year
+                                    Graduation Date
                                   </label>
                                   <input
                                     type="text"
@@ -1769,7 +2100,7 @@ export default function BuilderPage() {
                                     onChange={(e) =>
                                       store.updateEducation(edu.id, { endDate: e.target.value })
                                     }
-                                    placeholder="e.g. Jun 2022"
+                                    placeholder={getDateFormatMeta(store.dateFormat).eduEndPlaceholder}
                                     className={inputClass}
                                   />
                                 </div>
@@ -1791,8 +2122,42 @@ export default function BuilderPage() {
                                 className={inputClass}
                               />
                             </div>
+
+                            {/* Per-Entry Manual Pagination Control */}
+                            <div className="pt-3 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+                              <div className="min-w-0">
+                                <div className="text-xs font-semibold text-[#0F1B4D] flex items-center gap-1.5">
+                                  <SeparatorHorizontal className="w-3.5 h-3.5 text-[#4B4DED] shrink-0" />
+                                  <span>Page Break</span>
+                                </div>
+                                <p className="text-[11px] text-slate-500 mt-0.5">
+                                  Start this qualification at the top of a new A4 page
+                                </p>
+                              </div>
+                              <button
+                                type="button"
+                                aria-pressed={Boolean(edu.forceNewPage)}
+                                onClick={() =>
+                                  store.updateEducation(edu.id, {
+                                    forceNewPage: !edu.forceNewPage,
+                                  })
+                                }
+                                className={`min-h-[40px] px-3.5 py-2 rounded-xl border text-xs font-semibold inline-flex items-center gap-2 transition-all cursor-pointer shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4B4DED]/40 ${
+                                  edu.forceNewPage
+                                    ? 'bg-[#4B4DED] border-[#4B4DED] text-white shadow-2xs'
+                                    : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-white hover:border-[#4B4DED]/50 hover:text-[#0F1B4D]'
+                                }`}
+                              >
+                                <SeparatorHorizontal className="w-3.5 h-3.5 shrink-0" />
+                                <span>Force New Page</span>
+                                {edu.forceNewPage && (
+                                  <Check className="w-3.5 h-3.5 stroke-[2.75] shrink-0" />
+                                )}
+                              </button>
+                            </div>
                           </div>
                         )}
+                        </div>
                       </div>
                     );
                   })}
@@ -2241,10 +2606,31 @@ export default function BuilderPage() {
                           onFocus={() => setShowPrintSettingsTip(true)}
                           onBlur={() => setShowPrintSettingsTip(false)}
                           aria-describedby="vector-print-settings-hint"
-                          className="flex-1 sm:flex-none min-h-[40px] px-4 py-2 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-[#0F1B4D] text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shrink-0 whitespace-nowrap"
+                          className="flex-1 sm:flex-none min-h-[40px] px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-[#0F1B4D] text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shrink-0 whitespace-nowrap"
                         >
                           <Printer className="w-3.5 h-3.5 text-[#4B4DED]" />
                           <span>Vector Print</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            commitPendingInputs();
+                            setIsPdfSettingsModalOpen(true);
+                          }}
+                          className="flex-1 sm:flex-none min-h-[40px] px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-[#0F1B4D] text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shrink-0 whitespace-nowrap"
+                          title="Configure hyperlinks and image compression for PDF export"
+                        >
+                          <Sliders className="w-3.5 h-3.5 text-[#4B4DED]" />
+                          <span>PDF Export Settings</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleOpenShareModal}
+                          className="flex-1 sm:flex-none min-h-[40px] px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-[#0F1B4D] text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shrink-0 whitespace-nowrap"
+                          title="Generate a temporary shareable CV link"
+                        >
+                          <Share2 className="w-3.5 h-3.5 text-[#4B4DED]" />
+                          <span>Share</span>
                         </button>
                       </div>
 
@@ -2383,11 +2769,24 @@ export default function BuilderPage() {
                     )}
                   </div>
 
-                  {/* Custom PDF Filename */}
+                  {/* Custom PDF Filename & Export Settings Summary */}
                   <div>
-                    <label className="block text-xs font-semibold text-[#0F1B4D] mb-1.5">
-                      PDF File Name
-                    </label>
+                    <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+                      <label className="block text-xs font-semibold text-[#0F1B4D]">
+                        PDF File Name
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          commitPendingInputs();
+                          setIsPdfSettingsModalOpen(true);
+                        }}
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#4B4DED] hover:text-[#3D3FC9] transition-colors cursor-pointer whitespace-nowrap"
+                      >
+                        <Sliders className="w-3.5 h-3.5 shrink-0" />
+                        <span>PDF Export Settings</span>
+                      </button>
+                    </div>
                     <input
                       type="text"
                       value={store.customPdfFileName || ''}
@@ -2395,6 +2794,23 @@ export default function BuilderPage() {
                       placeholder={resolvedFileName()}
                       className={inputClass}
                     />
+                    <p className="mt-1.5 text-[11px] text-slate-500 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 tabular-nums">
+                      <span>
+                        Hyperlinks:{' '}
+                        <strong className="font-semibold text-[#0F1B4D]">
+                          {activePdfExportSettings.includeHyperlinks ? 'On' : 'Off'}
+                        </strong>
+                      </span>
+                      <span aria-hidden="true" className="text-slate-300">
+                        ·
+                      </span>
+                      <span>
+                        Compress Images:{' '}
+                        <strong className="font-semibold text-[#0F1B4D]">
+                          {activePdfExportSettings.compressImages ? 'On' : 'Off'}
+                        </strong>
+                      </span>
+                    </p>
                   </div>
 
                   {/* Optional Sections Disclosure */}
@@ -2928,6 +3344,260 @@ export default function BuilderPage() {
                 </div>
               </div>
 
+              {/* Date Format Dropdown (UK Industry Standards) */}
+              {(() => {
+                const activeDateFormat = normalizeDateFormat(store.dateFormat);
+                const activeFormatMeta = getDateFormatMeta(activeDateFormat);
+                return (
+                  <div className="p-3.5 sm:p-4 rounded-2xl bg-[#F8F9FE] border border-slate-200 space-y-2.5">
+                    <div className="flex items-center justify-between gap-2 flex-wrap">
+                      <label
+                        htmlFor="cv-date-format-select"
+                        className="text-xs font-semibold text-[#0F1B4D] flex items-center gap-1.5"
+                      >
+                        <Calendar className="w-3.5 h-3.5 text-[#4B4DED] shrink-0" />
+                        <span>Date Format</span>
+                      </label>
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-0.5 rounded-md bg-white border border-slate-200 text-[11px] font-mono font-semibold text-[#0F1B4D] tabular-nums">
+                          {activeFormatMeta.sampleRange}
+                        </span>
+                        {activeDateFormat !== DEFAULT_DATE_FORMAT && (
+                          <button
+                            type="button"
+                            onClick={() => store.setDateFormat(DEFAULT_DATE_FORMAT)}
+                            className="text-[11px] font-semibold text-[#4B4DED] hover:text-[#3D3FC9] hover:underline cursor-pointer flex items-center gap-1"
+                            title="Reset date format to Month Year"
+                          >
+                            <RotateCcw className="w-3 h-3" />
+                            <span>Reset</span>
+                          </button>
+                        )}
+                      </div>
+                    </div>
+
+                    <select
+                      id="cv-date-format-select"
+                      value={activeDateFormat}
+                      onChange={(e) => store.setDateFormat(e.target.value as DateFormatOption)}
+                      aria-label="Date Format"
+                      className={inputClass}
+                    >
+                      {DATE_FORMAT_OPTIONS.map((opt) => (
+                        <option key={opt.id} value={opt.id}>
+                          {opt.label}
+                        </option>
+                      ))}
+                    </select>
+
+                    <p className="text-[11px] text-slate-500">
+                      Standardises Work Experience, Education, and Personal dates across your CV using UK day–month–year formatting.
+                    </p>
+                  </div>
+                );
+              })()}
+
+              {/* Letter Spacing Control Slider */}
+              <div className="p-3.5 sm:p-4 rounded-2xl bg-[#F8F9FE] border border-slate-200 space-y-2.5">
+                <div className="flex items-center justify-between gap-2">
+                  <label
+                    htmlFor="cv-letter-spacing-slider"
+                    className="text-xs font-semibold text-[#0F1B4D]"
+                  >
+                    Letter Spacing
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <span className="px-2 py-0.5 rounded-md bg-white border border-slate-200 text-[11px] font-mono font-semibold text-[#0F1B4D] tabular-nums">
+                      {Math.abs(store.letterSpacing ?? 0) < 0.05
+                        ? '0.0px (Default)'
+                        : `${(store.letterSpacing ?? 0) > 0 ? '+' : ''}${(
+                            store.letterSpacing ?? 0
+                          ).toFixed(1)}px`}
+                    </span>
+                    {Math.abs(store.letterSpacing ?? 0) >= 0.05 && (
+                      <button
+                        type="button"
+                        onClick={() => store.setLetterSpacing(0)}
+                        className="text-[11px] font-semibold text-[#4B4DED] hover:text-[#3D3FC9] hover:underline cursor-pointer flex items-center gap-1"
+                        title="Reset letter spacing to default"
+                      >
+                        <RotateCcw className="w-3 h-3" />
+                        <span>Reset</span>
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                <input
+                  id="cv-letter-spacing-slider"
+                  type="range"
+                  min={-0.5}
+                  max={2}
+                  step={0.1}
+                  value={store.letterSpacing ?? 0}
+                  onChange={(e) => store.setLetterSpacing(parseFloat(e.target.value))}
+                  aria-label="Letter Spacing"
+                  className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#4B4DED]"
+                />
+
+                <div className="flex items-center justify-between text-[10px] font-medium text-slate-500 pt-0.5">
+                  {[
+                    { label: 'Tight (-0.5px)', value: -0.5 },
+                    { label: 'Normal (0px)', value: 0 },
+                    { label: 'Wide (+1.0px)', value: 1 },
+                    { label: 'Spacious (+2.0px)', value: 2 },
+                  ].map((preset) => {
+                    const isActive = Math.abs((store.letterSpacing ?? 0) - preset.value) < 0.05;
+                    return (
+                      <button
+                        key={preset.label}
+                        type="button"
+                        onClick={() => store.setLetterSpacing(preset.value)}
+                        className={`transition-colors cursor-pointer ${
+                          isActive
+                            ? 'text-[#4B4DED] font-bold'
+                            : 'text-slate-500 hover:text-[#0F1B4D]'
+                        }`}
+                      >
+                        {preset.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Font Boldness Toggle Control */}
+              {(() => {
+                const boldness = normalizeFontBoldness(store.fontBoldness);
+                const boldTargets: {
+                  id: FontBoldnessTarget;
+                  label: string;
+                  hint: string;
+                }[] = [
+                  {
+                    id: 'header',
+                    label: 'CV Header & Name',
+                    hint: 'Candidate name & job title',
+                  },
+                  {
+                    id: 'headings',
+                    label: 'Section Headings',
+                    hint: 'Experience, Education & Skills',
+                  },
+                  {
+                    id: 'subheadings',
+                    label: 'Role & Entry Titles',
+                    hint: 'Job roles, employers & degrees',
+                  },
+                  {
+                    id: 'sectionText',
+                    label: 'Section Body Text',
+                    hint: 'Summary, bullet points & skills',
+                  },
+                ];
+                const activeCount = boldness.enabled
+                  ? boldTargets.filter((t) => boldness[t.id]).length
+                  : 0;
+
+                return (
+                  <div className="p-3.5 sm:p-4 rounded-2xl bg-[#F8F9FE] border border-slate-200 space-y-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2">
+                          <Bold className="w-3.5 h-3.5 text-[#4B4DED] shrink-0 stroke-[2.6]" />
+                          <span
+                            id="cv-font-boldness-label"
+                            className="text-xs font-semibold text-[#0F1B4D]"
+                          >
+                            Font Boldness
+                          </span>
+                          <span className="text-[11px] font-mono text-slate-500 tabular-nums">
+                            · {boldness.enabled ? `${activeCount} active` : 'Standard'}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-slate-500 mt-0.5">
+                          Make specific headings or section text bolder across your CV
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-2.5 shrink-0">
+                        {boldness.enabled && (
+                          <button
+                            type="button"
+                            onClick={() => store.resetFontBoldness()}
+                            className="text-[11px] font-semibold text-[#4B4DED] hover:text-[#3D3FC9] hover:underline cursor-pointer flex items-center gap-1"
+                            title="Reset font boldness to standard weights"
+                          >
+                            <RotateCcw className="w-3 h-3" />
+                            <span>Reset</span>
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          role="switch"
+                          aria-checked={boldness.enabled}
+                          aria-labelledby="cv-font-boldness-label"
+                          onClick={() => store.setFontBoldness({ enabled: !boldness.enabled })}
+                          className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4B4DED]/40 ${
+                            boldness.enabled ? 'bg-[#4B4DED]' : 'bg-slate-300 hover:bg-slate-400'
+                          }`}
+                        >
+                          <span
+                            aria-hidden="true"
+                            className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-xs transition duration-200 ${
+                              boldness.enabled ? 'translate-x-5' : 'translate-x-0'
+                            }`}
+                          />
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-0.5">
+                      {boldTargets.map((target) => {
+                        const isTargetActive = boldness.enabled && boldness[target.id];
+                        return (
+                          <button
+                            key={target.id}
+                            type="button"
+                            aria-pressed={isTargetActive}
+                            onClick={() => store.toggleFontBoldnessTarget(target.id)}
+                            className={`min-h-[48px] px-3 py-2 rounded-xl border text-left transition-all cursor-pointer flex items-center justify-between gap-2.5 ${
+                              isTargetActive
+                                ? 'border-[#4B4DED] bg-white ring-1 ring-[#4B4DED]/20 shadow-2xs'
+                                : 'border-slate-200 bg-white/75 hover:bg-white hover:border-slate-300'
+                            }`}
+                          >
+                            <div className="min-w-0">
+                              <div
+                                className={`text-xs truncate ${
+                                  isTargetActive
+                                    ? 'font-extrabold text-[#0F1B4D]'
+                                    : 'font-semibold text-slate-700'
+                                }`}
+                              >
+                                {target.label}
+                              </div>
+                              <div className="text-[10px] text-slate-500 truncate">
+                                {target.hint}
+                              </div>
+                            </div>
+                            <div
+                              className={`w-5 h-5 rounded-md border flex items-center justify-center shrink-0 transition-colors ${
+                                isTargetActive
+                                  ? 'bg-[#4B4DED] border-[#4B4DED] text-white'
+                                  : 'border-slate-300 bg-slate-50 text-transparent'
+                              }`}
+                            >
+                              <Check className="w-3 h-3 stroke-[3]" />
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })()}
+
               {/* Theme Colors Palette Section */}
               <div>
                 <div className="flex items-center justify-between mb-2.5">
@@ -3086,14 +3756,20 @@ export default function BuilderPage() {
                   {CV_TEMPLATES.map((tmpl) => {
                     const isSelected = activeTemplate.id === tmpl.id;
                     const ThumbComp = tmpl.component;
-                    const thumbCv: CV = {
-                      ...SAMPLE_UK_CV,
-                      settings: {
-                        ...SAMPLE_UK_CV.settings,
-                        templateId: tmpl.id,
-                        accentColor: store.themeColor || '#4B4DED',
+                    const thumbCv: CV = applyDateFormatToCv(
+                      {
+                        ...SAMPLE_UK_CV,
+                        settings: {
+                          ...SAMPLE_UK_CV.settings,
+                          templateId: tmpl.id,
+                          accentColor: store.themeColor || '#4B4DED',
+                          dateFormat: normalizeDateFormat(store.dateFormat),
+                          letterSpacing: store.letterSpacing ?? 0,
+                          fontBoldness: store.fontBoldness,
+                        },
                       },
-                    };
+                      store.dateFormat
+                    );
                     return (
                       <button
                         type="button"
@@ -3130,210 +3806,200 @@ export default function BuilderPage() {
           )}
         </div>
 
-        {/* Right Panel: Crisp Auto-Fitted Live A4 CV Preview
+        {/* Right Panel: Precision Document Studio Live A4 CV Preview
             IMPORTANT: On mobile (<lg) when editing Content/Design, we keep this mounted off-screen
             rather than `display: none` so CvPreview & #cv-print-area remain 100% live for instant PDF export! */}
         <div
-          className={`lg:col-span-6 flex flex-col items-center lg:sticky lg:top-[76px] ${
+          className={`lg:col-span-6 xl:col-span-7 flex flex-col items-center lg:sticky lg:top-[76px] ${
             mobileMode === 'preview'
               ? 'w-full'
               : 'max-lg:fixed max-lg:-left-[9999px] max-lg:top-0 max-lg:w-[390px] max-lg:opacity-0 max-lg:pointer-events-none'
           }`}
         >
-          {/* Top Preview Action Strip with Quick Switcher on Desktop */}
-          <div className="w-full bg-white rounded-2xl border border-slate-200/90 shadow-[0_2px_12px_rgba(15,27,77,0.04)] p-2.5 mb-3 flex flex-col gap-2">
-            <div className="flex items-center justify-between gap-2 flex-wrap">
-              {/* Left: Template Modal Trigger + Page Count Badge */}
-              <div className="flex items-center gap-2 min-w-0">
+          {/* Unified Document Preview Studio Frame */}
+          <div className="w-full rounded-2xl sm:rounded-3xl border border-slate-200/95 bg-[#EAEEF7] shadow-[0_8px_30px_rgba(15,27,77,0.06)] overflow-hidden flex flex-col">
+            {/* Integrated Single-Bar Studio Control Strip */}
+            <div className="w-full bg-white border-b border-slate-200/90 px-3 sm:px-4 py-2.5 flex flex-wrap items-center justify-between gap-2">
+              {/* Left: Template Picker + Quick Accent Dots + Typographic Sheet Info */}
+              <div className="flex items-center gap-2.5 min-w-0">
                 <button
                   type="button"
                   onClick={() => setIsTemplateModalOpen(true)}
-                  className="min-h-[36px] px-3 py-1 rounded-xl bg-indigo-50/80 hover:bg-indigo-100/80 border border-indigo-200/90 hover:border-indigo-400 text-indigo-950 text-xs font-bold flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
-                  title="Switch template layout"
+                  className="min-h-[36px] px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-[#EEF1FF]/70 border border-slate-200/90 hover:border-[#4B4DED]/60 text-[#0F1B4D] text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
+                  title="Switch CV template layout"
                 >
-                  <LayoutGrid className="w-3.5 h-3.5 text-indigo-600 shrink-0" />
-                  <span>Template: {activeTemplate.name}</span>
+                  <LayoutGrid className="w-3.5 h-3.5 text-[#4B4DED] shrink-0" />
+                  <span className="truncate max-w-[120px] sm:max-w-[150px]">{activeTemplate.name}</span>
+                  <ChevronDown className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                 </button>
-                <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 px-2 py-1 rounded-lg tabular-nums whitespace-nowrap hidden sm:inline">
-                  A4 · {totalPages} {totalPages === 1 ? 'Page' : 'Pages'}
-                </span>
-                <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-full hidden md:inline-flex items-center gap-1">
-                  <Check className="w-3 h-3 text-emerald-600 stroke-[2.5]" />
-                  <span>ATS 99%</span>
-                </span>
-              </div>
 
-              {/* Right: Quick Color Swatches + Sample Reset */}
-              <div className="flex items-center gap-2">
-                <div className="hidden sm:flex items-center gap-1.5 bg-slate-50 px-2 py-1 rounded-xl border border-slate-200">
+                {/* Quick Accent Swatches */}
+                <div className="hidden xl:flex items-center gap-1.5 pl-2.5 border-l border-slate-200">
                   {[
-                    { color: '#4a4df2', name: 'Royal Blue' },
-                    { color: '#1e3a8a', name: 'British Navy' },
-                    { color: '#0f172a', name: 'Executive Slate' },
-                    { color: '#065f46', name: 'Oxford Green' },
-                    { color: '#7f1d1d', name: 'Burgundy' },
+                    { color: '#4B4DED', name: 'Royal Blue' },
+                    { color: '#1E3A8A', name: 'British Navy' },
+                    { color: '#0F172A', name: 'Executive Slate' },
+                    { color: '#065F46', name: 'Oxford Green' },
+                    { color: '#7F1D1D', name: 'Burgundy' },
                   ].map((swatch) => {
                     const isSelected =
-                      (store.themeColor || '#4a4df2').toLowerCase() === swatch.color.toLowerCase();
+                      (store.themeColor || '#4B4DED').toLowerCase() === swatch.color.toLowerCase();
                     return (
                       <button
                         key={swatch.color}
                         type="button"
                         onClick={() => store.setThemeColor(swatch.color)}
                         title={swatch.name}
-                        className={`w-5 h-5 rounded-full cursor-pointer transition-transform duration-200 hover:scale-110 flex items-center justify-center ${
+                        aria-label={`Select ${swatch.name} accent`}
+                        className={`w-4 h-4 rounded-full cursor-pointer transition-transform duration-150 hover:scale-110 flex items-center justify-center ${
                           isSelected
-                            ? 'ring-2 ring-offset-1 ring-[#4a4df2] scale-105'
-                            : 'opacity-85 hover:opacity-100'
+                            ? 'ring-2 ring-offset-1 ring-[#4B4DED] scale-105'
+                            : 'opacity-80 hover:opacity-100'
                         }`}
                         style={{ backgroundColor: swatch.color }}
-                      >
-                        {isSelected && <Check className="w-3 h-3 text-white stroke-[3]" />}
-                      </button>
+                      />
                     );
                   })}
                 </div>
 
+                <span className="hidden sm:inline text-slate-300">·</span>
+                <span className="hidden sm:inline text-xs font-medium text-slate-500 tabular-nums whitespace-nowrap">
+                  A4 · {totalPages} {totalPages === 1 ? 'Page' : 'Pages'}
+                </span>
+              </div>
+
+              {/* Right: Page Stepper + Zoom/Fit + Margin Guides + Fullscreen Inspect + Print */}
+              <div className="flex items-center gap-1.5 sm:gap-2 ml-auto">
+                {/* Multi-Page Navigation */}
+                {totalPages > 1 && (
+                  <div className="flex items-center bg-slate-50 rounded-xl border border-slate-200/90 px-1 py-0.5">
+                    <button
+                      type="button"
+                      disabled={activePreviewPage <= 1}
+                      onClick={() => handleScrollToPreviewPage(activePreviewPage - 1)}
+                      className="min-h-[28px] min-w-[26px] flex items-center justify-center rounded-lg text-slate-600 hover:bg-white hover:text-[#0F1B4D] disabled:opacity-35 disabled:cursor-not-allowed cursor-pointer"
+                      title="Previous Page"
+                      aria-label="Previous Page"
+                    >
+                      <ChevronLeft className="w-3.5 h-3.5" />
+                    </button>
+                    <span className="text-[11px] font-mono font-semibold text-slate-700 tabular-nums whitespace-nowrap px-1">
+                      {activePreviewPage}/{totalPages}
+                    </span>
+                    <button
+                      type="button"
+                      disabled={activePreviewPage >= totalPages}
+                      onClick={() => handleScrollToPreviewPage(activePreviewPage + 1)}
+                      className="min-h-[28px] min-w-[26px] flex items-center justify-center rounded-lg text-slate-600 hover:bg-white hover:text-[#0F1B4D] disabled:opacity-35 disabled:cursor-not-allowed cursor-pointer"
+                      title="Next Page"
+                      aria-label="Next Page"
+                    >
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                )}
+
+                {/* Zoom & Auto-Fit Cluster */}
+                <div className="flex items-center bg-slate-50 rounded-xl border border-slate-200/90 p-0.5">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setManualZoom((z) => Math.max(35, (z ?? displayedZoomPercent) - 10))
+                    }
+                    disabled={displayedZoomPercent <= 35}
+                    className="min-h-[30px] min-w-[28px] flex items-center justify-center rounded-lg text-slate-600 hover:bg-white hover:text-[#0F1B4D] disabled:opacity-35 disabled:cursor-not-allowed cursor-pointer"
+                    title="Zoom Out"
+                    aria-label="Zoom Out"
+                  >
+                    <ZoomOut className="w-3.5 h-3.5" />
+                  </button>
+                  <span className="text-[11px] font-mono font-semibold text-slate-700 min-w-[38px] text-center tabular-nums">
+                    {displayedZoomPercent}%
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setManualZoom((z) => Math.min(125, (z ?? displayedZoomPercent) + 10))
+                    }
+                    disabled={displayedZoomPercent >= 125}
+                    className="min-h-[30px] min-w-[28px] flex items-center justify-center rounded-lg text-slate-600 hover:bg-white hover:text-[#0F1B4D] disabled:opacity-35 disabled:cursor-not-allowed cursor-pointer"
+                    title="Zoom In"
+                    aria-label="Zoom In"
+                  >
+                    <ZoomIn className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setManualZoom((z) => (z === null ? 100 : null))}
+                    className={`min-h-[30px] px-2 rounded-lg text-[11px] font-semibold transition-colors cursor-pointer whitespace-nowrap ${
+                      manualZoom === null
+                        ? 'bg-[#4B4DED] text-white shadow-2xs'
+                        : 'text-slate-600 hover:bg-white hover:text-[#0F1B4D]'
+                    }`}
+                    title={manualZoom === null ? 'Switch to 100% actual size' : 'Auto-fit to preview width'}
+                  >
+                    Fit
+                  </button>
+                </div>
+
+                {/* Safe A4 Print Margin Guides Toggle */}
                 <button
                   type="button"
-                  onClick={handleLoadSampleData}
-                  className="min-h-[36px] px-2.5 sm:px-3 py-1 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-600 hover:text-slate-900 text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap shrink-0 shadow-2xs"
-                  title="Populate sample UK CV data to preview layout"
+                  onClick={() => setShowMarginGuides((v) => !v)}
+                  aria-pressed={showMarginGuides}
+                  className={`hidden sm:flex min-h-[36px] min-w-[36px] rounded-xl border items-center justify-center transition-colors cursor-pointer ${
+                    showMarginGuides
+                      ? 'border-[#4B4DED] bg-[#EEF1FF] text-[#4B4DED]'
+                      : 'border-slate-200/90 bg-white hover:bg-slate-50 text-slate-600 hover:text-[#0F1B4D]'
+                  }`}
+                  title="Toggle 12mm safe A4 print margin guides"
+                  aria-label="Toggle A4 margin guides"
                 >
-                  <RefreshCw className="w-3.5 h-3.5 text-[#4a4df2]" />
-                  <span className="hidden xs:inline">Sample</span>
+                  <Ruler className="w-3.5 h-3.5" />
+                </button>
+
+                {/* Fullscreen A4 Inspection Modal Trigger */}
+                <button
+                  type="button"
+                  onClick={() => setIsFullscreenPreviewOpen(true)}
+                  className="min-h-[36px] px-2.5 sm:px-3 rounded-xl border border-slate-200/90 bg-white hover:bg-slate-50 text-[#0F1B4D] text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
+                  title="Open full-screen A4 CV inspection view"
+                  aria-label="Expand full-screen preview"
+                >
+                  <Maximize2 className="w-3.5 h-3.5 text-[#4B4DED] shrink-0" />
+                  <span className="hidden md:inline">Expand</span>
+                </button>
+
+                {/* Quick Browser Print */}
+                <button
+                  type="button"
+                  onClick={handleBrowserPrint}
+                  className="hidden sm:flex min-h-[36px] min-w-[36px] rounded-xl border border-slate-200/90 bg-white hover:bg-slate-50 text-slate-600 hover:text-[#0F1B4D] items-center justify-center transition-colors cursor-pointer"
+                  title="Print / Save Vector A4 PDF"
+                  aria-label="Print CV"
+                >
+                  <Printer className="w-3.5 h-3.5" />
                 </button>
               </div>
             </div>
 
-            {/* Desktop Quick Template Switcher Pills */}
-            <div className="hidden lg:flex items-center gap-1.5 pt-1.5 border-t border-slate-100 overflow-x-auto scrollbar-none">
-              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider shrink-0 pl-1">
-                Layout:
-              </span>
-              {CV_TEMPLATES.map((tmpl) => {
-                const isActive = activeTemplate.id === tmpl.id;
-                return (
-                  <button
-                    key={tmpl.id}
-                    type="button"
-                    onClick={() => store.setTemplate(tmpl.id as any)}
-                    className={`min-h-[30px] px-2.5 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
-                      isActive
-                        ? 'bg-gradient-to-r from-[#4a4df2] to-[#6366f1] text-white shadow-xs font-bold'
-                        : 'bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200/60'
-                    }`}
-                  >
-                    {tmpl.name}
-                  </button>
-                );
-              })}
+            {/* Architectural A4 Paper Stage with Precision Dot-Grid Backdrop */}
+            <div
+              ref={previewContainerRef}
+              onScroll={handlePreviewScroll}
+              className="w-full lg:h-[calc(100vh-146px)] lg:min-h-[600px] bg-[#EAEEF7] bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:18px_18px] overflow-x-auto overflow-y-auto flex justify-center items-start p-3 sm:p-6"
+            >
+              <CvPreview
+                showControlsBar={false}
+                showMarginGuides={showMarginGuides}
+                scale={effectiveScale}
+                onPagesChange={handlePagesChange}
+              />
             </div>
           </div>
 
-          {/* Crisp Single-Scale A4 Preview Stage with Designer Studio Canvas */}
-          <div
-            ref={previewContainerRef}
-            className="w-full lg:max-h-[calc(100vh-215px)] lg:min-h-[560px] bg-gradient-to-b from-[#F0F3FC] to-[#E6EBF8] rounded-3xl border border-[#DCE3F7] shadow-inner overflow-x-auto overflow-y-auto flex justify-center items-start p-3 sm:p-6"
-          >
-            <CvPreview
-              showControlsBar={false}
-              scale={effectiveScale}
-              onPagesChange={handlePagesChange}
-            />
-          </div>
-
-          {/* Floating Navy Zoom & Page Controls Dock */}
-          <div className="mt-3.5 bg-[#0F1B4D]/95 backdrop-blur-md text-white rounded-2xl px-4 sm:px-6 py-2 flex items-center justify-center gap-2 sm:gap-3.5 shadow-[0_12px_30px_rgba(15,27,77,0.28)] border border-slate-700/50 max-w-full">
-            {/* Multi-Page Navigation */}
-            <button
-              type="button"
-              disabled={activePreviewPage <= 1}
-              onClick={() => handleScrollToPreviewPage(activePreviewPage - 1)}
-              className="min-h-[38px] min-w-[34px] flex items-center justify-center text-white/75 hover:text-white disabled:opacity-35 disabled:cursor-not-allowed cursor-pointer"
-              title="Previous Page"
-              aria-label="Previous Page"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-            <span className="text-xs font-mono font-semibold tabular-nums whitespace-nowrap px-0.5">
-              {activePreviewPage}/{totalPages}
-            </span>
-            <button
-              type="button"
-              disabled={activePreviewPage >= totalPages}
-              onClick={() => handleScrollToPreviewPage(activePreviewPage + 1)}
-              className="min-h-[38px] min-w-[34px] flex items-center justify-center text-white/75 hover:text-white disabled:opacity-35 disabled:cursor-not-allowed cursor-pointer"
-              title="Next Page"
-              aria-label="Next Page"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
-
-            <div className="w-px h-4 bg-white/20" />
-
-            {/* Zoom Controls */}
-            <button
-              type="button"
-              onClick={() =>
-                setManualZoom((z) => Math.max(30, (z ?? displayedZoomPercent) - 10))
-              }
-              disabled={displayedZoomPercent <= 30}
-              className="min-h-[38px] min-w-[34px] flex items-center justify-center text-white/75 hover:text-white disabled:opacity-35 disabled:cursor-not-allowed cursor-pointer"
-              title="Zoom Out"
-              aria-label="Zoom Out"
-            >
-              <ZoomOut className="w-4 h-4" />
-            </button>
-            <span className="text-xs font-mono font-bold min-w-[40px] text-center tabular-nums">
-              {displayedZoomPercent}%
-            </span>
-            <button
-              type="button"
-              onClick={() =>
-                setManualZoom((z) => Math.min(115, (z ?? displayedZoomPercent) + 10))
-              }
-              disabled={displayedZoomPercent >= 115}
-              className="min-h-[38px] min-w-[34px] flex items-center justify-center text-white/75 hover:text-white disabled:opacity-35 disabled:cursor-not-allowed cursor-pointer"
-              title="Zoom In"
-              aria-label="Zoom In"
-            >
-              <ZoomIn className="w-4 h-4" />
-            </button>
-
-            <div className="w-px h-4 bg-white/20" />
-
-            {/* Auto-Fit Toggle */}
-            <button
-              type="button"
-              onClick={() => setManualZoom((z) => (z === null ? 100 : null))}
-              className={`min-h-[34px] text-xs font-semibold px-2.5 py-1 rounded-lg transition-colors cursor-pointer flex items-center gap-1 whitespace-nowrap ${
-                manualZoom === null
-                  ? 'bg-[#4a4df2] text-white shadow-xs'
-                  : 'text-white/80 hover:text-white'
-              }`}
-              title={manualZoom === null ? 'Switch to 100% Zoom' : 'Auto-fit to screen width'}
-            >
-              <Maximize2 className="w-3.5 h-3.5" />
-              <span>Fit</span>
-            </button>
-
-            <div className="w-px h-4 bg-white/20" />
-
-            {/* Quick Browser Print */}
-            <button
-              type="button"
-              onClick={handleBrowserPrint}
-              className="min-h-[38px] min-w-[34px] flex items-center justify-center text-white/80 hover:text-white cursor-pointer"
-              title="Print / Save Vector PDF"
-              aria-label="Print CV"
-            >
-              <Printer className="w-4 h-4" />
-            </button>
-          </div>
-
           {/* Mobile Quick Export Card inside Preview Tab */}
-          <div className="lg:hidden w-full mt-4 p-3.5 rounded-2xl bg-white border border-[#E8EAF5] flex items-center gap-2.5 shadow-2xs">
+          <div className="lg:hidden w-full mt-4 p-3.5 rounded-2xl bg-white border border-slate-200/90 flex items-center gap-2.5 shadow-2xs">
             <PdfDownloadButton
               fileName={resolvedFileName}
               onBeforeDownload={commitPendingInputs}
@@ -3342,8 +4008,17 @@ export default function BuilderPage() {
             />
             <button
               type="button"
+              onClick={handleDownloadDocx}
+              disabled={isDownloadingDocx}
+              className="min-h-[46px] px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-[#0F1B4D] text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shrink-0 whitespace-nowrap disabled:opacity-60"
+            >
+              <FileText className="w-4 h-4 text-[#4B4DED]" />
+              <span>DOCX</span>
+            </button>
+            <button
+              type="button"
               onClick={handleBrowserPrint}
-              className="min-h-[46px] px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-[#0F1B4D] text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shrink-0 whitespace-nowrap"
+              className="min-h-[46px] px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-[#0F1B4D] text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shrink-0 whitespace-nowrap"
             >
               <Printer className="w-4 h-4 text-[#4B4DED]" />
               <span>Print</span>
@@ -3409,6 +4084,124 @@ export default function BuilderPage() {
         </div>
       </nav>
 
+      {/* Full-Screen A4 CV Inspection Modal */}
+      {isFullscreenPreviewOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Full-Screen CV Inspection"
+          className="fixed inset-0 z-[45] bg-slate-950/85 backdrop-blur-sm flex flex-col"
+        >
+          <div className="w-full bg-white border-b border-slate-200 px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-3 shrink-0">
+            <div className="flex items-center gap-3 min-w-0">
+              <button
+                type="button"
+                onClick={() => setIsTemplateModalOpen(true)}
+                className="min-h-[38px] px-3 py-1.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-[#0F1B4D] text-xs font-semibold flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
+              >
+                <LayoutGrid className="w-3.5 h-3.5 text-[#4B4DED]" />
+                <span>{activeTemplate.name}</span>
+                <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+              </button>
+              <span className="hidden sm:inline text-xs font-medium text-slate-500 tabular-nums whitespace-nowrap">
+                A4 (210 × 297 mm) · {totalPages} {totalPages === 1 ? 'Page' : 'Pages'}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+              <div className="hidden xs:flex sm:flex items-center bg-slate-100 rounded-xl border border-slate-200 p-0.5">
+                <button
+                  type="button"
+                  onClick={() => setFullscreenZoom((z) => Math.max(50, z - 15))}
+                  disabled={fullscreenZoom <= 50}
+                  className="min-h-[30px] min-w-[28px] flex items-center justify-center rounded-lg text-slate-600 hover:bg-white disabled:opacity-35 cursor-pointer"
+                  aria-label="Zoom out fullscreen preview"
+                >
+                  <ZoomOut className="w-3.5 h-3.5" />
+                </button>
+                <span className="text-xs font-mono font-semibold text-slate-800 min-w-[42px] text-center tabular-nums">
+                  {fullscreenZoom}%
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setFullscreenZoom((z) => Math.min(145, z + 15))}
+                  disabled={fullscreenZoom >= 145}
+                  className="min-h-[30px] min-w-[28px] flex items-center justify-center rounded-lg text-slate-600 hover:bg-white disabled:opacity-35 cursor-pointer"
+                  aria-label="Zoom in fullscreen preview"
+                >
+                  <ZoomIn className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFullscreenZoom(100)}
+                  className={`min-h-[30px] px-2 rounded-lg text-[11px] font-semibold cursor-pointer ${
+                    fullscreenZoom === 100
+                      ? 'bg-[#4B4DED] text-white'
+                      : 'text-slate-600 hover:bg-white'
+                  }`}
+                >
+                  100%
+                </button>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setShowMarginGuides((v) => !v)}
+                aria-pressed={showMarginGuides}
+                className={`hidden md:flex min-h-[38px] px-3 rounded-xl border text-xs font-semibold items-center gap-1.5 cursor-pointer ${
+                  showMarginGuides
+                    ? 'border-[#4B4DED] bg-[#EEF1FF] text-[#4B4DED]'
+                    : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
+                }`}
+              >
+                <Ruler className="w-3.5 h-3.5" />
+                <span>Margins</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleBrowserPrint}
+                className="hidden sm:flex min-h-[38px] px-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold items-center gap-1.5 cursor-pointer"
+              >
+                <Printer className="w-3.5 h-3.5 text-[#4B4DED]" />
+                <span>Print</span>
+              </button>
+
+              <PdfDownloadButton
+                fileName={resolvedFileName}
+                onBeforeDownload={commitPendingInputs}
+                variant="compact"
+                label="Download PDF"
+              />
+
+              <button
+                type="button"
+                onClick={() => setIsFullscreenPreviewOpen(false)}
+                className="min-h-[38px] px-3 rounded-xl border border-slate-200 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
+                aria-label="Close full-screen preview"
+              >
+                <Minimize2 className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Close</span>
+              </button>
+            </div>
+          </div>
+
+          <div
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setIsFullscreenPreviewOpen(false);
+            }}
+            className="flex-1 overflow-auto flex justify-center items-start p-4 sm:p-8 bg-slate-900/60"
+          >
+            <CvPreview
+              isPrimary={false}
+              showControlsBar={false}
+              showMarginGuides={showMarginGuides}
+              scale={fullscreenZoom / 100}
+            />
+          </div>
+        </div>
+      )}
+
       {/* Full Template & Design Modal / Bottom Sheet */}
       {isTemplateModalOpen && (
         <TemplateModal
@@ -3422,6 +4215,18 @@ export default function BuilderPage() {
         <ShareModal
           isOpen={isShareModalOpen}
           onClose={() => setIsShareModalOpen(false)}
+        />
+      )}
+
+      {/* PDF Export Settings Modal */}
+      {isPdfSettingsModalOpen && (
+        <PdfExportSettingsModal
+          isOpen={isPdfSettingsModalOpen}
+          onClose={() => setIsPdfSettingsModalOpen(false)}
+          fileName={resolvedFileName}
+          onBeforeDownload={commitPendingInputs}
+          totalPages={totalPages}
+          lastExportedBytes={readyPdfBlob?.byteSize ?? null}
         />
       )}
 

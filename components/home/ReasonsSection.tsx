@@ -59,7 +59,7 @@ const REASONS = [
 export default function ReasonsSection() {
   return (
     <section
-      aria-label="6 Reasons to Create Your CV with Makemeyour"
+      aria-label="6 Reasons to Create Your CV with freecvmakeruk.co.uk"
       className="relative py-16 sm:py-24 bg-gradient-to-b from-white via-[#F6F9FF] to-white border-b border-slate-100 overflow-hidden"
     >
       {/* Ambient background glows */}
@@ -81,7 +81,7 @@ export default function ReasonsSection() {
           </div>
 
           <h2 className="text-3xl sm:text-4xl font-extrabold text-[#0B112C] tracking-tight leading-tight [text-wrap:balance]">
-            6 Reasons to Create Your CV with Makemeyour
+            6 Reasons to Create Your CV with freecvmakeruk.co.uk
           </h2>
         </div>
 

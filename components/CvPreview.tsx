@@ -5,6 +5,7 @@ import { useReactToPrint } from 'react-to-print';
 import {
   CV,
   FontScale,
+  normalizeFontBoldness,
   A4_WIDTH_PX,
   A4_HEIGHT_PX,
   A4_WIDTH_MM,
@@ -14,6 +15,7 @@ import {
 import { getTemplateById } from '@/templates/registry';
 import { useCvStore } from '@/store/useCvStore';
 import { cvStoreToCv, cvToCvStore } from '@/lib/cvAdapter';
+import { applyDateFormatToCv } from '@/lib/dateFormat';
 import { SAMPLE_UK_CV } from '@/data/sampleCv';
 import { paginateCv } from '@/lib/cvPagination';
 import {
@@ -26,6 +28,7 @@ import {
   Loader2,
   Check,
   LayoutGrid,
+  Ruler,
 } from 'lucide-react';
 import CvSkeleton from '@/components/CvSkeleton';
 import { downloadCvPdf, collectDocumentCssText } from '@/lib/pdfGenerator';
@@ -76,6 +79,7 @@ interface CvPreviewProps {
   cv?: CV;
   className?: string;
   showControlsBar?: boolean;
+  showMarginGuides?: boolean;
   onResetToSample?: () => void;
   scale?: number;
   isLoading?: boolean;
@@ -87,6 +91,7 @@ export default function CvPreview({
   cv: customCv,
   className = '',
   showControlsBar = true,
+  showMarginGuides: externalShowMarginGuides,
   onResetToSample,
   scale: customScale,
   isLoading = false,
@@ -111,6 +116,9 @@ export default function CvPreview({
   const themeColor = useCvStore((s) => s.themeColor);
   const fontFamily = useCvStore((s) => s.fontFamily);
   const fontScale = useCvStore((s) => s.fontScale);
+  const dateFormat = useCvStore((s) => s.dateFormat);
+  const letterSpacing = useCvStore((s) => s.letterSpacing);
+  const fontBoldness = useCvStore((s) => s.fontBoldness);
   const showPhoto = useCvStore((s) => s.showPhoto);
   const sectionOrder = useCvStore((s) => s.sectionOrder);
   const customPdfFileName = useCvStore((s) => s.customPdfFileName);
@@ -131,10 +139,12 @@ export default function CvPreview({
   const [exportProgressText, setExportProgressText] = useState<string>('');
   const [isDownloadSuccess, setIsDownloadSuccess] = useState<boolean>(false);
   const [isTemplateModalOpen, setIsTemplateModalOpen] = useState<boolean>(false);
+  const [internalMarginGuides, setInternalMarginGuides] = useState<boolean>(false);
+  const showMarginGuides = externalShowMarginGuides ?? internalMarginGuides;
 
   // Compute resolved CV object directly from reactive store slices
   const activeCv: CV = React.useMemo(() => {
-    if (customCv) return customCv;
+    if (customCv) return applyDateFormatToCv(customCv);
     return cvStoreToCv({
       contact,
       summary,
@@ -153,6 +163,9 @@ export default function CvPreview({
       themeColor,
       fontFamily,
       fontScale,
+      dateFormat,
+      letterSpacing,
+      fontBoldness,
       showPhoto,
       sectionOrder,
     });
@@ -175,6 +188,9 @@ export default function CvPreview({
     themeColor,
     fontFamily,
     fontScale,
+    dateFormat,
+    letterSpacing,
+    fontBoldness,
     showPhoto,
     sectionOrder,
   ]);
@@ -194,10 +210,10 @@ export default function CvPreview({
       if (!containerRef.current) return;
       const containerWidth = containerRef.current.clientWidth;
       if (containerWidth > 0) {
-        const padding = containerWidth < 480 ? 12 : 20;
+        const padding = containerWidth < 480 ? 12 : 24;
         const available = Math.max(200, containerWidth - padding);
         const calculated = Math.min(1.0, Math.max(0.28, available / A4_WIDTH_PX));
-        setAutoScale(calculated);
+        setAutoScale(Number(calculated.toFixed(3)));
       }
     };
 
@@ -535,18 +551,21 @@ export default function CvPreview({
 
   const fontConfig = FONT_MAP[activeCv.settings.fontFamily] || FONT_MAP.jakarta;
   const scaleConfig = FONT_SCALE_STYLES[activeCv.settings.fontScale] || FONT_SCALE_STYLES.md;
+  const resolvedLetterSpacing = Number(activeCv.settings.letterSpacing ?? 0);
+  const hasCustomLetterSpacing = Math.abs(resolvedLetterSpacing) > 0.001;
+  const boldConfig = normalizeFontBoldness(activeCv.settings.fontBoldness);
   const effectiveScale = customScale ?? autoScale * zoomLevel;
 
   return (
     <div ref={containerRef} className={`w-full flex flex-col items-center select-text ${className}`}>
       {/* Top Action / Zoom Bar (if enabled) */}
       {showControlsBar && (
-        <div className="w-full flex flex-wrap items-center justify-between gap-2 px-3 py-2 bg-white rounded-xl mb-3 text-xs text-slate-700 border border-[#E8EAF5] shadow-2xs">
-          <div className="flex items-center gap-2 min-w-0">
+        <div className="w-full flex flex-wrap items-center justify-between gap-2 px-3.5 py-2.5 bg-white rounded-xl mb-3.5 text-xs text-slate-700 border border-slate-200/90 shadow-2xs">
+          <div className="flex items-center gap-2.5 min-w-0">
             <button
               type="button"
               onClick={() => setIsTemplateModalOpen(true)}
-              className="min-h-[38px] px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-[#EEF1FF]/50 text-[#0F1B4D] font-semibold text-xs flex items-center gap-1.5 transition-all cursor-pointer hover:border-[#4B4DED]"
+              className="min-h-[36px] px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-[#0F1B4D] font-semibold text-xs flex items-center gap-1.5 transition-colors cursor-pointer hover:border-[#4B4DED]"
               title="Change template & design options"
             >
               <LayoutGrid className="w-3.5 h-3.5 text-[#4B4DED] shrink-0" />
@@ -555,7 +574,7 @@ export default function CvPreview({
               </span>
             </button>
             <span className="text-slate-300 hidden md:inline">·</span>
-            <span className="text-[11px] text-slate-500 hidden md:inline tabular-nums whitespace-nowrap">
+            <span className="text-[11px] font-medium text-slate-500 hidden md:inline tabular-nums whitespace-nowrap">
               A4 · {pages.length} {pages.length === 1 ? 'Page' : 'Pages'}
             </span>
           </div>
@@ -566,7 +585,7 @@ export default function CvPreview({
                 type="button"
                 onClick={() => setZoomLevel((z) => Math.max(0.5, z - 0.1))}
                 aria-label="Zoom out"
-                className="min-h-[32px] min-w-[30px] flex items-center justify-center hover:bg-white rounded text-slate-600 transition-colors cursor-pointer"
+                className="min-h-[30px] min-w-[28px] flex items-center justify-center hover:bg-white rounded text-slate-600 transition-colors cursor-pointer"
                 title="Zoom out"
               >
                 <ZoomOut className="w-3.5 h-3.5" />
@@ -578,7 +597,7 @@ export default function CvPreview({
                 type="button"
                 onClick={() => setZoomLevel((z) => Math.min(1.4, z + 0.1))}
                 aria-label="Zoom in"
-                className="min-h-[32px] min-w-[30px] flex items-center justify-center hover:bg-white rounded text-slate-600 transition-colors cursor-pointer"
+                className="min-h-[30px] min-w-[28px] flex items-center justify-center hover:bg-white rounded text-slate-600 transition-colors cursor-pointer"
                 title="Zoom in"
               >
                 <ZoomIn className="w-3.5 h-3.5" />
@@ -587,7 +606,7 @@ export default function CvPreview({
                 type="button"
                 onClick={() => setZoomLevel(1)}
                 aria-label="Reset zoom"
-                className="min-h-[32px] min-w-[30px] flex items-center justify-center hover:bg-white rounded text-slate-600 transition-colors cursor-pointer"
+                className="min-h-[30px] min-w-[28px] flex items-center justify-center hover:bg-white rounded text-slate-600 transition-colors cursor-pointer"
                 title="Fit to width"
               >
                 <Maximize2 className="w-3 h-3" />
@@ -596,8 +615,23 @@ export default function CvPreview({
 
             <button
               type="button"
+              onClick={() => setInternalMarginGuides((v) => !v)}
+              aria-pressed={showMarginGuides}
+              className={`min-h-[36px] min-w-[36px] rounded-lg border hidden sm:flex items-center justify-center transition-colors cursor-pointer ${
+                showMarginGuides
+                  ? 'border-[#4B4DED] bg-[#EEF1FF] text-[#4B4DED]'
+                  : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-600'
+              }`}
+              title="Toggle A4 safe print margin guides"
+              aria-label="Toggle A4 safe print margin guides"
+            >
+              <Ruler className="w-3.5 h-3.5" />
+            </button>
+
+            <button
+              type="button"
               onClick={handleResetToSample}
-              className="min-h-[38px] px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
+              className="min-h-[36px] px-2.5 py-1.5 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
               title="Load sample UK CV"
             >
               <RefreshCw className="w-3.5 h-3.5 text-slate-500" />
@@ -608,7 +642,7 @@ export default function CvPreview({
               type="button"
               onClick={() => void handleDirectDownloadPdf()}
               disabled={isExportingPdf}
-              className={`min-h-[38px] px-3 py-1.5 text-white text-xs font-semibold rounded-lg shadow-2xs flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-60 whitespace-nowrap ${
+              className={`min-h-[36px] px-3 py-1.5 text-white text-xs font-semibold rounded-lg shadow-2xs flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-60 whitespace-nowrap ${
                 isDownloadSuccess
                   ? 'bg-emerald-600 hover:bg-emerald-700'
                   : 'bg-[#4B4DED] hover:bg-[#3D3FC9]'
@@ -639,7 +673,7 @@ export default function CvPreview({
             <button
               type="button"
               onClick={handleTriggerNativePrint}
-              className="min-h-[38px] min-w-[38px] hover:bg-slate-100 rounded-lg text-slate-600 transition-colors cursor-pointer hidden sm:flex items-center justify-center"
+              className="min-h-[36px] min-w-[36px] hover:bg-slate-100 rounded-lg text-slate-600 transition-colors cursor-pointer hidden sm:flex items-center justify-center"
               title="Print / Save Vector A4 PDF"
               aria-label="Browser Print"
             >
@@ -649,76 +683,126 @@ export default function CvPreview({
         </div>
       )}
 
-      {/* A4 Multi-Page On-Screen Viewport (Exact Visual Design Preserved) */}
+      {/* A4 Multi-Page On-Screen Viewport (Exact 210mm × 297mm Proportions Preserved) */}
       <div className="w-full flex justify-center">
         <div
           data-cv-preview-primary={isPrimary ? 'true' : undefined}
-          className="flex flex-col items-center gap-6"
+          className="flex flex-col items-center gap-7"
         >
-          {(isLoading && pages.length === 0 ? [{}] : pages).map((pageData, pageIdx) => (
-            <React.Fragment key={pageIdx}>
-              {/* Clean Typographic Multi-Page Label (Hidden in Print) */}
-              {!isLoading && pages.length > 1 && (
-                <div
-                  style={{ width: `${Math.round(A4_WIDTH_PX * effectiveScale)}px` }}
-                  className="page-badge-indicator flex items-center justify-between px-0.5 text-[11px] font-medium text-slate-500 select-none -mb-3.5 tabular-nums"
-                >
-                  <span>
-                    Page {pageIdx + 1} of {pages.length}
-                  </span>
-                  <span className="text-slate-400 font-mono text-[10px]">
-                    {A4_WIDTH_MM} × {A4_HEIGHT_MM} mm
-                  </span>
-                </div>
-              )}
+          {(isLoading && pages.length === 0 ? [{}] : pages).map((pageData, pageIdx) => {
+            const scaledWidth = Math.round(A4_WIDTH_PX * effectiveScale);
+            const scaledHeight = Math.round(A4_HEIGHT_PX * effectiveScale);
+            const scaledMarginPx = Math.max(12, Math.round(45 * effectiveScale));
+            return (
+              <React.Fragment key={pageIdx}>
+                {/* Subtle Page Break Divider & Typographic Sheet Header (Hidden in Print) */}
+                {!isLoading && pageIdx > 0 && (
+                  <div
+                    style={{ width: `${scaledWidth}px` }}
+                    className="no-print page-badge-indicator flex items-center gap-3 -my-2 select-none"
+                  >
+                    <div className="h-px flex-1 border-t border-dashed border-slate-300/90" />
+                    <span className="text-[10px] font-mono font-semibold uppercase tracking-wider text-slate-400 tabular-nums whitespace-nowrap">
+                      Page {pageIdx + 1} Break
+                    </span>
+                    <div className="h-px flex-1 border-t border-dashed border-slate-300/90" />
+                  </div>
+                )}
 
-              {/* Scaled Wrapper strictly matching A4 proportions without outer overflow */}
-              <div
-                id={isPrimary ? `cv-preview-page-${pageIdx + 1}` : undefined}
-                className="cv-page-wrapper relative shrink-0"
-                style={{
-                  width: `${Math.round(A4_WIDTH_PX * effectiveScale)}px`,
-                  height: `${Math.round(A4_HEIGHT_PX * effectiveScale)}px`,
-                  aspectRatio: `${A4_WIDTH_MM} / ${A4_HEIGHT_MM}`,
-                }}
-              >
-                {/* Printable A4 Container: 210mm × 297mm (794px × 1123px at 96 DPI) */}
+                {!isLoading && pages.length > 1 && (
+                  <div
+                    style={{ width: `${scaledWidth}px` }}
+                    className="no-print page-badge-indicator flex items-center justify-between px-0.5 text-[11px] font-medium text-slate-500 select-none -mb-4 tabular-nums"
+                  >
+                    <span className="font-semibold text-slate-600">
+                      Page {pageIdx + 1} of {pages.length}
+                    </span>
+                    <span className="text-slate-400 font-mono text-[10px]">
+                      A4 · {A4_WIDTH_MM} × {A4_HEIGHT_MM} mm
+                    </span>
+                  </div>
+                )}
+
+                {/* Scaled Wrapper strictly matching A4 proportions without outer overflow */}
                 <div
-                  data-font-scale={activeCv.settings.fontScale || 'md'}
+                  id={isPrimary ? `cv-preview-page-${pageIdx + 1}` : undefined}
+                  data-page-number={pageIdx + 1}
+                  className="cv-page-wrapper relative shrink-0 transition-[width,height] duration-150 ease-out"
                   style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: `${A4_WIDTH_PX}px`,
-                    height: `${A4_HEIGHT_PX}px`,
-                    minWidth: `${A4_WIDTH_PX}px`,
-                    maxWidth: `${A4_WIDTH_PX}px`,
-                    minHeight: `${A4_HEIGHT_PX}px`,
-                    maxHeight: `${A4_HEIGHT_PX}px`,
+                    width: `${scaledWidth}px`,
+                    height: `${scaledHeight}px`,
                     aspectRatio: `${A4_WIDTH_MM} / ${A4_HEIGHT_MM}`,
-                    transform: `scale(${effectiveScale})`,
-                    transformOrigin: 'top left',
-                    fontFamily: fontConfig.cssFont,
-                    fontSize: scaleConfig.baseSize,
-                    lineHeight: scaleConfig.lineHeight,
-                    ['--accent' as any]: activeCv.settings.accentColor || '#4B4DED',
                   }}
-                  className="cv-page bg-white text-slate-900 shadow-[0_14px_38px_rgba(15,27,77,0.10)] border border-slate-200/90 rounded-[3px] flex flex-col overflow-hidden select-text box-border relative"
                 >
-                  {isLoading || isUpdating ? (
-                    <CvSkeleton />
-                  ) : (
-                    <TemplateComponent
-                      cv={activeCv}
-                      pageData={pageData}
-                      pageIndex={pageIdx}
-                      totalPages={pages.length}
-                    />
+                  {/* Printable A4 Container: 210mm × 297mm (794px × 1123px at 96 DPI) */}
+                  <div
+                    data-font-scale={activeCv.settings.fontScale || 'md'}
+                    data-has-letter-spacing={hasCustomLetterSpacing ? 'true' : undefined}
+                    data-bold-header={boldConfig.enabled && boldConfig.header ? 'true' : undefined}
+                    data-bold-headings={
+                      boldConfig.enabled && boldConfig.headings ? 'true' : undefined
+                    }
+                    data-bold-subheadings={
+                      boldConfig.enabled && boldConfig.subheadings ? 'true' : undefined
+                    }
+                    data-bold-body={
+                      boldConfig.enabled && boldConfig.sectionText ? 'true' : undefined
+                    }
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      width: `${A4_WIDTH_PX}px`,
+                      height: `${A4_HEIGHT_PX}px`,
+                      minWidth: `${A4_WIDTH_PX}px`,
+                      maxWidth: `${A4_WIDTH_PX}px`,
+                      minHeight: `${A4_HEIGHT_PX}px`,
+                      maxHeight: `${A4_HEIGHT_PX}px`,
+                      aspectRatio: `${A4_WIDTH_MM} / ${A4_HEIGHT_MM}`,
+                      transform: `scale(${effectiveScale})`,
+                      transformOrigin: 'top left',
+                      fontFamily: fontConfig.cssFont,
+                      fontSize: scaleConfig.baseSize,
+                      lineHeight: scaleConfig.lineHeight,
+                      letterSpacing: hasCustomLetterSpacing ? `${resolvedLetterSpacing}px` : undefined,
+                      ['--cv-letter-spacing' as any]: `${resolvedLetterSpacing}px`,
+                      ['--accent' as any]: activeCv.settings.accentColor || '#4B4DED',
+                    }}
+                    className="cv-page bg-white text-slate-900 shadow-[0_1px_3px_rgba(15,23,42,0.06),0_16px_38px_-6px_rgba(15,23,42,0.14),0_0_0_1px_rgba(15,23,42,0.07)] rounded-[2px] flex flex-col overflow-hidden select-text box-border relative"
+                  >
+                    {isLoading || isUpdating ? (
+                      <CvSkeleton />
+                    ) : (
+                      <TemplateComponent
+                        cv={activeCv}
+                        pageData={pageData}
+                        pageIndex={pageIdx}
+                        totalPages={pages.length}
+                      />
+                    )}
+                  </div>
+
+                  {/* Screen-Only A4 Safe Print Margin Guide (Sibling outside .cv-page — never cloned in PDF/Print) */}
+                  {showMarginGuides && !isLoading && (
+                    <div
+                      aria-hidden="true"
+                      style={{
+                        top: `${scaledMarginPx}px`,
+                        right: `${scaledMarginPx}px`,
+                        bottom: `${scaledMarginPx}px`,
+                        left: `${scaledMarginPx}px`,
+                      }}
+                      className="no-print pointer-events-none absolute border border-dashed border-[#4B4DED]/35 rounded-[1px] z-10"
+                    >
+                      <span className="absolute -top-4 right-0 text-[9px] font-mono font-medium text-[#4B4DED]/75 bg-white/90 px-1 rounded-xs tabular-nums">
+                        12mm safe margin
+                      </span>
+                    </div>
                   )}
                 </div>
-              </div>
-            </React.Fragment>
-          ))}
+              </React.Fragment>
+            );
+          })}
         </div>
       </div>
 
@@ -751,6 +835,13 @@ export default function CvPreview({
               <div
                 key={`native-print-page-${pageIdx}`}
                 data-font-scale={activeCv.settings.fontScale || 'md'}
+                data-has-letter-spacing={hasCustomLetterSpacing ? 'true' : undefined}
+                data-bold-header={boldConfig.enabled && boldConfig.header ? 'true' : undefined}
+                data-bold-headings={boldConfig.enabled && boldConfig.headings ? 'true' : undefined}
+                data-bold-subheadings={
+                  boldConfig.enabled && boldConfig.subheadings ? 'true' : undefined
+                }
+                data-bold-body={boldConfig.enabled && boldConfig.sectionText ? 'true' : undefined}
                 className="cv-print-sheet bg-white text-slate-900 flex flex-col overflow-hidden box-border relative"
                 style={{
                   width: '210mm',
@@ -769,6 +860,8 @@ export default function CvPreview({
                   fontFamily: fontConfig.cssFont,
                   fontSize: scaleConfig.baseSize,
                   lineHeight: scaleConfig.lineHeight,
+                  letterSpacing: hasCustomLetterSpacing ? `${resolvedLetterSpacing}px` : undefined,
+                  ['--cv-letter-spacing' as any]: `${resolvedLetterSpacing}px`,
                   ['--accent' as any]: activeCv.settings.accentColor || '#4B4DED',
                 }}
               >

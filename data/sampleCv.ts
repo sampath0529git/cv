@@ -1,4 +1,4 @@
-import { CV } from '@/types/cv';
+import { CV, DEFAULT_FONT_BOLDNESS } from '@/types/cv';
 
 export const SAMPLE_UK_CV: CV = {
   personal: {
@@ -112,6 +112,8 @@ export const SAMPLE_UK_CV: CV = {
     accentColor: '#4B4DED',
     fontFamily: 'jakarta',
     fontScale: 'md',
+    letterSpacing: 0,
+    fontBoldness: { ...DEFAULT_FONT_BOLDNESS },
     showPhoto: false,
     sectionOrder: ['statement', 'experience', 'education', 'skills', 'languages', 'interests'],
   },

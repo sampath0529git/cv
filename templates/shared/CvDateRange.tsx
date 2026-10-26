@@ -22,7 +22,7 @@ export default function CvDateRange({
 
   return (
     <span
-      className={`text-[9.5px] font-medium text-slate-500 whitespace-nowrap ${className}`}
+      className={`text-[9.5px] font-medium text-slate-500 whitespace-nowrap tabular-nums ${className}`}
       style={accentColor ? { color: accentColor } : undefined}
     >
       {text}

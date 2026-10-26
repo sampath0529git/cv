@@ -19,6 +19,7 @@ import {
 import { CV, FontScale } from '@/types/cv';
 import { useCvStore } from '@/store/useCvStore';
 import { cvStoreToCv } from '@/lib/cvAdapter';
+import { applyDateFormatToCv } from '@/lib/dateFormat';
 import { getTemplateById } from '@/templates/registry';
 
 export interface ExportDocxOptions {
@@ -321,7 +322,8 @@ function createSectionHeading(
   font: string,
   scale: DocxTypographyScale,
   accentHex: string,
-  templateId: string
+  templateId: string,
+  pageBreakBefore: boolean = false
 ): Paragraph {
   const isClassic = templateId === 'uk-traditional' || templateId === 'classic-corporate';
   const isMinimal = templateId === 'minimal-clean';
@@ -329,6 +331,7 @@ function createSectionHeading(
   return new Paragraph({
     spacing: { before: 220, after: 100 },
     keepNext: true,
+    pageBreakBefore,
     border: isMinimal
       ? undefined
       : {
@@ -420,7 +423,17 @@ function buildSectionBlocks(
 
   if (secKey === 'experience') {
     if (!cv.experience || cv.experience.length === 0) return blocks;
-    blocks.push(createSectionHeading('Work Experience', font, scale, accentHex, templateId));
+    const allowDocxPageBreak = templateId !== 'toronto';
+    blocks.push(
+      createSectionHeading(
+        'Work Experience',
+        font,
+        scale,
+        accentHex,
+        templateId,
+        allowDocxPageBreak && Boolean(cv.experience[0]?.forceNewPage)
+      )
+    );
 
     cv.experience.forEach((exp, idx) => {
       const dateLabel = formatDateSpan(exp.startDate, exp.endDate, exp.current);
@@ -430,6 +443,7 @@ function buildSectionBlocks(
         new Paragraph({
           spacing: { before: idx === 0 ? 40 : 140, after: 30 },
           keepNext: true,
+          pageBreakBefore: allowDocxPageBreak && idx > 0 && Boolean(exp.forceNewPage),
           tabStops: [{ type: TabStopType.RIGHT, position: rightTabTwip }],
           children: [
             new TextRun({
@@ -498,8 +512,16 @@ function buildSectionBlocks(
 
   if (secKey === 'education') {
     if (!cv.education || cv.education.length === 0) return blocks;
+    const allowDocxPageBreak = templateId !== 'toronto';
     blocks.push(
-      createSectionHeading('Education & Qualifications', font, scale, accentHex, templateId)
+      createSectionHeading(
+        'Education & Qualifications',
+        font,
+        scale,
+        accentHex,
+        templateId,
+        allowDocxPageBreak && Boolean(cv.education[0]?.forceNewPage)
+      )
     );
 
     cv.education.forEach((edu, idx) => {
@@ -513,6 +535,7 @@ function buildSectionBlocks(
         new Paragraph({
           spacing: { before: idx === 0 ? 40 : 130, after: 30 },
           keepNext: true,
+          pageBreakBefore: allowDocxPageBreak && idx > 0 && Boolean(edu.forceNewPage),
           tabStops: [{ type: TabStopType.RIGHT, position: rightTabTwip }],
           children: [
             new TextRun({
@@ -1474,7 +1497,7 @@ export async function downloadCvDocx(options: ExportDocxOptions = {}): Promise<b
     options.onProgress?.('Preparing Word document...');
     await waitNextFrame();
 
-    const cv: CV = options.cv ?? cvStoreToCv(useCvStore.getState());
+    const cv: CV = applyDateFormatToCv(options.cv ?? cvStoreToCv(useCvStore.getState()));
     const sanitizedFileName = sanitizeDocxFileName(options.fileName, cv.personal.fullName);
 
     const templateDef = getTemplateById(cv.settings.templateId);
@@ -1521,7 +1544,7 @@ export async function downloadCvDocx(options: ExportDocxOptions = {}): Promise<b
         );
 
     const doc = new Document({
-      creator: 'Makemycv',
+      creator: 'freecvmakeruk.co.uk',
       title: `${cv.personal.fullName || 'Candidate'} — Curriculum Vitae`,
       description: `Curriculum Vitae (${templateDef.name} style)`,
       styles: {
@@ -1531,6 +1554,9 @@ export async function downloadCvDocx(options: ExportDocxOptions = {}): Promise<b
               font,
               size: scale.bodySize,
               color: '1E293B',
+              bold: Boolean(
+                cv.settings.fontBoldness?.enabled && cv.settings.fontBoldness?.sectionText
+              ),
             },
             paragraph: {
               spacing: { line: scale.lineSpacing },

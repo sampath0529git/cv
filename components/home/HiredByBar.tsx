@@ -3,7 +3,7 @@ import React from 'react';
 export default function HiredByBar() {
   return (
     <section
-      aria-label="Companies hiring Makemeyour candidates"
+      aria-label="Top UK and global companies hiring freecvmakeruk.co.uk candidates"
       className="relative bg-gradient-to-b from-white via-[#F8FAFF] to-white py-8 sm:py-10 border-b border-slate-100 overflow-hidden"
     >
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 text-center">

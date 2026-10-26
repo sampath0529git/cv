@@ -26,13 +26,13 @@ export default function HomePage() {
           {/* Hired by top employers banner */}
           <HiredByBar />
 
-          {/* Create your CV in 4 steps + Why 1M+ users trust Makemeyour */}
+          {/* Create your CV in 4 steps + Why 1M+ users trust freecvmakeruk.co.uk */}
           <StepsSection />
 
           {/* Professional Academic & Corporate CV Templates (Dark Navy) */}
           <TemplatesSection />
 
-          {/* 6 Reasons to Create Your CV with Makemeyour */}
+          {/* 6 Reasons to Create Your CV with freecvmakeruk.co.uk */}
           <ReasonsSection />
 
           {/* Real Stories / Customer Testimonial Slider */}

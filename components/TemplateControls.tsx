@@ -1,9 +1,30 @@
 'use client';
 
 import React, { useRef } from 'react';
-import { CvSettings, FontScale } from '@/types/cv';
+import {
+  CvSettings,
+  DateFormatOption,
+  DEFAULT_DATE_FORMAT,
+  DEFAULT_FONT_BOLDNESS,
+  FontBoldnessTarget,
+  FontScale,
+  normalizeDateFormat,
+  normalizeFontBoldness,
+} from '@/types/cv';
+import { DATE_FORMAT_OPTIONS, getDateFormatMeta } from '@/lib/dateFormat';
 import { getTemplateById } from '@/templates/registry';
-import { Check, ChevronUp, ChevronDown, Camera, Type, Palette, ArrowUpDown } from 'lucide-react';
+import {
+  Check,
+  ChevronUp,
+  ChevronDown,
+  Camera,
+  Type,
+  Palette,
+  ArrowUpDown,
+  RotateCcw,
+  Bold,
+  Calendar,
+} from 'lucide-react';
 import { FONT_MAP } from './CvPreview';
 
 export const PRESET_ACCENT_COLORS = [
@@ -165,6 +186,258 @@ export default function TemplateControls({
           </div>
         </div>
       </div>
+
+      {/* 2a. Date Format (UK Standard) */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between gap-2">
+          <label
+            htmlFor="modal-date-format-select"
+            className="text-xs font-bold uppercase tracking-wider text-slate-700 flex items-center gap-1.5"
+          >
+            <Calendar className="w-3.5 h-3.5 text-[#4B4DED]" />
+            <span>Date Format</span>
+          </label>
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-mono text-slate-500 tabular-nums">
+              {getDateFormatMeta(settings.dateFormat).sampleRange}
+            </span>
+            {normalizeDateFormat(settings.dateFormat) !== DEFAULT_DATE_FORMAT && (
+              <button
+                type="button"
+                onClick={() => onChange({ dateFormat: DEFAULT_DATE_FORMAT })}
+                className="text-[11px] font-semibold text-[#4B4DED] hover:underline cursor-pointer flex items-center gap-1"
+                title="Reset date format to Month Year"
+              >
+                <RotateCcw className="w-3 h-3" />
+                <span>Reset</span>
+              </button>
+            )}
+          </div>
+        </div>
+        <select
+          id="modal-date-format-select"
+          value={normalizeDateFormat(settings.dateFormat)}
+          onChange={(e) => onChange({ dateFormat: e.target.value as DateFormatOption })}
+          className="w-full min-h-[44px] px-3.5 py-2.5 text-base sm:text-xs font-medium bg-white border border-slate-200 rounded-xl shadow-2xs focus:outline-none focus:ring-2 focus:ring-[#4B4DED]/20 focus:border-[#4B4DED] cursor-pointer"
+        >
+          {DATE_FORMAT_OPTIONS.map((opt) => (
+            <option key={opt.id} value={opt.id}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* 2b. Letter Spacing Slider */}
+      <div className="p-3.5 sm:p-4 rounded-2xl border border-slate-200 bg-slate-50/70 space-y-2.5">
+        <div className="flex items-center justify-between gap-2">
+          <label
+            htmlFor="modal-letter-spacing-slider"
+            className="text-xs font-bold uppercase tracking-wider text-slate-700"
+          >
+            Letter Spacing
+          </label>
+          <div className="flex items-center gap-2">
+            <span className="px-2 py-0.5 rounded-md bg-white border border-slate-200 text-[11px] font-mono font-semibold text-[#0F1B4D] tabular-nums">
+              {Math.abs(settings.letterSpacing ?? 0) < 0.05
+                ? '0.0px (Default)'
+                : `${(settings.letterSpacing ?? 0) > 0 ? '+' : ''}${(
+                    settings.letterSpacing ?? 0
+                  ).toFixed(1)}px`}
+            </span>
+            {Math.abs(settings.letterSpacing ?? 0) >= 0.05 && (
+              <button
+                type="button"
+                onClick={() => onChange({ letterSpacing: 0 })}
+                className="text-[11px] font-semibold text-[#4B4DED] hover:underline cursor-pointer flex items-center gap-1"
+                title="Reset letter spacing"
+              >
+                <RotateCcw className="w-3 h-3" />
+                <span>Reset</span>
+              </button>
+            )}
+          </div>
+        </div>
+        <input
+          id="modal-letter-spacing-slider"
+          type="range"
+          min={-0.5}
+          max={2}
+          step={0.1}
+          value={settings.letterSpacing ?? 0}
+          onChange={(e) => onChange({ letterSpacing: parseFloat(e.target.value) })}
+          aria-label="Letter Spacing"
+          className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#4B4DED]"
+        />
+        <div className="flex items-center justify-between text-[10px] font-medium text-slate-500">
+          <span>Tight (-0.5px)</span>
+          <span>Normal (0px)</span>
+          <span>Wide (+1.0px)</span>
+          <span>Spacious (+2.0px)</span>
+        </div>
+      </div>
+
+      {/* 2c. Font Boldness Toggle */}
+      {(() => {
+        const boldness = normalizeFontBoldness(settings.fontBoldness);
+        const boldTargets: { id: FontBoldnessTarget; label: string; hint: string }[] = [
+          { id: 'header', label: 'CV Header & Name', hint: 'Candidate name & job title' },
+          { id: 'headings', label: 'Section Headings', hint: 'Experience, Education & Skills' },
+          { id: 'subheadings', label: 'Role & Entry Titles', hint: 'Job roles, employers & degrees' },
+          { id: 'sectionText', label: 'Section Body Text', hint: 'Summary, bullet points & skills' },
+        ];
+        const activeCount = boldness.enabled
+          ? boldTargets.filter((t) => boldness[t.id]).length
+          : 0;
+
+        const handleMasterToggle = () => {
+          const nextEnabled = !boldness.enabled;
+          if (
+            nextEnabled &&
+            !boldness.header &&
+            !boldness.headings &&
+            !boldness.subheadings &&
+            !boldness.sectionText
+          ) {
+            onChange({
+              fontBoldness: {
+                enabled: true,
+                header: true,
+                headings: true,
+                subheadings: true,
+                sectionText: false,
+              },
+            });
+          } else {
+            onChange({
+              fontBoldness: {
+                ...boldness,
+                enabled: nextEnabled,
+              },
+            });
+          }
+        };
+
+        const handleTargetToggle = (targetId: FontBoldnessTarget) => {
+          if (!boldness.enabled) {
+            onChange({
+              fontBoldness: {
+                enabled: true,
+                header: targetId === 'header',
+                headings: targetId === 'headings',
+                subheadings: targetId === 'subheadings',
+                sectionText: targetId === 'sectionText',
+              },
+            });
+            return;
+          }
+          const updated = { ...boldness, [targetId]: !boldness[targetId] };
+          const anyActive =
+            updated.header || updated.headings || updated.subheadings || updated.sectionText;
+          onChange({
+            fontBoldness: {
+              ...updated,
+              enabled: anyActive,
+            },
+          });
+        };
+
+        return (
+          <div className="p-3.5 sm:p-4 rounded-2xl border border-slate-200 bg-slate-50/70 space-y-3">
+            <div className="flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <Bold className="w-3.5 h-3.5 text-[#4B4DED] stroke-[2.6]" />
+                  <span
+                    id="modal-font-boldness-label"
+                    className="text-xs font-bold uppercase tracking-wider text-slate-700"
+                  >
+                    Font Boldness
+                  </span>
+                  <span className="text-[11px] font-mono text-slate-500 tabular-nums">
+                    · {boldness.enabled ? `${activeCount} active` : 'Standard'}
+                  </span>
+                </div>
+                <p className="text-[11px] text-slate-500 mt-0.5">
+                  Emphasise specific headings or section text
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2 shrink-0">
+                {boldness.enabled && (
+                  <button
+                    type="button"
+                    onClick={() => onChange({ fontBoldness: { ...DEFAULT_FONT_BOLDNESS } })}
+                    className="text-[11px] font-semibold text-[#4B4DED] hover:underline cursor-pointer flex items-center gap-1"
+                    title="Reset font boldness"
+                  >
+                    <RotateCcw className="w-3 h-3" />
+                    <span>Reset</span>
+                  </button>
+                )}
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={boldness.enabled}
+                  aria-labelledby="modal-font-boldness-label"
+                  onClick={handleMasterToggle}
+                  className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4B4DED]/40 ${
+                    boldness.enabled ? 'bg-[#4B4DED]' : 'bg-slate-300 hover:bg-slate-400'
+                  }`}
+                >
+                  <span
+                    aria-hidden="true"
+                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-xs transition duration-200 ${
+                      boldness.enabled ? 'translate-x-5' : 'translate-x-0'
+                    }`}
+                  />
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {boldTargets.map((target) => {
+                const isTargetActive = boldness.enabled && boldness[target.id];
+                return (
+                  <button
+                    key={target.id}
+                    type="button"
+                    aria-pressed={isTargetActive}
+                    onClick={() => handleTargetToggle(target.id)}
+                    className={`min-h-[46px] px-3 py-2 rounded-xl border text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${
+                      isTargetActive
+                        ? 'border-[#4B4DED] bg-white ring-1 ring-[#4B4DED]/20 shadow-2xs'
+                        : 'border-slate-200 bg-white/80 hover:bg-white hover:border-slate-300'
+                    }`}
+                  >
+                    <div className="min-w-0">
+                      <div
+                        className={`text-xs truncate ${
+                          isTargetActive
+                            ? 'font-extrabold text-[#0F1B4D]'
+                            : 'font-semibold text-slate-700'
+                        }`}
+                      >
+                        {target.label}
+                      </div>
+                      <div className="text-[10px] text-slate-500 truncate">{target.hint}</div>
+                    </div>
+                    <div
+                      className={`w-5 h-5 rounded-md border flex items-center justify-center shrink-0 transition-colors ${
+                        isTargetActive
+                          ? 'bg-[#4B4DED] border-[#4B4DED] text-white'
+                          : 'border-slate-300 bg-slate-50 text-transparent'
+                      }`}
+                    >
+                      <Check className="w-3 h-3 stroke-[3]" />
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })()}
 
       {/* 3. Photo Toggle */}
       <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50/70 space-y-2">

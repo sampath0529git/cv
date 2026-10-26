@@ -13,26 +13,20 @@ interface Props {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateStaticParams() {
-  return BLOG_POSTS.map((post) => ({
-    slug: post.id,
-  }));
-}
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const post = getBlogPostBySlug(slug);
 
   if (!post) {
     return {
-      title: `Article Not Found | ${BRAND_CONFIG.name}`,
+      title: 'Article Not Found',
     };
   }
 
-  const url = `https://${BRAND_CONFIG.domain}/blog/${post.id}`;
+  const url = `/blog/${post.id}`;
 
   return {
-    title: `${post.title} | ${BRAND_CONFIG.name}`,
+    title: post.title,
     description: post.metaDescription,
     keywords: post.keywords,
     alternates: {
@@ -42,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: `${post.title} | ${BRAND_CONFIG.name}`,
       description: post.metaDescription,
       url,
-      siteName: `${BRAND_CONFIG.name} - Free CV Maker UK`,
+      siteName: BRAND_CONFIG.name,
       locale: 'en_GB',
       type: 'article',
       publishedTime: post.datePublished,
@@ -101,7 +95,7 @@ export default async function BlogPostPage({ params }: Props) {
       url: `https://${BRAND_CONFIG.domain}`,
       logo: {
         '@type': 'ImageObject',
-        url: `https://${BRAND_CONFIG.domain}/assets/logo.png`,
+        url: `https://${BRAND_CONFIG.domain}/assets/logo-mark.png`,
       },
     },
   };

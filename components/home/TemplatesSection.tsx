@@ -1,86 +1,28 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
 import {
   Sparkles,
   Check,
   ArrowRight,
-  ShieldCheck,
   Eye,
 } from 'lucide-react';
 import { useCvStore } from '@/store/useCvStore';
+import { CV_TEMPLATES, TEMPLATE_CATEGORIES } from '@/templates/registry';
+import { SAMPLE_UK_CV } from '@/data/sampleCv';
+import { A4_WIDTH_PX, A4_HEIGHT_PX, TemplateDefinition } from '@/types/cv';
 
-interface TemplateCardData {
-  id: string;
-  name: string;
-  category: string;
-  tag: string;
-  image: string;
-  accent: string;
-}
-
-const TEMPLATE_CATEGORIES = [
-  'All Templates',
-  'Academic',
-  'Corporate',
-  'Creative',
-  'Tech',
-  'Medical',
-];
-
-const DISPLAY_TEMPLATES: TemplateCardData[] = [
-  {
-    id: 'toronto',
-    name: 'Modern Blue',
-    category: 'Corporate',
-    tag: 'Corporate',
-    image: 'https://picsum.photos/seed/cv_modern_blue/400/560',
-    accent: '#2563EB',
-  },
-  {
-    id: 'minimal',
-    name: 'Minimal',
-    category: 'Corporate',
-    tag: 'Professional',
-    image: 'https://picsum.photos/seed/cv_minimal/400/560',
-    accent: '#0F172A',
-  },
-  {
-    id: 'tech',
-    name: 'Creative',
-    category: 'Creative',
-    tag: 'Creative',
-    image: 'https://picsum.photos/seed/cv_creative/400/560',
-    accent: '#7C3AED',
-  },
-  {
-    id: 'classic',
-    name: 'Classic',
-    category: 'Academic',
-    tag: 'Academic',
-    image: 'https://picsum.photos/seed/cv_classic/400/560',
-    accent: '#0284C7',
-  },
-  {
-    id: 'executive',
-    name: 'Tech Executive',
-    category: 'Tech',
-    tag: 'Tech',
-    image: 'https://picsum.photos/seed/cv_tech/400/560',
-    accent: '#059669',
-  },
-  {
-    id: 'graduate',
-    name: 'Medical Specialist',
-    category: 'Medical',
-    tag: 'Medical',
-    image: 'https://picsum.photos/seed/cv_medical/400/560',
-    accent: '#DC2626',
-  },
-];
+const TEMPLATE_ACCENTS: Record<string, string> = {
+  hopkins: '#2563EB',
+  toronto: '#1E3A8A',
+  'classic-corporate': '#0F172A',
+  'minimal-clean': '#334155',
+  yale: '#0284C7',
+  'graduate-starter': '#4B4DED',
+  'uk-traditional': '#1E293B',
+};
 
 const TEMPLATE_PERKS = [
   'ATS-friendly design',
@@ -89,21 +31,86 @@ const TEMPLATE_PERKS = [
   'Multiple color options',
 ];
 
+function HomeTemplateThumb({ template }: { template: TemplateDefinition }) {
+  const Component = template.component;
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState<number>(0.24);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const updateScale = (width: number) => {
+      if (width > 0) {
+        setScale(Number((width / A4_WIDTH_PX).toFixed(4)));
+      }
+    };
+
+    updateScale(el.clientWidth);
+
+    const observer = new ResizeObserver((entries) => {
+      const w = entries[0]?.contentRect?.width || el.clientWidth;
+      updateScale(w);
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const accentColor = TEMPLATE_ACCENTS[template.id] || SAMPLE_UK_CV.settings.accentColor;
+
+  return (
+    <div
+      ref={containerRef}
+      className="relative w-full aspect-[210/297] rounded-xl overflow-hidden bg-white shadow-inner mb-3 select-none"
+    >
+      <div
+        style={{
+          width: `${A4_WIDTH_PX}px`,
+          height: `${A4_HEIGHT_PX}px`,
+          transform: `scale(${scale})`,
+          transformOrigin: 'top left',
+        }}
+        className="absolute top-0 left-0 pointer-events-none bg-white text-slate-900 text-left transition-transform duration-300 group-hover:scale-[1.02]"
+      >
+        <Component
+          cv={{
+            ...SAMPLE_UK_CV,
+            settings: {
+              ...SAMPLE_UK_CV.settings,
+              templateId: template.id,
+              accentColor,
+            },
+          }}
+        />
+      </div>
+
+      {/* Subtle border ring */}
+      <div className="absolute inset-0 rounded-xl ring-1 ring-inset ring-slate-900/5 pointer-events-none" />
+
+      {/* Hover Overlay */}
+      <div className="absolute inset-0 bg-blue-950/65 backdrop-blur-[2px] flex flex-col items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity p-2 text-center">
+        <Eye className="w-5 h-5 text-blue-300" />
+        <span className="text-[11px] font-bold text-white bg-[#2563EB] px-3 py-1 rounded-full shadow-xs">
+          Use Template
+        </span>
+      </div>
+    </div>
+  );
+}
+
 export default function TemplatesSection() {
   const router = useRouter();
   const setStoreTemplate = useCvStore((state) => state.setTemplate);
   const [selectedCategory, setSelectedCategory] = useState<string>('All Templates');
 
+  const filterCategories = ['All Templates', ...TEMPLATE_CATEGORIES];
+
   const filteredTemplates =
     selectedCategory === 'All Templates'
-      ? DISPLAY_TEMPLATES.slice(0, 4)
-      : DISPLAY_TEMPLATES.filter(
+      ? CV_TEMPLATES.slice(0, 4)
+      : CV_TEMPLATES.filter(
           (t) => t.category.toLowerCase() === selectedCategory.toLowerCase()
-        ).length > 0
-      ? DISPLAY_TEMPLATES.filter(
-          (t) => t.category.toLowerCase() === selectedCategory.toLowerCase()
-        )
-      : DISPLAY_TEMPLATES.slice(0, 4);
+        ).slice(0, 4);
 
   const handleSelectTemplate = (templateId: string) => {
     setStoreTemplate(templateId as any);
@@ -140,7 +147,7 @@ export default function TemplatesSection() {
 
         {/* Category Filter Pills */}
         <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pb-4 mb-8">
-          {TEMPLATE_CATEGORIES.map((cat) => {
+          {filterCategories.map((cat) => {
             const isSelected = selectedCategory === cat;
             return (
               <button
@@ -159,9 +166,9 @@ export default function TemplatesSection() {
           })}
         </div>
 
-        {/* Main Grid: 4 Template Cards + Right Side "Why Choose" Card */}
+        {/* Main Grid: Template Cards + Right Side "Why Choose" Card */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-          {/* 4 Cards: Spans 9 or 8 cols on desktop */}
+          {/* Cards: Spans 9 or 8 cols on desktop */}
           <div className="lg:col-span-8 xl:col-span-9 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-5">
             {filteredTemplates.map((template) => (
               <div
@@ -169,28 +176,8 @@ export default function TemplatesSection() {
                 onClick={() => handleSelectTemplate(template.id)}
                 className="group relative rounded-2xl bg-[#0D1533] border border-white/10 hover:border-blue-400/50 p-2.5 transition-all duration-200 hover:-translate-y-1 cursor-pointer flex flex-col justify-between shadow-lg"
               >
-                {/* CV Visual Thumbnail with CSS document preview fallback */}
-                <div className="relative w-full aspect-[210/297] rounded-xl overflow-hidden bg-white shadow-inner mb-3">
-                  <Image
-                    src={template.image}
-                    alt={template.name}
-                    fill
-                    sizes="(max-width: 768px) 50vw, 220px"
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    referrerPolicy="no-referrer"
-                  />
-
-                  {/* Top document styling overlay for realistic CV look */}
-                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/40 pointer-events-none" />
-
-                  {/* Hover Overlay */}
-                  <div className="absolute inset-0 bg-blue-950/70 backdrop-blur-2xs flex flex-col items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity p-2 text-center">
-                    <Eye className="w-5 h-5 text-blue-300" />
-                    <span className="text-[11px] font-bold text-white bg-[#2563EB] px-3 py-1 rounded-full shadow-xs">
-                      Use Template
-                    </span>
-                  </div>
-                </div>
+                {/* Live Scaled A4 CV Template Preview */}
+                <HomeTemplateThumb template={template} />
 
                 {/* Card Title & Category Tag */}
                 <div className="px-1 pb-1 text-left">
@@ -198,7 +185,7 @@ export default function TemplatesSection() {
                     {template.name}
                   </h4>
                   <p className="text-[11px] text-slate-400 capitalize">
-                    {template.tag}
+                    {template.category}
                   </p>
                 </div>
               </div>

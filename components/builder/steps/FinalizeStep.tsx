@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCvStore } from '@/store/useCvStore';
+import { normalizePdfExportSettings } from '@/types/cv';
 import {
   Download,
   Edit3,
@@ -15,12 +16,14 @@ import {
   Check,
   Info,
   AlertCircle,
+  Sliders,
 } from 'lucide-react';
 import { downloadCvPdf, triggerBrowserPrint } from '@/lib/pdfGenerator';
 import { downloadCvDocx } from '@/lib/docxGenerator';
 import { useSummaryRewrite } from '@/hooks/useSummaryRewrite';
 import WordCountBadge from '@/components/common/WordCountBadge';
 import PdfDownloadButton from '@/components/builder/PdfDownloadButton';
+import PdfExportSettingsModal from '@/components/builder/PdfExportSettingsModal';
 
 export default function FinalizeStep() {
   const {
@@ -34,15 +37,31 @@ export default function FinalizeStep() {
     setStep,
     customPdfFileName,
     setCustomPdfFileName,
+    pdfExportSettings,
   } = useCvStore();
   const [showTooltip, setShowTooltip] = useState(false);
   const [showPrintTip, setShowPrintTip] = useState(false);
+  const [isPdfSettingsOpen, setIsPdfSettingsOpen] = useState(false);
+  const [lastPdfBytes, setLastPdfBytes] = useState<number | null>(null);
   const [isDownloading, setIsDownloading] = useState(false);
   const [downloadProgressText, setDownloadProgressText] = useState('');
   const [downloadSuccess, setDownloadSuccess] = useState(false);
   const [isDownloadingDocx, setIsDownloadingDocx] = useState(false);
   const [docxProgressText, setDocxProgressText] = useState('');
   const [docxSuccess, setDocxSuccess] = useState(false);
+
+  const exportSettings = normalizePdfExportSettings(pdfExportSettings);
+
+  useEffect(() => {
+    const onBlobReady = (e: Event) => {
+      const detail = (e as CustomEvent)?.detail;
+      if (typeof detail?.byteSize === 'number') {
+        setLastPdfBytes(detail.byteSize);
+      }
+    };
+    window.addEventListener('applet-pdf-blob-ready', onBlobReady);
+    return () => window.removeEventListener('applet-pdf-blob-ready', onBlobReady);
+  }, []);
 
   const {
     isRewriting,
@@ -239,17 +258,27 @@ export default function FinalizeStep() {
               Customize the name of your exported PDF document before saving.
             </p>
           </div>
-          {customPdfFileName && (
+          <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+            {customPdfFileName && (
+              <button
+                type="button"
+                onClick={() => setCustomPdfFileName('')}
+                className="text-xs text-slate-500 hover:text-[#4B4DED] flex items-center gap-1 font-medium transition-colors cursor-pointer"
+                title="Reset to default filename"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>Reset to default</span>
+              </button>
+            )}
             <button
               type="button"
-              onClick={() => setCustomPdfFileName('')}
-              className="text-xs text-slate-500 hover:text-[#4B4DED] flex items-center gap-1 font-medium transition-colors cursor-pointer self-start sm:self-auto"
-              title="Reset to default filename"
+              onClick={() => setIsPdfSettingsOpen(true)}
+              className="min-h-[36px] px-3 py-1.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-white hover:border-[#4B4DED]/50 text-[#0F1B4D] text-xs font-semibold inline-flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
             >
-              <RotateCcw className="w-3.5 h-3.5" />
-              <span>Reset to default</span>
+              <Sliders className="w-3.5 h-3.5 text-[#4B4DED] shrink-0" />
+              <span>PDF Export Settings</span>
             </button>
-          )}
+          </div>
         </div>
 
         <div className="relative flex items-center">
@@ -273,6 +302,18 @@ export default function FinalizeStep() {
           <span>or</span>
           <span className="font-mono text-[#0F1B4D] font-semibold bg-slate-100 px-2 py-0.5 rounded border border-slate-200/80">
             {resolvedDocxFileName}
+          </span>
+          <span className="text-slate-300" aria-hidden="true">
+            ·
+          </span>
+          <span className="tabular-nums text-slate-500">
+            Hyperlinks: <strong className="font-semibold text-[#0F1B4D]">{exportSettings.includeHyperlinks ? 'On' : 'Off'}</strong>
+          </span>
+          <span className="text-slate-300" aria-hidden="true">
+            ·
+          </span>
+          <span className="tabular-nums text-slate-500">
+            Compress Images: <strong className="font-semibold text-[#0F1B4D]">{exportSettings.compressImages ? 'On' : 'Off'}</strong>
           </span>
         </div>
       </div>
@@ -383,6 +424,16 @@ export default function FinalizeStep() {
                 <span>Vector Print</span>
               </button>
 
+              <button
+                type="button"
+                onClick={() => setIsPdfSettingsOpen(true)}
+                className="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-white font-semibold flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
+                title="Configure PDF hyperlinks and image compression"
+              >
+                <Sliders className="w-3.5 h-3.5 text-cyan-300" />
+                <span>PDF Export Settings</span>
+              </button>
+
               <div className="flex items-center gap-1 text-[11px] text-cyan-200/95 font-medium select-none">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                 <span>ATS-friendly</span>
@@ -475,6 +526,14 @@ export default function FinalizeStep() {
           ))}
         </div>
       </div>
+
+      {/* PDF Export Settings Modal */}
+      <PdfExportSettingsModal
+        isOpen={isPdfSettingsOpen}
+        onClose={() => setIsPdfSettingsOpen(false)}
+        fileName={resolvedFileName}
+        lastExportedBytes={lastPdfBytes}
+      />
     </div>
   );
 }

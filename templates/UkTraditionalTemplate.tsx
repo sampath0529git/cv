@@ -207,9 +207,9 @@ export default function UkTraditionalTemplate({
                     return (
                       <div
                         key={edu.id || idx}
-                        className="grid grid-cols-[125px_1fr] gap-4 break-inside-avoid cv-item"
+                        className="grid grid-cols-[140px_1fr] gap-4 break-inside-avoid cv-item"
                       >
-                        <div className="font-bold text-neutral-800 text-[10.5px] whitespace-nowrap tabular-nums">
+                        <div className="font-bold text-neutral-800 text-[10.5px] leading-snug tabular-nums">
                           {dateDisplay}
                         </div>
                         <div>
@@ -261,9 +261,9 @@ export default function UkTraditionalTemplate({
                     return (
                       <div
                         key={exp.id || idx}
-                        className="grid grid-cols-[125px_1fr] gap-4 break-inside-avoid cv-item"
+                        className="grid grid-cols-[140px_1fr] gap-4 break-inside-avoid cv-item"
                       >
-                        <div className="font-bold text-neutral-800 text-[10.5px] whitespace-nowrap tabular-nums">
+                        <div className="font-bold text-neutral-800 text-[10.5px] leading-snug tabular-nums">
                           {dateDisplay}
                         </div>
                         <div>

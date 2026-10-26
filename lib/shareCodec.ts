@@ -1,6 +1,7 @@
-import { CV, FontScale } from '@/types/cv';
+import { CV, FontScale, normalizeDateFormat, normalizeFontBoldness } from '@/types/cv';
 import { CvState } from '@/store/useCvStore';
 import { cvStoreToCv } from '@/lib/cvAdapter';
+import { applyDateFormatToCv } from '@/lib/dateFormat';
 
 export type ShareExpiryPreset = '1h' | '24h' | '7d' | '30d';
 
@@ -243,7 +244,7 @@ function hydrateCvDefaults(raw: Partial<CV>): CV {
   const fontScale: FontScale =
     s.fontScale && validScales.includes(s.fontScale) ? s.fontScale : 'md';
 
-  return {
+  return applyDateFormatToCv({
     personal: {
       fullName: p.fullName || 'Curriculum Vitae',
       jobTitle: p.jobTitle || '',
@@ -275,13 +276,19 @@ function hydrateCvDefaults(raw: Partial<CV>): CV {
       accentColor: s.accentColor || '#4B4DED',
       fontFamily: s.fontFamily || 'jakarta',
       fontScale,
+      dateFormat: normalizeDateFormat(s.dateFormat),
+      letterSpacing:
+        typeof s.letterSpacing === 'number' && Number.isFinite(s.letterSpacing)
+          ? Math.max(-0.5, Math.min(2, Math.round(s.letterSpacing * 10) / 10))
+          : 0,
+      fontBoldness: normalizeFontBoldness(s.fontBoldness),
       showPhoto: Boolean(s.showPhoto && p.photoUrl),
       sectionOrder:
         Array.isArray(s.sectionOrder) && s.sectionOrder.length > 0
           ? s.sectionOrder
           : ['statement', 'experience', 'education', 'skills', 'languages', 'interests'],
     },
-  };
+  });
 }
 
 /**

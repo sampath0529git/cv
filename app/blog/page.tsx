@@ -3,10 +3,10 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { BookOpen, Calendar, Clock, ArrowRight, Search } from 'lucide-react';
+import { BookOpen, Calendar, Clock, ArrowRight, Search, CheckCircle2 } from 'lucide-react';
 import TopNav from '@/components/navigation/TopNav';
 import Footer from '@/components/layout/Footer';
-import { BLOG_POSTS, BlogPost } from '@/data/blogPosts';
+import { BLOG_POSTS } from '@/data/blogPosts';
 
 const CATEGORIES = [
   'All',
@@ -20,6 +20,9 @@ const CATEGORIES = [
 export default function BlogPage() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
+  const [newsletterSubscribed, setNewsletterSubscribed] = useState(false);
+
+  const hasAnyPosts = BLOG_POSTS.length > 0;
 
   const filteredPosts = BLOG_POSTS.filter((post) => {
     const matchesCat = selectedCategory === 'All' || post.category === selectedCategory;
@@ -49,44 +52,73 @@ export default function BlogPage() {
             </p>
 
             {/* Search Bar */}
-            <div className="max-w-md mx-auto pt-4">
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                <input
-                  type="text"
-                  placeholder="Search articles &amp; advice..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full min-h-[48px] pl-11 pr-4 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-400 backdrop-blur-sm"
-                />
+            {hasAnyPosts && (
+              <div className="max-w-md mx-auto pt-4">
+                <div className="relative">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                  <input
+                    type="text"
+                    placeholder="Search articles & advice..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="w-full min-h-[48px] pl-11 pr-4 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-400 backdrop-blur-sm"
+                  />
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </section>
 
         {/* Category Filter Bar */}
-        <section className="bg-white border-b border-slate-200 sticky top-[56px] sm:top-[64px] md:top-[72px] z-30 shadow-2xs">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-start sm:justify-center gap-2 overflow-x-auto scrollbar-none">
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => setSelectedCategory(cat)}
-                className={`min-h-[38px] px-4 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
-                  selectedCategory === cat
-                    ? 'bg-[#4a4df2] text-white shadow-sm'
-                    : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-        </section>
+        {hasAnyPosts && (
+          <section className="bg-white border-b border-slate-200 sticky top-[56px] sm:top-[64px] md:top-[72px] z-30 shadow-2xs">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-start sm:justify-center gap-2 overflow-x-auto scrollbar-none">
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`min-h-[38px] px-4 rounded-xl text-xs sm:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+                    selectedCategory === cat
+                      ? 'bg-[#4a4df2] text-white shadow-sm'
+                      : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Blog Posts Grid */}
         <section className="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {filteredPosts.length === 0 ? (
+          {!hasAnyPosts ? (
+            <div className="max-w-lg mx-auto text-center py-16 px-6 bg-white rounded-3xl border border-slate-200/80 shadow-xs space-y-4">
+              <div className="w-12 h-12 rounded-2xl bg-[#eef2ff] text-[#4a4df2] flex items-center justify-center mx-auto">
+                <BookOpen className="w-6 h-6" />
+              </div>
+              <h2 className="text-xl font-bold text-slate-900">No blog articles published yet</h2>
+              <p className="text-sm text-slate-500 leading-relaxed">
+                New UK CV guides and career advice articles will appear here once published. In the meantime, explore our ATS-friendly templates or start building your CV for free.
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+                <Link
+                  href="/start"
+                  className="min-h-[42px] px-5 py-2.5 rounded-xl bg-[#4a4df2] hover:bg-[#383be0] text-white text-xs sm:text-sm font-semibold inline-flex items-center gap-1.5 transition-colors"
+                >
+                  <span>Build Free CV</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+                <Link
+                  href="/templates"
+                  className="min-h-[42px] px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-semibold inline-flex items-center transition-colors"
+                >
+                  Browse Templates
+                </Link>
+              </div>
+            </div>
+          ) : filteredPosts.length === 0 ? (
             <div className="text-center py-16 space-y-3">
               <p className="text-lg font-semibold text-slate-700">No articles found matching your search.</p>
               <button
@@ -179,26 +211,33 @@ export default function BlogPage() {
             <p className="text-sm sm:text-base text-slate-300">
               Join 50,000+ UK jobseekers who receive our weekly newsletter with resume templates, interview guides, and salary insights.
             </p>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                alert('Thank you for subscribing to the Makemeyour career newsletter!');
-              }}
-              className="flex flex-col sm:flex-row gap-3 pt-2 max-w-md mx-auto"
-            >
-              <input
-                type="email"
-                placeholder="Enter your email address"
-                required
-                className="flex-1 min-h-[46px] px-4 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-400"
-              />
-              <button
-                type="submit"
-                className="min-h-[46px] px-6 rounded-xl bg-[#4a4df2] hover:bg-[#383be0] text-white font-semibold text-sm transition-all shadow-sm cursor-pointer whitespace-nowrap"
+            {newsletterSubscribed ? (
+              <div className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-emerald-500/15 border border-emerald-400/30 text-emerald-300 text-sm font-medium">
+                <CheckCircle2 className="w-4 h-4 shrink-0" />
+                <span>Thank you for subscribing to the career newsletter!</span>
+              </div>
+            ) : (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  setNewsletterSubscribed(true);
+                }}
+                className="flex flex-col sm:flex-row gap-3 pt-2 max-w-md mx-auto"
               >
-                Subscribe
-              </button>
-            </form>
+                <input
+                  type="email"
+                  placeholder="Enter your email address"
+                  required
+                  className="flex-1 min-h-[46px] px-4 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-400"
+                />
+                <button
+                  type="submit"
+                  className="min-h-[46px] px-6 rounded-xl bg-[#4a4df2] hover:bg-[#383be0] text-white font-semibold text-sm transition-all shadow-sm cursor-pointer whitespace-nowrap"
+                >
+                  Subscribe
+                </button>
+              </form>
+            )}
           </div>
         </section>
       </main>

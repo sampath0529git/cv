@@ -1,7 +1,21 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import { ProjectItem, CustomSectionItem, FontScale } from '@/types/cv';
+import {
+  ProjectItem,
+  CustomSectionItem,
+  FontScale,
+  DateFormatOption,
+  DEFAULT_DATE_FORMAT,
+  normalizeDateFormat,
+  FontBoldnessSettings,
+  FontBoldnessTarget,
+  DEFAULT_FONT_BOLDNESS,
+  normalizeFontBoldness,
+  PdfExportSettings,
+  DEFAULT_PDF_EXPORT_SETTINGS,
+  normalizePdfExportSettings,
+} from '@/types/cv';
 
 function createUniqueId(prefix: string): string {
   if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
@@ -34,6 +48,7 @@ export interface WorkExperience {
   isCurrent: boolean;
   description: string;
   bullets?: string[];
+  forceNewPage?: boolean;
 }
 
 export interface Education {
@@ -46,6 +61,7 @@ export interface Education {
   description: string;
   grade?: string;
   bullets?: string[];
+  forceNewPage?: boolean;
 }
 
 export interface SkillItem {
@@ -167,6 +183,10 @@ export interface CvState {
   customPdfFileName: string;
   fontFamily: string;
   fontScale: FontScale;
+  dateFormat: DateFormatOption;
+  letterSpacing: number;
+  fontBoldness: FontBoldnessSettings;
+  pdfExportSettings: PdfExportSettings;
   showPhoto: boolean;
   sectionOrder: string[];
 
@@ -179,6 +199,13 @@ export interface CvState {
   setCustomPdfFileName: (name: string) => void;
   setFontFamily: (font: string) => void;
   setFontScale: (scale: FontScale) => void;
+  setDateFormat: (dateFormat: DateFormatOption) => void;
+  setLetterSpacing: (spacing: number) => void;
+  setFontBoldness: (boldness: Partial<FontBoldnessSettings>) => void;
+  toggleFontBoldnessTarget: (target: FontBoldnessTarget) => void;
+  resetFontBoldness: () => void;
+  setPdfExportSettings: (settings: Partial<PdfExportSettings>) => void;
+  resetPdfExportSettings: () => void;
   setShowPhoto: (show: boolean) => void;
   setSectionOrder: (order: string[]) => void;
   setStep: (step: number) => void;
@@ -194,12 +221,16 @@ export interface CvState {
   // Experience actions
   addExperience: (fields?: Partial<Omit<WorkExperience, 'id'>>) => void;
   updateExperience: (id: string, fields: Partial<WorkExperience>) => void;
+  duplicateExperience: (id: string) => string | null;
+  clearExperienceFields: (id: string) => void;
   removeExperience: (id: string) => void;
   moveExperience: (id: string, direction: 'up' | 'down') => void;
 
   // Education actions
   addEducation: (fields?: Partial<Omit<Education, 'id'>>) => void;
   updateEducation: (id: string, fields: Partial<Education>) => void;
+  duplicateEducation: (id: string) => string | null;
+  clearEducationFields: (id: string) => void;
   removeEducation: (id: string) => void;
   moveEducation: (id: string, direction: 'up' | 'down') => void;
 
@@ -318,6 +349,10 @@ export const useCvStore = create<CvState>()(
         customPdfFileName: '',
         fontFamily: 'jakarta',
         fontScale: 'md',
+        dateFormat: DEFAULT_DATE_FORMAT,
+        letterSpacing: 0,
+        fontBoldness: { ...DEFAULT_FONT_BOLDNESS },
+        pdfExportSettings: { ...DEFAULT_PDF_EXPORT_SETTINGS },
         showPhoto: true,
         sectionOrder: [...DEFAULT_CORE_ORDER],
         saveStatus: 'idle',
@@ -355,6 +390,76 @@ export const useCvStore = create<CvState>()(
         setCustomPdfFileName: (customPdfFileName) => mutate({ customPdfFileName }),
         setFontFamily: (fontFamily) => mutate({ fontFamily }),
         setFontScale: (fontScale) => mutate({ fontScale }),
+        setDateFormat: (dateFormat) =>
+          mutate({ dateFormat: normalizeDateFormat(dateFormat) }),
+        setLetterSpacing: (letterSpacing) =>
+          mutate({
+            letterSpacing: Math.max(-0.5, Math.min(2, Math.round(letterSpacing * 10) / 10)),
+          }),
+        setFontBoldness: (boldness) =>
+          mutate((state) => {
+            const current = normalizeFontBoldness(state.fontBoldness);
+            const merged = normalizeFontBoldness({ ...current, ...boldness });
+            if (
+              boldness.enabled === true &&
+              !merged.header &&
+              !merged.headings &&
+              !merged.subheadings &&
+              !merged.sectionText
+            ) {
+              merged.header = true;
+              merged.headings = true;
+              merged.subheadings = true;
+            }
+            if (
+              boldness.enabled === undefined &&
+              !merged.header &&
+              !merged.headings &&
+              !merged.subheadings &&
+              !merged.sectionText
+            ) {
+              merged.enabled = false;
+            }
+            return { fontBoldness: merged };
+          }),
+        toggleFontBoldnessTarget: (target) =>
+          mutate((state) => {
+            const current = normalizeFontBoldness(state.fontBoldness);
+            if (!current.enabled) {
+              return {
+                fontBoldness: {
+                  enabled: true,
+                  header: target === 'header',
+                  headings: target === 'headings',
+                  subheadings: target === 'subheadings',
+                  sectionText: target === 'sectionText',
+                },
+              };
+            }
+            const nextVal = !current[target];
+            const nextState: FontBoldnessSettings = {
+              ...current,
+              [target]: nextVal,
+            };
+            const anyActive =
+              nextState.header ||
+              nextState.headings ||
+              nextState.subheadings ||
+              nextState.sectionText;
+            nextState.enabled = anyActive;
+            return { fontBoldness: nextState };
+          }),
+        resetFontBoldness: () =>
+          mutate({ fontBoldness: { ...DEFAULT_FONT_BOLDNESS } }),
+        setPdfExportSettings: (settings) =>
+          mutate((state) => ({
+            pdfExportSettings: normalizePdfExportSettings({
+              ...normalizePdfExportSettings(state.pdfExportSettings),
+              ...settings,
+            }),
+          })),
+        resetPdfExportSettings: () =>
+          mutate({ pdfExportSettings: { ...DEFAULT_PDF_EXPORT_SETTINGS } }),
         setShowPhoto: (showPhoto) => mutate({ showPhoto }),
         setSectionOrder: (sectionOrder) => mutate({ sectionOrder: [...sectionOrder] }),
         setStep: (step) =>
@@ -424,6 +529,48 @@ export const useCvStore = create<CvState>()(
             experiences: state.experiences.filter((exp) => exp.id !== id),
           })),
 
+        duplicateExperience: (id) => {
+          let createdId: string | null = null;
+          mutate((state) => {
+            const index = state.experiences.findIndex((exp) => exp.id === id);
+            if (index === -1) return {};
+            const source = state.experiences[index];
+            const newId = createUniqueId('exp');
+            createdId = newId;
+            const cloned: WorkExperience = {
+              ...source,
+              id: newId,
+              bullets: source.bullets
+                ? [...source.bullets]
+                : parseDescriptionBullets(source.description),
+            };
+            const nextExperiences = [...state.experiences];
+            nextExperiences.splice(index + 1, 0, cloned);
+            return { experiences: nextExperiences };
+          });
+          return createdId;
+        },
+
+        clearExperienceFields: (id) =>
+          mutate((state) => ({
+            experiences: state.experiences.map((exp) =>
+              exp.id === id
+                ? {
+                    id: exp.id,
+                    jobTitle: '',
+                    employer: '',
+                    city: '',
+                    startDate: '',
+                    endDate: '',
+                    isCurrent: false,
+                    description: '',
+                    bullets: [],
+                    forceNewPage: false,
+                  }
+                : exp
+            ),
+          })),
+
         moveExperience: (id, direction) =>
           mutate((state) => {
             const index = state.experiences.findIndex((e) => e.id === id);
@@ -475,6 +622,51 @@ export const useCvStore = create<CvState>()(
               }
               return nextEdu;
             }),
+          })),
+
+        duplicateEducation: (id) => {
+          let createdId: string | null = null;
+          mutate((state) => {
+            const index = state.educations.findIndex((edu) => edu.id === id);
+            if (index === -1) return {};
+            const source = state.educations[index];
+            const newId = createUniqueId('edu');
+            createdId = newId;
+            const parsed = parseDescriptionBullets(source.description);
+            const cloned: Education = {
+              ...source,
+              id: newId,
+              bullets: source.bullets
+                ? [...source.bullets]
+                : parsed.length > 1
+                ? parsed
+                : undefined,
+            };
+            const nextEducations = [...state.educations];
+            nextEducations.splice(index + 1, 0, cloned);
+            return { educations: nextEducations };
+          });
+          return createdId;
+        },
+
+        clearEducationFields: (id) =>
+          mutate((state) => ({
+            educations: state.educations.map((edu) =>
+              edu.id === id
+                ? {
+                    id: edu.id,
+                    degree: '',
+                    school: '',
+                    city: '',
+                    grade: '',
+                    startDate: '',
+                    endDate: '',
+                    description: '',
+                    bullets: undefined,
+                    forceNewPage: false,
+                  }
+                : edu
+            ),
           })),
 
         removeEducation: (id) =>
@@ -907,6 +1099,11 @@ export const useCvStore = create<CvState>()(
             ? persisted.customSections
             : currentState.customSections,
           includeReferences: Boolean(persisted.includeReferences),
+          dateFormat: normalizeDateFormat(persisted.dateFormat ?? currentState.dateFormat),
+          fontBoldness: normalizeFontBoldness(persisted.fontBoldness ?? currentState.fontBoldness),
+          pdfExportSettings: normalizePdfExportSettings(
+            persisted.pdfExportSettings ?? currentState.pdfExportSettings
+          ),
           lastImportBackup: (persistedState as any)?.lastImportBackup || null,
         };
       },
@@ -931,6 +1128,10 @@ export const useCvStore = create<CvState>()(
         customPdfFileName: state.customPdfFileName || '',
         fontFamily: state.fontFamily || 'jakarta',
         fontScale: state.fontScale || 'md',
+        dateFormat: normalizeDateFormat(state.dateFormat),
+        letterSpacing: typeof state.letterSpacing === 'number' ? state.letterSpacing : 0,
+        fontBoldness: normalizeFontBoldness(state.fontBoldness),
+        pdfExportSettings: normalizePdfExportSettings(state.pdfExportSettings),
         showPhoto: state.showPhoto ?? true,
         sectionOrder: state.sectionOrder || [...DEFAULT_CORE_ORDER],
         lastImportBackup: state.lastImportBackup,

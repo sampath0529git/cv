@@ -42,7 +42,7 @@ export default function Footer() {
 
   return (
     <footer
-      aria-label="Makemeyour Global Footer"
+      aria-label="freecvmakeruk.co.uk Global Footer"
       className="bg-slate-900 text-slate-300 border-t border-slate-800"
     >
       {/* 1. Newsletter & Career Insights Strip */}
@@ -110,7 +110,7 @@ export default function Footer() {
               <Logo variant="light" href="/" />
 
               <p className="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-sm">
-                Makemeyour is the UK&apos;s leading free CV maker. Create recruiter-approved, ATS-compliant UK CVs and resumes in minutes with instant free PDF &amp; Word downloads.
+                freecvmakeruk.co.uk is the UK&apos;s leading free CV maker. Create recruiter-approved, ATS-compliant UK CVs and resumes in minutes with instant free PDF &amp; Word downloads.
               </p>
 
               {/* Trust Indicators */}
@@ -229,28 +229,18 @@ export default function Footer() {
               </h4>
               <ul className="space-y-2 text-xs sm:text-sm text-slate-400">
                 <li>
-                  <Link href="/blog/how-to-write-ats-cv-uk-2026" className="hover:text-white transition-colors">
-                    ATS CV Guide 2026
+                  <Link href="/templates" className="hover:text-white transition-colors">
+                    UK CV Templates
                   </Link>
                 </li>
                 <li>
-                  <Link href="/blog/cv-personal-statement-examples" className="hover:text-white transition-colors">
-                    Personal Statement Examples
+                  <Link href="/import" className="hover:text-white transition-colors">
+                    Smart CV Parser
                   </Link>
                 </li>
                 <li>
-                  <Link href="/blog/cv-template-16-year-old-school-leaver" className="hover:text-white transition-colors">
-                    School Leaver &amp; 16-Year-Old CV
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/blog/top-5-cv-mistakes-london-graduates" className="hover:text-white transition-colors">
-                    Graduate CV Tips
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/blog/mastering-star-interview-technique" className="hover:text-white transition-colors">
-                    STAR Interview Method
+                  <Link href="/builder" className="hover:text-white transition-colors">
+                    AI Summary Rewrite
                   </Link>
                 </li>
                 <li>
@@ -269,7 +259,7 @@ export default function Footer() {
               <ul className="space-y-2 text-xs sm:text-sm text-slate-400">
                 <li>
                   <Link href="#how-it-works" className="hover:text-white transition-colors">
-                    About Makemeyour
+                    About freecvmakeruk.co.uk
                   </Link>
                 </li>
                 <li>
@@ -319,7 +309,7 @@ export default function Footer() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-5">
             {/* Copyright */}
             <div className="flex items-center gap-2 text-center md:text-left">
-              <span>&copy; 2026 Makemeyour Inc. All rights reserved.</span>
+              <span>&copy; 2026 freecvmakeruk.co.uk. All rights reserved.</span>
             </div>
 
             {/* Quick Links */}

@@ -28,7 +28,7 @@ const TESTIMONIALS: Testimonial[] = [
     company: 'Fintech London',
     image: 'https://picsum.photos/seed/sarah_johnson/120/120',
     quote:
-      'Makemeyour made my CV look so professional! I got 3 interview calls within a week. Highly recommended!',
+      'freecvmakeruk.co.uk made my CV look so professional! I got 3 interview calls within a week. Highly recommended!',
   },
   {
     id: 2,
@@ -92,7 +92,7 @@ export default function ReviewsSection() {
             </h2>
 
             <p className="text-sm sm:text-base text-slate-500 leading-relaxed max-w-md">
-              See what our users have to say about their experience with Makemeyour.
+              See what UK jobseekers have to say about their experience with freecvmakeruk.co.uk.
             </p>
 
             <div className="pt-2">

@@ -11,6 +11,7 @@ export interface PdfDownloadButtonProps {
   className?: string;
   variant?: 'header' | 'hero' | 'mobile' | 'compact';
   label?: string;
+  showIcon?: boolean;
   id?: string;
   title?: string;
   onBeforeDownload?: () => void;
@@ -25,6 +26,7 @@ export default function PdfDownloadButton({
   className = '',
   variant = 'header',
   label = 'Download PDF',
+  showIcon = true,
   id,
   title,
   onBeforeDownload,
@@ -154,11 +156,13 @@ export default function PdfDownloadButton({
           </>
         ) : (
           <>
-            <Download
-              className={`${
-                variant === 'hero' ? 'w-5 h-5' : 'w-4 h-4'
-              } shrink-0`}
-            />
+            {showIcon && (
+              <Download
+                className={`${
+                  variant === 'hero' ? 'w-5 h-5' : 'w-4 h-4'
+                } shrink-0`}
+              />
+            )}
             {variant === 'header' ? (
               <>
                 <span className="sm:hidden">PDF</span>

@@ -167,11 +167,11 @@ export default function StepsSection() {
           </Link>
         </div>
 
-        {/* Trust Metrics Section: "Why 1+ million users trust Makemeyour" */}
+        {/* Trust Metrics Section: "Why 1+ million users trust freecvmakeruk.co.uk" */}
         <div className="mt-20 sm:mt-24 pt-16 border-t border-slate-200/80">
           <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
             <h3 className="text-2xl sm:text-3xl font-extrabold text-[#0B112C] tracking-tight [text-wrap:balance]">
-              Why 1+ million users trust Makemeyour
+              Why 1+ million users trust freecvmakeruk.co.uk
             </h3>
             <p className="text-xs sm:text-sm text-slate-500 mt-2 font-normal">
               Simple. Fast. Professional. Here&apos;s what our users love about us.
