@@ -4,7 +4,7 @@ export default function HiredByBar() {
   return (
     <section
       aria-label="Top UK and global companies hiring freecvmakeruk.co.uk candidates"
-      className="relative bg-gradient-to-b from-white via-[#F8FAFF] to-white py-8 sm:py-10 border-b border-slate-100 overflow-hidden"
+      className="relative bg-white/20 backdrop-blur-xs py-8 sm:py-10 border-b border-white/70 overflow-hidden"
     >
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 className="text-xs sm:text-[13px] font-bold text-slate-600 uppercase tracking-wider text-center mb-4 sm:mb-5">
@@ -12,7 +12,7 @@ export default function HiredByBar() {
         </h2>
 
         {/* Frosted Glass Ribbon Container */}
-        <div className="rounded-2xl sm:rounded-3xl bg-white/70 backdrop-blur-xl border border-white/80 shadow-[0_8px_30px_rgba(15,23,42,0.04),inset_0_1px_2px_rgba(255,255,255,0.95)] py-3 sm:py-4 px-5 sm:px-8">
+        <div className="rounded-2xl sm:rounded-3xl bg-white/58 backdrop-blur-2xl backdrop-saturate-150 border border-white/85 ring-1 ring-slate-900/[0.04] shadow-[0_12px_36px_rgba(15,23,42,0.06),inset_0_1px_2px_rgba(255,255,255,0.95)] py-3 sm:py-4 px-5 sm:px-8">
           <div className="flex items-center justify-between gap-6 sm:gap-8 overflow-x-auto scrollbar-none py-1 text-slate-400">
           {/* Google */}
           <div className="flex items-center justify-center shrink-0 hover:text-slate-800 transition-colors">

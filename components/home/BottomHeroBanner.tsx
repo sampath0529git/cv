@@ -91,20 +91,24 @@ export default function BottomHeroBanner() {
   return (
     <section
       aria-label="Get Started Today"
-      className="py-12 sm:py-16 bg-white"
+      className="py-12 sm:py-16 bg-transparent"
     >
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative rounded-3xl bg-gradient-to-r from-[#070B1E] via-[#0A1132] to-[#121B45] text-white p-8 sm:p-12 lg:p-16 overflow-hidden shadow-2xl">
-          {/* Subtle decorative glow */}
+        <div className="relative rounded-3xl bg-[#080E24]/86 backdrop-blur-2xl backdrop-saturate-150 border border-white/18 text-white p-8 sm:p-12 lg:p-16 overflow-hidden shadow-[0_24px_60px_rgba(8,14,36,0.28),inset_0_1px_2px_rgba(255,255,255,0.2)]">
+          {/* Subtle decorative smoked-glass glow pools */}
           <div
             aria-hidden="true"
-            className="absolute top-0 right-1/4 w-96 h-96 bg-blue-500/15 rounded-full blur-3xl pointer-events-none"
+            className="absolute -top-20 right-1/4 w-96 h-96 bg-blue-500/22 rounded-full blur-3xl pointer-events-none"
+          />
+          <div
+            aria-hidden="true"
+            className="absolute -bottom-24 left-1/5 w-80 h-80 bg-indigo-500/18 rounded-full blur-3xl pointer-events-none"
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
             {/* Left Content */}
             <div className="lg:col-span-7 flex flex-col items-start text-left space-y-4">
-              <span className="text-[11px] font-bold text-blue-400 uppercase tracking-widest">
+              <span className="text-[11px] font-bold text-blue-300 uppercase tracking-widest">
                 GET STARTED TODAY
               </span>
 
@@ -131,9 +135,9 @@ export default function BottomHeroBanner() {
             {/* Right Visual: Fanned Real CV Templates with "Build your future today" badge */}
             <div className="lg:col-span-5 relative flex items-center justify-center pt-4 lg:pt-0">
               <div className="relative w-full max-w-[340px] min-h-[290px] sm:min-h-[310px] flex items-center justify-center">
-                {/* Floating Badge: Frosted Glass */}
-                <div className="absolute top-3 right-0 z-30 px-3.5 py-1.5 rounded-full bg-slate-900/65 backdrop-blur-xl text-white text-[11px] font-bold flex items-center gap-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.35)] border border-white/25 pointer-events-none">
-                  <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
+                {/* Floating Badge: Smoked Frosted Glass */}
+                <div className="absolute top-3 right-0 z-30 px-3.5 py-1.5 rounded-full bg-white/12 backdrop-blur-2xl backdrop-saturate-150 text-white text-[11px] font-bold flex items-center gap-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.35)] border border-white/25 pointer-events-none">
+                  <Sparkles className="w-3.5 h-3.5 text-sky-300" />
                   <span>Build your future today</span>
                 </div>
 

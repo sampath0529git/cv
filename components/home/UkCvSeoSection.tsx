@@ -81,25 +81,24 @@ export default function UkCvSeoSection() {
   return (
     <section
       aria-label="Free CV Maker UK Guide & FAQ"
-      className="relative py-16 sm:py-24 bg-gradient-to-b from-[#F8FAFC] via-[#F1F5F9] to-white border-b border-slate-200/80 overflow-hidden"
+      className="relative py-16 sm:py-24 bg-white/18 border-b border-white/75 overflow-hidden"
     >
       {/* Soft ambient background glows */}
       <div
         aria-hidden="true"
-        className="absolute top-1/4 right-0 w-96 h-96 bg-blue-200/25 rounded-full blur-3xl pointer-events-none"
+        className="absolute top-1/4 right-0 w-96 h-96 bg-blue-300/25 rounded-full blur-3xl pointer-events-none"
       />
       <div
         aria-hidden="true"
-        className="absolute bottom-1/4 left-0 w-96 h-96 bg-cyan-200/20 rounded-full blur-3xl pointer-events-none"
+        className="absolute bottom-1/4 left-0 w-96 h-96 bg-sky-300/22 rounded-full blur-3xl pointer-events-none"
       />
 
       <div className="relative z-10 max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="max-w-3xl mx-auto text-center mb-12 sm:mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/70 backdrop-blur-md border border-white/80 text-[#2563EB] text-xs font-semibold mb-3 shadow-[0_4px_16px_rgba(37,99,235,0.06),inset_0_1px_1px_rgba(255,255,255,0.9)]">
-            <Sparkles className="w-3.5 h-3.5 text-[#2563EB]" />
-            <span className="tracking-wide uppercase text-[11px]">UK JOB MARKET STANDARD</span>
-          </div>
+          <p className="text-xs font-bold tracking-wider uppercase text-[#2563EB] mb-2.5">
+            UK Job Market Standard
+          </p>
 
           <h2 className="text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-[#0B112C] tracking-tight leading-tight [text-wrap:balance]">
             The #1 Free CV Maker UK for Jobseekers
@@ -117,9 +116,9 @@ export default function UkCvSeoSection() {
             return (
               <div
                 key={idx}
-                className="bg-white/75 hover:bg-white/95 backdrop-blur-xl rounded-2xl p-6 border border-white/80 shadow-[0_8px_30px_rgba(15,23,42,0.04),inset_0_1px_2px_rgba(255,255,255,0.95)] hover:shadow-[0_16px_36px_rgba(37,99,235,0.1)] hover:-translate-y-1 transition-all duration-300 flex flex-col"
+                className="bg-white/60 hover:bg-white/84 backdrop-blur-2xl backdrop-saturate-150 rounded-2xl p-6 border border-white/85 ring-1 ring-slate-900/[0.04] shadow-[0_12px_36px_rgba(15,23,42,0.06),inset_0_1px_2px_rgba(255,255,255,0.95)] hover:shadow-[0_16px_40px_rgba(37,99,235,0.12)] hover:-translate-y-1 transition-all duration-300 flex flex-col"
               >
-                <div className="w-12 h-12 rounded-xl bg-blue-50/90 text-[#2563EB] flex items-center justify-center mb-4 shrink-0 shadow-2xs">
+                <div className="w-12 h-12 rounded-xl bg-blue-500/12 border border-blue-400/25 text-[#2563EB] flex items-center justify-center mb-4 shrink-0 shadow-[inset_0_1px_1px_rgba(255,255,255,0.85)]">
                   <Icon className="w-6 h-6 stroke-[2.2]" />
                 </div>
                 <h3 className="text-lg font-bold text-slate-900 mb-2 leading-snug">
@@ -151,7 +150,7 @@ export default function UkCvSeoSection() {
               return (
                 <div
                   key={idx}
-                  className="bg-white/75 hover:bg-white/90 backdrop-blur-xl rounded-2xl border border-white/80 overflow-hidden shadow-[0_4px_20px_rgba(15,23,42,0.03),inset_0_1px_1px_rgba(255,255,255,0.95)] transition-all duration-200"
+                  className="bg-white/62 hover:bg-white/84 backdrop-blur-2xl backdrop-saturate-150 rounded-2xl border border-white/85 ring-1 ring-slate-900/[0.04] overflow-hidden shadow-[0_8px_28px_rgba(15,23,42,0.05),inset_0_1px_2px_rgba(255,255,255,0.95)] transition-all duration-200"
                 >
                   <button
                     type="button"
@@ -170,7 +169,7 @@ export default function UkCvSeoSection() {
                   </button>
 
                   {isOpen && (
-                    <div className="px-6 pb-5 pt-1 text-sm text-slate-600 leading-relaxed border-t border-slate-100/80">
+                    <div className="px-6 pb-5 pt-1 text-sm text-slate-600 leading-relaxed border-t border-white/75">
                       <p>{faq.answer}</p>
                     </div>
                   )}
@@ -181,7 +180,7 @@ export default function UkCvSeoSection() {
 
           {/* Featured UK CV Writing Guides Internal Link Strip */}
           {BLOG_POSTS.length > 0 && (
-            <div className="mt-12 pt-10 border-t border-slate-200/80">
+            <div className="mt-12 pt-10 border-t border-white/75">
               <div className="flex items-center justify-between gap-4 mb-5">
                 <h4 className="text-lg sm:text-xl font-extrabold text-[#0B112C]">
                   Essential UK CV Writing Guides
@@ -199,7 +198,7 @@ export default function UkCvSeoSection() {
                   <Link
                     key={post.id}
                     href={`/blog/${post.id}`}
-                    className="group p-4 sm:p-5 rounded-2xl bg-white/90 hover:bg-white border border-slate-200/90 hover:border-[#2563EB] shadow-2xs hover:shadow-md transition-all flex flex-col justify-between gap-3"
+                    className="group p-4 sm:p-5 rounded-2xl bg-white/62 hover:bg-white/88 backdrop-blur-2xl backdrop-saturate-150 border border-white/85 hover:border-blue-400/70 ring-1 ring-slate-900/[0.04] shadow-[0_8px_28px_rgba(15,23,42,0.05),inset_0_1px_1px_rgba(255,255,255,0.95)] hover:shadow-[0_14px_34px_rgba(37,99,235,0.12)] transition-all flex flex-col justify-between gap-3"
                   >
                     <div>
                       <div className="flex items-center gap-1.5 text-[11px] font-medium text-slate-500">
@@ -222,7 +221,7 @@ export default function UkCvSeoSection() {
           )}
 
           {/* Quick CTA Prompt */}
-          <div className="mt-10 p-6 rounded-2xl bg-white/80 backdrop-blur-xl border border-white/90 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-[0_8px_30px_rgba(37,99,235,0.08),inset_0_1px_2px_rgba(255,255,255,0.95)] text-center sm:text-left">
+          <div className="mt-10 p-6 rounded-2xl bg-white/68 backdrop-blur-2xl backdrop-saturate-150 border border-white/90 ring-1 ring-slate-900/[0.04] flex flex-col sm:flex-row items-center justify-between gap-4 shadow-[0_12px_36px_rgba(37,99,235,0.09),inset_0_1px_2px_rgba(255,255,255,0.95)] text-center sm:text-left">
             <div>
               <h4 className="text-base font-bold text-slate-900">
                 Ready to land your dream UK role?

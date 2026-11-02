@@ -93,15 +93,15 @@ export default function Dropzone({
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           onClick={handleBrowseClick}
-          className={`relative w-full rounded-2xl border-2 border-dashed transition-all duration-200 p-8 sm:p-12 text-center flex flex-col items-center justify-center cursor-pointer group ${
+          className={`relative w-full rounded-2xl border-2 border-dashed backdrop-blur-xl transition-all duration-200 p-8 sm:p-12 text-center flex flex-col items-center justify-center cursor-pointer group ${
             isDragOver
-              ? 'border-[#4B4DED] bg-[#EEF1FF] scale-[1.01]'
-              : 'border-[#CAD2F8] bg-[#F9FAFE] hover:bg-[#F2F4FD] hover:border-[#4B4DED]'
+              ? 'border-[#4B4DED] bg-indigo-50/75 scale-[1.01] shadow-[0_12px_32px_rgba(75,77,237,0.12)]'
+              : 'border-indigo-300/75 bg-white/52 hover:bg-white/78 hover:border-[#4B4DED] shadow-[inset_0_1px_2px_rgba(255,255,255,0.9)]'
           } ${disabled ? 'opacity-50 cursor-not-allowed pointer-events-none' : ''}`}
         >
           {/* Document Upload Icon Illustration */}
           <div className="relative mb-4 flex items-center justify-center">
-            <div className="w-16 h-16 rounded-2xl bg-indigo-50 border border-indigo-100/80 flex items-center justify-center text-[#4B4DED] group-hover:scale-105 group-hover:bg-indigo-100/70 transition-all shadow-xs">
+            <div className="w-16 h-16 rounded-2xl bg-indigo-500/12 border border-indigo-400/25 backdrop-blur-md flex items-center justify-center text-[#4B4DED] group-hover:scale-105 group-hover:bg-indigo-500/18 transition-all shadow-[inset_0_1px_1px_rgba(255,255,255,0.85)]">
               <UploadCloud className="w-8 h-8" strokeWidth={1.8} />
             </div>
           </div>
@@ -113,25 +113,21 @@ export default function Dropzone({
             </span>
           </p>
 
-          <p className="text-xs sm:text-sm text-slate-500 mb-5 font-normal">
+          <p className="text-xs sm:text-sm text-slate-600 mb-5 font-normal">
             Supported formats: PDF, DOCX, TXT (up to 8MB)
           </p>
 
-          {/* Formats bar */}
-          <div className="flex items-center gap-2 text-[11px] font-semibold text-slate-500">
-            <span className="px-2.5 py-1 rounded-md bg-white border border-slate-200 shadow-2xs">
-              PDF
-            </span>
-            <span className="px-2.5 py-1 rounded-md bg-white border border-slate-200 shadow-2xs">
-              DOCX
-            </span>
-            <span className="px-2.5 py-1 rounded-md bg-white border border-slate-200 shadow-2xs">
-              TXT
-            </span>
+          {/* Formats metadata */}
+          <div className="flex items-center gap-2 text-xs font-medium text-slate-500">
+            <span>PDF</span>
+            <span aria-hidden="true">·</span>
+            <span>DOCX</span>
+            <span aria-hidden="true">·</span>
+            <span>TXT</span>
           </div>
         </div>
       ) : (
-        <div className="w-full rounded-2xl border border-indigo-200/90 bg-indigo-50/40 p-5 sm:p-6 flex items-center justify-between gap-4 shadow-xs">
+        <div className="w-full rounded-2xl border border-white/90 ring-1 ring-indigo-500/15 bg-white/68 backdrop-blur-2xl backdrop-saturate-150 p-5 sm:p-6 flex items-center justify-between gap-4 shadow-[0_10px_28px_rgba(15,27,77,0.06),inset_0_1px_2px_rgba(255,255,255,0.95)]">
           <div className="flex items-center gap-3.5 min-w-0">
             <div className="w-12 h-12 rounded-xl bg-[#4B4DED] text-white flex items-center justify-center shrink-0 shadow-xs">
               <FileCheck2 className="w-6 h-6" />
@@ -140,7 +136,7 @@ export default function Dropzone({
               <p className="text-sm sm:text-base font-bold text-[#0F1B4D] truncate">
                 {selectedFile.name}
               </p>
-              <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
+              <div className="flex items-center gap-2 text-xs text-slate-600 mt-0.5">
                 <span className="font-mono tabular-nums">
                   {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB
                 </span>
@@ -157,7 +153,7 @@ export default function Dropzone({
               onClearFile();
             }}
             disabled={disabled}
-            className="p-2 text-slate-400 hover:text-rose-600 hover:bg-white rounded-xl border border-transparent hover:border-slate-200 transition-colors cursor-pointer shrink-0 disabled:opacity-50"
+            className="p-2 text-slate-400 hover:text-red-600 hover:bg-white/85 rounded-xl border border-transparent hover:border-white/90 transition-colors cursor-pointer shrink-0 disabled:opacity-50"
             title="Remove file"
           >
             <X className="w-5 h-5" />

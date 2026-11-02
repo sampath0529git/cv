@@ -130,21 +130,24 @@ export default function TemplatesSection() {
     <section
       id="templates"
       aria-label="Professional Academic & Corporate CV Templates"
-      className="py-16 sm:py-24 bg-[#080E24] text-white relative overflow-hidden"
+      className="py-16 sm:py-24 bg-[#080E24]/88 backdrop-blur-2xl backdrop-saturate-150 border-y border-white/15 text-white relative overflow-hidden shadow-[inset_0_1px_0_rgba(255,255,255,0.16)]"
     >
-      {/* Background subtle radial gradient */}
+      {/* Background smoked-glass sapphire & sky light pools */}
       <div
         aria-hidden="true"
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none"
+        className="absolute top-1/3 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[620px] h-[420px] bg-blue-500/20 rounded-full blur-3xl pointer-events-none"
+      />
+      <div
+        aria-hidden="true"
+        className="absolute bottom-0 right-1/6 w-[520px] h-[380px] bg-sky-400/14 rounded-full blur-3xl pointer-events-none"
       />
 
       <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
         <div className="text-left mb-8 sm:mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/15 border border-blue-400/20 text-blue-300 text-xs font-semibold mb-3">
-            <Sparkles className="w-3.5 h-3.5 text-blue-400" />
-            <span className="tracking-wide uppercase text-[11px]">PROFESSIONAL TEMPLATES</span>
-          </div>
+          <p className="text-xs font-bold tracking-wider uppercase text-blue-300 mb-2">
+            Recruiter-Approved A4 Layouts
+          </p>
 
           <h2 className="text-2xl sm:text-3xl lg:text-[38px] font-extrabold text-white tracking-tight leading-tight [text-wrap:balance]">
             Professional Academic &amp; Corporate CV Templates
@@ -154,7 +157,7 @@ export default function TemplatesSection() {
           </p>
         </div>
 
-        {/* Category Filter Pills */}
+        {/* Category Filter Controls */}
         <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pb-4 mb-8">
           {filterCategories.map((cat) => {
             const isSelected = selectedCategory === cat;
@@ -165,8 +168,8 @@ export default function TemplatesSection() {
                 onClick={() => setSelectedCategory(cat)}
                 className={`min-h-[38px] px-4 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                   isSelected
-                    ? 'bg-[#2563EB] text-white shadow-md shadow-blue-600/30 ring-1 ring-blue-400'
-                    : 'bg-white/10 hover:bg-white/15 text-slate-300 border border-white/10'
+                    ? 'bg-[#2563EB] text-white shadow-[0_6px_18px_rgba(37,99,235,0.4)] ring-1 ring-blue-300/60'
+                    : 'bg-white/10 hover:bg-white/18 backdrop-blur-md text-slate-200 border border-white/15 shadow-[inset_0_1px_1px_rgba(255,255,255,0.12)]'
                 }`}
               >
                 {cat}
@@ -182,7 +185,7 @@ export default function TemplatesSection() {
             {filteredTemplates.map((template) => (
               <div
                 key={template.id}
-                className="group relative rounded-xl sm:rounded-2xl bg-[#0D1533] border border-white/10 hover:border-blue-400/50 p-2.5 sm:p-3 transition-all duration-200 hover:-translate-y-0.5 flex flex-col justify-between shadow-lg min-w-0"
+                className="group relative rounded-xl sm:rounded-2xl bg-white/[0.08] hover:bg-white/[0.13] backdrop-blur-2xl backdrop-saturate-150 border border-white/18 hover:border-blue-400/55 p-2.5 sm:p-3 transition-all duration-200 hover:-translate-y-0.5 flex flex-col justify-between shadow-[0_14px_38px_rgba(0,0,0,0.28),inset_0_1px_1px_rgba(255,255,255,0.18)] min-w-0"
               >
                 {/* Live Scaled A4 CV Template Preview */}
                 <HomeTemplateThumb
@@ -200,19 +203,19 @@ export default function TemplatesSection() {
                       A4
                     </span>
                   </div>
-                  <p className="text-[10.5px] sm:text-[11px] text-slate-400 capitalize mt-0.5 truncate">
+                  <p className="text-[10.5px] sm:text-[11px] text-slate-300/80 capitalize mt-0.5 truncate">
                     {template.category}
                   </p>
                 </div>
 
                 {/* Action Buttons: Preview & Use */}
-                <div className="flex sm:grid sm:grid-cols-2 items-center gap-1.5 pt-1.5 border-t border-white/5">
+                <div className="flex sm:grid sm:grid-cols-2 items-center gap-1.5 pt-1.5 border-t border-white/10">
                   <button
                     type="button"
                     onClick={() => setPreviewTemplate(template)}
                     aria-label={`Preview ${template.name} template`}
                     title={`Preview ${template.name}`}
-                    className="min-h-[36px] w-[36px] sm:w-auto px-0 sm:px-2 py-1.5 rounded-lg sm:rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer shrink-0"
+                    className="min-h-[36px] w-[36px] sm:w-auto px-0 sm:px-2 py-1.5 rounded-lg sm:rounded-xl bg-white/12 hover:bg-white/22 backdrop-blur-md border border-white/15 text-white text-xs font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer shrink-0"
                   >
                     <Eye className="w-3.5 h-3.5 text-blue-300 shrink-0" />
                     <span className="hidden sm:inline">Preview</span>
@@ -231,15 +234,15 @@ export default function TemplatesSection() {
           </div>
 
           {/* Right Side "Why choose our templates?" card */}
-          <div className="lg:col-span-4 xl:col-span-3 rounded-2xl bg-[#0D1533]/80 border border-white/10 p-6 flex flex-col justify-between text-left">
+          <div className="lg:col-span-4 xl:col-span-3 rounded-2xl bg-white/[0.08] backdrop-blur-2xl backdrop-saturate-150 border border-white/18 p-6 flex flex-col justify-between text-left shadow-[0_14px_38px_rgba(0,0,0,0.25),inset_0_1px_1px_rgba(255,255,255,0.2)]">
             <div>
               <h3 className="text-base sm:text-lg font-bold text-white mb-4">
                 Why choose our templates?
               </h3>
               <ul className="space-y-3 mb-6">
                 {TEMPLATE_PERKS.map((perk, i) => (
-                  <li key={i} className="flex items-center gap-2.5 text-xs sm:text-sm text-slate-200 font-medium">
-                    <div className="w-4 h-4 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0">
+                  <li key={i} className="flex items-center gap-2.5 text-xs sm:text-sm text-slate-100 font-medium">
+                    <div className="w-4 h-4 rounded-full bg-emerald-500/20 border border-emerald-400/30 text-emerald-300 flex items-center justify-center shrink-0">
                       <Check className="w-2.5 h-2.5 stroke-[3]" />
                     </div>
                     <span>{perk}</span>

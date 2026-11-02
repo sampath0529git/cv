@@ -142,10 +142,10 @@ export default function TopNav() {
 
   return (
     <header
-      className={`sticky top-0 z-50 transition-colors duration-200 ${
+      className={`sticky top-0 z-50 transition-all duration-200 ${
         isScrolled || mobileMenuOpen
-          ? 'bg-white/95 backdrop-blur-xl border-b border-slate-200/90 shadow-[0_4px_20px_rgba(15,23,42,0.05)]'
-          : 'bg-white/90 backdrop-blur-lg border-b border-slate-200/75'
+          ? 'bg-white/64 backdrop-blur-2xl backdrop-saturate-150 border-b border-white/85 shadow-[0_10px_34px_rgba(15,23,42,0.07),inset_0_-1px_0_rgba(255,255,255,0.75)]'
+          : 'bg-white/48 backdrop-blur-xl backdrop-saturate-150 border-b border-white/70 shadow-[inset_0_-1px_0_rgba(255,255,255,0.55)]'
       }`}
     >
       <div className="max-w-[1240px] mx-auto px-3.5 sm:px-6 lg:px-8 h-[56px] md:h-[68px] flex items-center justify-between gap-3 md:gap-8">
@@ -198,8 +198,8 @@ export default function TopNav() {
             onClick={() => setMobileMenuOpen((prev) => !prev)}
             className={`min-h-[44px] min-w-[44px] rounded-xl border flex items-center justify-center transition-all duration-150 active:scale-95 cursor-pointer shrink-0 ${
               mobileMenuOpen
-                ? 'bg-slate-900 border-slate-900 text-white'
-                : 'bg-slate-50/90 hover:bg-slate-100 border-slate-200/90 text-slate-800'
+                ? 'bg-[#0B112C]/90 backdrop-blur-xl border-white/20 text-white shadow-md'
+                : 'bg-white/65 hover:bg-white/85 backdrop-blur-md border-white/85 ring-1 ring-slate-900/[0.05] text-slate-800 shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)]'
             }`}
             aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
             aria-expanded={mobileMenuOpen}
@@ -220,7 +220,7 @@ export default function TopNav() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.16 }}
-              className="fixed inset-0 top-[56px] bg-slate-950/35 backdrop-blur-[2px] z-40 md:hidden"
+              className="fixed inset-0 top-[56px] bg-[#0B112C]/35 backdrop-blur-md z-40 md:hidden"
               onClick={() => setMobileMenuOpen(false)}
               aria-hidden="true"
             />
@@ -231,10 +231,10 @@ export default function TopNav() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-              className="fixed left-0 right-0 top-[56px] z-50 md:hidden max-h-[calc(100dvh-56px)] overflow-y-auto bg-white border-b border-slate-200 shadow-[0_20px_48px_rgba(15,23,42,0.16)] rounded-b-3xl px-4 pt-3 pb-6"
+              className="fixed left-0 right-0 top-[56px] z-50 md:hidden max-h-[calc(100dvh-56px)] overflow-y-auto bg-white/82 backdrop-blur-2xl backdrop-saturate-150 border-b border-white/90 shadow-[0_24px_56px_rgba(15,23,42,0.20),inset_0_1px_2px_rgba(255,255,255,0.95)] rounded-b-3xl px-4 pt-3 pb-6"
             >
               {/* Primary Navigation Tap Rows */}
-              <nav className="flex flex-col divide-y divide-slate-100" aria-label="Mobile Navigation">
+              <nav className="flex flex-col divide-y divide-slate-200/50" aria-label="Mobile Navigation">
                 {navItems.map((item) => (
                   <Link
                     key={item.href}
@@ -242,8 +242,8 @@ export default function TopNav() {
                     onClick={() => setMobileMenuOpen(false)}
                     className={`min-h-[52px] flex items-center justify-between px-3 py-2.5 rounded-xl text-[15px] transition-colors duration-150 ${
                       item.isActive
-                        ? 'font-semibold text-[#2563EB] bg-blue-50/60'
-                        : 'font-medium text-slate-800 active:bg-slate-50'
+                        ? 'font-semibold text-[#2563EB] bg-blue-500/10 backdrop-blur-xs'
+                        : 'font-medium text-slate-800 hover:bg-white/60 active:bg-white/80'
                     }`}
                   >
                     <span className="whitespace-nowrap">{item.label}</span>
@@ -257,7 +257,7 @@ export default function TopNav() {
               </nav>
 
               {/* Popular UK Template Categories Quick-Jump Grid */}
-              <div className="mt-4 pt-4 border-t border-slate-100">
+              <div className="mt-4 pt-4 border-t border-slate-200/60">
                 <div className="flex items-center justify-between px-1 mb-2.5">
                   <span className="text-xs font-semibold text-slate-500">
                     UK Templates by Career Stage
@@ -280,8 +280,8 @@ export default function TopNav() {
                         onClick={() => setMobileMenuOpen(false)}
                         className={`min-h-[44px] px-3 py-2 rounded-xl border text-[13px] font-medium flex items-center justify-between gap-1.5 transition-colors duration-150 ${
                           isNicheActive
-                            ? 'border-[#2563EB] bg-blue-50/70 text-[#2563EB] font-semibold'
-                            : 'border-slate-200/85 bg-slate-50/60 text-slate-700 active:bg-slate-100'
+                            ? 'border-blue-400/70 bg-blue-500/12 text-[#2563EB] font-semibold backdrop-blur-md'
+                            : 'border-white/85 bg-white/60 hover:bg-white/85 ring-1 ring-slate-900/[0.04] text-slate-700 active:bg-white/90 backdrop-blur-md'
                         }`}
                       >
                         <span className="truncate">{niche.label}</span>
@@ -293,7 +293,7 @@ export default function TopNav() {
               </div>
 
               {/* Thumb-Zone Action Footer */}
-              <div className="mt-5 pt-4 border-t border-slate-100 flex flex-col gap-2.5">
+              <div className="mt-5 pt-4 border-t border-slate-200/60 flex flex-col gap-2.5">
                 {hasSavedDraft ? (
                   <>
                     <Link
@@ -308,7 +308,7 @@ export default function TopNav() {
                       <Link
                         href="/start"
                         onClick={() => setMobileMenuOpen(false)}
-                        className="w-full min-h-[46px] px-5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold text-[14px] flex items-center justify-center active:scale-[0.98] transition-all duration-150 whitespace-nowrap"
+                        className="w-full min-h-[46px] px-5 rounded-xl border border-white/90 bg-white/70 hover:bg-white/90 backdrop-blur-md ring-1 ring-slate-900/[0.05] text-slate-800 font-semibold text-[14px] flex items-center justify-center active:scale-[0.98] transition-all duration-150 whitespace-nowrap"
                       >
                         Start New or Import CV
                       </Link>
@@ -327,7 +327,7 @@ export default function TopNav() {
                     <Link
                       href="/import"
                       onClick={() => setMobileMenuOpen(false)}
-                      className="w-full min-h-[46px] px-5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-semibold text-[14px] flex items-center justify-center active:scale-[0.98] transition-all duration-150 whitespace-nowrap"
+                      className="w-full min-h-[46px] px-5 rounded-xl border border-white/90 bg-white/70 hover:bg-white/90 backdrop-blur-md ring-1 ring-slate-900/[0.05] text-slate-800 font-semibold text-[14px] flex items-center justify-center active:scale-[0.98] transition-all duration-150 whitespace-nowrap"
                     >
                       Upload Existing CV (PDF / Word)
                     </Link>

@@ -1,8 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Type } from '@google/genai';
-import { getGeminiClient } from '@/lib/gemini';
-
-const SKILLS_SUGGEST_MODEL = 'gemini-3.8-flash';
+import {
+  SKILLS_SUGGEST_MODEL,
+  generateContentWithFallback,
+  cleanJsonModelOutput,
+  formatGeminiRouteError,
+} from '@/lib/gemini';
 
 interface SuggestSkillsPayload {
   jobTitle?: string;
@@ -69,7 +72,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const ai = getGeminiClient();
+
 
     const expSummary = experiences
       .slice(0, 4)
@@ -98,8 +101,8 @@ export async function POST(req: NextRequest) {
       .filter(Boolean)
       .join('\n');
 
-    const response = await ai.models.generateContent({
-      model: SKILLS_SUGGEST_MODEL,
+    const response = await generateContentWithFallback({
+      preferredModel: SKILLS_SUGGEST_MODEL,
       contents: prompt,
       config: {
         systemInstruction,
@@ -108,7 +111,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    const rawText = (response.text || '').trim();
+    const rawText = cleanJsonModelOutput(response.text || '');
     if (!rawText) {
       return NextResponse.json(
         { error: 'Could not generate skills suggestions at this time.' },
@@ -120,10 +123,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(data);
   } catch (err: unknown) {
     console.error('Error in /api/cv/suggest-skills:', err);
-    const message =
-      err instanceof Error && err.message
-        ? err.message
-        : 'Failed to suggest skills. Please try again.';
-    return NextResponse.json({ error: message }, { status: 500 });
+    const { message, status } = formatGeminiRouteError(
+      err,
+      'Failed to suggest skills. Please try again.'
+    );
+    return NextResponse.json({ error: message }, { status });
   }
 }

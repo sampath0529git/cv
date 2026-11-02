@@ -117,7 +117,7 @@ export default function TemplateGallery({
           className={`min-h-[40px] px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap shrink-0 transition-all cursor-pointer ${
             activeCategory === 'All'
               ? 'bg-[#4B4DED] text-white shadow-xs'
-              : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+              : 'bg-white/68 hover:bg-white/92 backdrop-blur-md border border-white/85 ring-1 ring-slate-900/[0.04] text-slate-700'
           }`}
         >
           All ({CV_TEMPLATES.length})
@@ -134,7 +134,7 @@ export default function TemplateGallery({
               className={`min-h-[40px] px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap shrink-0 transition-all cursor-pointer flex items-center gap-1.5 ${
                 isSelected
                   ? 'bg-[#4B4DED] text-white shadow-xs'
-                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                  : 'bg-white/68 hover:bg-white/92 backdrop-blur-md border border-white/85 ring-1 ring-slate-900/[0.04] text-slate-700'
               }`}
             >
               <span>{cat}</span>
@@ -169,10 +169,10 @@ export default function TemplateGallery({
             <div
               key={template.id}
               onClick={() => onSelectTemplate(template.id)}
-              className={`group flex flex-col rounded-2xl p-2 sm:p-3 bg-white transition-all duration-150 cursor-pointer border ${
+              className={`group flex flex-col rounded-2xl p-2 sm:p-3 backdrop-blur-xl transition-all duration-150 cursor-pointer border ${
                 isSelected
-                  ? 'border-[#4B4DED] ring-2 ring-[#4B4DED]/20 shadow-md'
-                  : 'border-slate-200 hover:border-slate-300 hover:shadow-xs active:scale-[0.99]'
+                  ? 'bg-white/92 border-[#4B4DED] ring-2 ring-[#4B4DED]/20 shadow-md'
+                  : 'bg-white/68 hover:bg-white/92 border-white/85 ring-1 ring-slate-900/[0.04] shadow-[0_8px_24px_rgba(15,23,42,0.04),inset_0_1px_2px_rgba(255,255,255,0.95)] active:scale-[0.99]'
               }`}
             >
               {/* Auto-Scaled Live A4 Preview Thumbnail */}
@@ -237,7 +237,7 @@ export default function TemplateGallery({
                       e.stopPropagation();
                       setInspectTemplate(template);
                     }}
-                    className="min-h-[36px] px-2.5 rounded-xl border border-slate-200 hover:border-slate-300 bg-slate-50 hover:bg-white text-slate-600 hover:text-[#0F1B4D] text-xs font-semibold flex items-center justify-center transition-colors cursor-pointer"
+                    className="min-h-[36px] px-2.5 rounded-xl border border-white/85 ring-1 ring-slate-900/[0.05] bg-white/75 hover:bg-white text-slate-600 hover:text-[#0F1B4D] text-xs font-semibold flex items-center justify-center transition-colors cursor-pointer"
                     title="Inspect A4 layout"
                   >
                     <Eye className="w-3.5 h-3.5" />
@@ -252,7 +252,7 @@ export default function TemplateGallery({
                     className={`flex-1 min-h-[36px] py-1.5 px-2 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center justify-center gap-1.5 whitespace-nowrap ${
                       isSelected
                         ? 'bg-[#4B4DED] text-white shadow-2xs'
-                        : 'bg-slate-100 hover:bg-[#4B4DED] hover:text-white text-slate-700'
+                        : 'bg-white/75 hover:bg-[#4B4DED] hover:text-white border border-white/85 ring-1 ring-slate-900/[0.04] text-slate-700'
                     }`}
                   >
                     {isSelected ? (

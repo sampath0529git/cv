@@ -224,9 +224,9 @@ export default function AiAssistantDrawer({ isOpen, onClose }: AiAssistantDrawer
   };
 
   return (
-    <div className="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-white border-l border-slate-200 shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
+    <div className="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-white/84 backdrop-blur-2xl backdrop-saturate-150 border-l border-white/90 shadow-[-20px_0_60px_rgba(8,14,36,0.18)] flex flex-col animate-in slide-in-from-right duration-300">
       {/* Drawer Header */}
-      <div className="p-4 sm:p-5 border-b border-slate-200 bg-gradient-to-r from-indigo-50/70 via-blue-50/40 to-slate-50 flex items-center justify-between">
+      <div className="p-4 sm:p-5 border-b border-white/80 bg-white/55 backdrop-blur-md flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center shadow-xs">
             <Sparkles className="w-4 h-4" />
@@ -234,7 +234,7 @@ export default function AiAssistantDrawer({ isOpen, onClose }: AiAssistantDrawer
           <div>
             <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
               <span>freecvmakeruk.co.uk AI Assistant</span>
-              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-indigo-100 text-indigo-700">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-600">
                 PRO
               </span>
             </h3>
@@ -246,7 +246,7 @@ export default function AiAssistantDrawer({ isOpen, onClose }: AiAssistantDrawer
         <button
           type="button"
           onClick={onClose}
-          className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
+          className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-white/80 transition-colors cursor-pointer"
           title="Close AI Assistant"
         >
           <X className="w-4 h-4" />
@@ -254,13 +254,13 @@ export default function AiAssistantDrawer({ isOpen, onClose }: AiAssistantDrawer
       </div>
 
       {/* Tabs */}
-      <div className="p-2 border-b border-slate-200 bg-slate-50/80 flex items-center gap-1 text-xs font-semibold">
+      <div className="p-2 border-b border-white/80 bg-white/45 backdrop-blur-md flex items-center gap-1 text-xs font-semibold">
         <button
           type="button"
           onClick={() => setActiveTab('bullets')}
           className={`flex-1 py-2 px-2.5 rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
             activeTab === 'bullets'
-              ? 'bg-white text-indigo-600 shadow-2xs font-bold'
+              ? 'bg-white/95 text-indigo-600 shadow-2xs border border-white/90 font-bold'
               : 'text-slate-600 hover:text-slate-900'
           }`}
         >
@@ -272,7 +272,7 @@ export default function AiAssistantDrawer({ isOpen, onClose }: AiAssistantDrawer
           onClick={() => setActiveTab('summary')}
           className={`flex-1 py-2 px-2.5 rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
             activeTab === 'summary'
-              ? 'bg-white text-indigo-600 shadow-2xs font-bold'
+              ? 'bg-white/95 text-indigo-600 shadow-2xs border border-white/90 font-bold'
               : 'text-slate-600 hover:text-slate-900'
           }`}
         >
@@ -289,7 +289,7 @@ export default function AiAssistantDrawer({ isOpen, onClose }: AiAssistantDrawer
           }}
           className={`flex-1 py-2 px-2.5 rounded-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
             activeTab === 'skills'
-              ? 'bg-white text-indigo-600 shadow-2xs font-bold'
+              ? 'bg-white/95 text-indigo-600 shadow-2xs border border-white/90 font-bold'
               : 'text-slate-600 hover:text-slate-900'
           }`}
         >
@@ -311,7 +311,7 @@ export default function AiAssistantDrawer({ isOpen, onClose }: AiAssistantDrawer
                 <select
                   value={selectedExpId}
                   onChange={(e) => setSelectedExpId(e.target.value)}
-                  className="w-full text-xs rounded-lg border border-slate-200 p-2 text-slate-900 bg-white focus:ring-2 focus:ring-indigo-500"
+                  className="w-full text-xs rounded-lg border border-white/85 ring-1 ring-slate-900/[0.06] p-2 text-slate-900 bg-white/80 focus:bg-white focus:ring-2 focus:ring-indigo-500"
                 >
                   {store.experiences.map((exp) => (
                     <option key={exp.id} value={exp.id}>
@@ -325,7 +325,7 @@ export default function AiAssistantDrawer({ isOpen, onClose }: AiAssistantDrawer
                   value={customJobTitle}
                   onChange={(e) => setCustomJobTitle(e.target.value)}
                   placeholder="e.g. Senior Commercial Director"
-                  className="w-full text-xs rounded-lg border border-slate-200 p-2 text-slate-900 bg-white focus:ring-2 focus:ring-indigo-500"
+                  className="w-full text-xs rounded-lg border border-white/85 ring-1 ring-slate-900/[0.06] p-2 text-slate-900 bg-white/80 focus:bg-white focus:ring-2 focus:ring-indigo-500"
                 />
               )}
             </div>
@@ -339,7 +339,7 @@ export default function AiAssistantDrawer({ isOpen, onClose }: AiAssistantDrawer
                 onChange={(e) => setCurrentDescription(e.target.value)}
                 placeholder="e.g. Managed sales team, improved quarterly targets and launched new product"
                 rows={3}
-                className="w-full text-xs rounded-lg border border-slate-200 p-2 text-slate-900 bg-white focus:ring-2 focus:ring-indigo-500"
+                className="w-full text-xs rounded-lg border border-white/85 ring-1 ring-slate-900/[0.06] p-2 text-slate-900 bg-white/80 focus:bg-white focus:ring-2 focus:ring-indigo-500"
               />
               <p className="text-[10px] text-slate-400 mt-1">
                 AI will inject strong action verbs and quantified impact metrics (%, £, scale).
@@ -347,7 +347,7 @@ export default function AiAssistantDrawer({ isOpen, onClose }: AiAssistantDrawer
             </div>
 
             {bulletError && (
-              <div className="p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs">
+              <div className="p-2.5 rounded-lg bg-red-50/90 border border-red-200 text-red-700 text-xs">
                 {bulletError}
               </div>
             )}
@@ -442,7 +442,7 @@ export default function AiAssistantDrawer({ isOpen, onClose }: AiAssistantDrawer
                 value={summaryTargetRole}
                 onChange={(e) => setSummaryTargetRole(e.target.value)}
                 placeholder="e.g. Managing Director or Senior Software Engineer"
-                className="w-full text-xs rounded-lg border border-slate-200 p-2 text-slate-900 bg-white focus:ring-2 focus:ring-indigo-500"
+                className="w-full text-xs rounded-lg border border-white/85 ring-1 ring-slate-900/[0.06] p-2 text-slate-900 bg-white/80 focus:bg-white focus:ring-2 focus:ring-indigo-500"
               />
             </div>
 
@@ -465,8 +465,8 @@ export default function AiAssistantDrawer({ isOpen, onClose }: AiAssistantDrawer
                     onClick={() => setSummaryTone(t.id)}
                     className={`p-2 rounded-lg border text-left transition-colors cursor-pointer ${
                       summaryTone === t.id
-                        ? 'border-indigo-600 bg-indigo-50/70 text-indigo-900 font-bold'
-                        : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300'
+                        ? 'border-indigo-600 bg-indigo-50/80 text-indigo-900 font-bold'
+                        : 'border-white/85 ring-1 ring-slate-900/[0.05] bg-white/75 text-slate-700 hover:bg-white'
                     }`}
                   >
                     {t.label}
@@ -476,7 +476,7 @@ export default function AiAssistantDrawer({ isOpen, onClose }: AiAssistantDrawer
             </div>
 
             {summaryError && (
-              <div className="p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs">
+              <div className="p-2.5 rounded-lg bg-red-50/90 border border-red-200 text-red-700 text-xs">
                 {summaryError}
               </div>
             )}
@@ -575,7 +575,7 @@ export default function AiAssistantDrawer({ isOpen, onClose }: AiAssistantDrawer
             </div>
 
             {skillsError && (
-              <div className="p-2.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs">
+              <div className="p-2.5 rounded-lg bg-red-50/90 border border-red-200 text-red-700 text-xs">
                 {skillsError}
               </div>
             )}
@@ -599,7 +599,7 @@ export default function AiAssistantDrawer({ isOpen, onClose }: AiAssistantDrawer
                     return (
                       <div
                         key={idx}
-                        className="p-2.5 rounded-xl border border-slate-200/80 bg-white hover:border-indigo-200 flex items-center justify-between gap-2 transition-all shadow-2xs"
+                        className="p-2.5 rounded-xl border border-white/85 ring-1 ring-slate-900/[0.04] bg-white/75 hover:bg-white hover:border-indigo-200 flex items-center justify-between gap-2 transition-all shadow-2xs"
                       >
                         <div className="min-w-0">
                           <div className="flex items-center gap-2">

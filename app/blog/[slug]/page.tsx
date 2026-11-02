@@ -14,7 +14,7 @@ import {
 import TopNav from '@/components/navigation/TopNav';
 import Footer from '@/components/layout/Footer';
 import { BRAND_CONFIG } from '@/lib/config';
-import { BLOG_POSTS, getBlogPostBySlug } from '@/data/blogPosts';
+import { BLOG_POSTS, getBlogPostBySlug, getRelatedBlogPosts } from '@/data/blogPosts';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -201,10 +201,10 @@ export default async function BlogPostPage({ params }: Props) {
     ],
   };
 
-  const relatedPosts = BLOG_POSTS.filter((p) => p.id !== post.id);
+  const relatedPosts = getRelatedBlogPosts(post.id, 3);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F8FAFC] text-slate-900 font-sans">
+    <div className="min-h-screen flex flex-col bg-transparent text-slate-900 font-sans">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredGraph) }}
@@ -214,7 +214,7 @@ export default async function BlogPostPage({ params }: Props) {
 
       <main className="flex-1">
         {/* Breadcrumb & Editorial Header */}
-        <header className="bg-white border-b border-slate-200/85 pt-5 sm:pt-8 pb-10 sm:pb-14">
+        <header className="bg-white/44 backdrop-blur-2xl backdrop-saturate-150 border-b border-white/80 pt-5 sm:pt-8 pb-10 sm:pb-14 shadow-[0_8px_30px_rgba(15,23,42,0.03)]">
           <div className="max-w-[1160px] mx-auto px-4 sm:px-6 lg:px-8">
             <nav
               aria-label="Breadcrumb"
@@ -250,9 +250,9 @@ export default async function BlogPostPage({ params }: Props) {
                 {post.excerpt}
               </p>
 
-              <div className="mt-6 pt-5 border-t border-slate-100 flex flex-wrap items-center justify-between gap-4">
+              <div className="mt-6 pt-5 border-t border-white/75 flex flex-wrap items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-blue-50 text-[#2563EB] font-bold text-sm flex items-center justify-center shrink-0">
+                  <div className="w-9 h-9 rounded-full bg-blue-500/12 border border-white/85 backdrop-blur-md text-[#2563EB] font-bold text-sm flex items-center justify-center shrink-0">
                     {post.author.name.charAt(0)}
                   </div>
                   <div className="text-xs sm:text-[13px]">
@@ -280,7 +280,7 @@ export default async function BlogPostPage({ params }: Props) {
             <article className="lg:col-span-8 min-w-0 blog-article-content">
               {/* 16:9 Editorial Hero Cover Image */}
               <figure className="mb-8 sm:mb-10">
-                <div className="relative aspect-[16/9] w-full rounded-2xl overflow-hidden bg-slate-200 border border-slate-200/80 shadow-xs">
+                <div className="relative aspect-[16/9] w-full rounded-2xl overflow-hidden bg-slate-200 border border-white/85 ring-1 ring-slate-900/[0.05] shadow-[0_14px_38px_rgba(15,23,42,0.07)]">
                   <Image
                     src={post.image}
                     alt={post.imageAlt || post.title}
@@ -300,7 +300,7 @@ export default async function BlogPostPage({ params }: Props) {
               {post.keyTakeaways.length > 0 && (
                 <section
                   aria-label="Key Takeaways"
-                  className="mb-8 sm:mb-10 p-5 sm:p-6 rounded-2xl bg-white border border-slate-200/90 shadow-[0_2px_12px_rgba(15,23,42,0.03)]"
+                  className="mb-8 sm:mb-10 p-5 sm:p-6 rounded-2xl bg-white/66 backdrop-blur-2xl backdrop-saturate-150 border border-white/85 ring-1 ring-slate-900/[0.04] shadow-[0_12px_34px_rgba(15,23,42,0.05),inset_0_1px_2px_rgba(255,255,255,0.95)]"
                 >
                   <h2 className="text-sm sm:text-base font-bold text-[#0B112C] mb-3.5">
                     Key UK Takeaways at a Glance
@@ -322,7 +322,7 @@ export default async function BlogPostPage({ params }: Props) {
               {/* Mobile Jump-to-Section Navigation */}
               <nav
                 aria-label="Table of contents"
-                className="lg:hidden mb-8 p-4 rounded-2xl bg-white border border-slate-200/85"
+                className="lg:hidden mb-8 p-4 rounded-2xl bg-white/66 backdrop-blur-2xl backdrop-saturate-150 border border-white/85 ring-1 ring-slate-900/[0.04] shadow-[0_10px_28px_rgba(15,23,42,0.05),inset_0_1px_2px_rgba(255,255,255,0.95)]"
               >
                 <div className="text-xs font-bold text-slate-900 mb-2.5">In this guide</div>
                 <ol className="space-y-2 text-[13px]">
@@ -340,7 +340,7 @@ export default async function BlogPostPage({ params }: Props) {
               </nav>
 
               {/* Editorial Body Prose */}
-              <div className="max-w-[68ch] space-y-8 text-slate-700">
+              <div className="p-5 sm:p-8 rounded-2xl sm:rounded-3xl bg-white/64 backdrop-blur-2xl backdrop-saturate-150 border border-white/85 ring-1 ring-slate-900/[0.04] shadow-[0_14px_40px_rgba(15,23,42,0.05),inset_0_1px_2px_rgba(255,255,255,0.95)] space-y-8 text-slate-700">
                 <p className="text-base sm:text-[17.5px] text-slate-800 leading-[1.75] font-normal">
                   {renderRichEditorialText(post.content.intro)}
                 </p>
@@ -416,7 +416,7 @@ export default async function BlogPostPage({ params }: Props) {
                       <Link
                         key={tpl.href}
                         href={tpl.href}
-                        className="group p-4 rounded-2xl bg-white border border-slate-200/90 hover:border-[#2563EB] shadow-[0_1px_6px_rgba(15,23,42,0.02)] transition-all duration-150 flex flex-col justify-between gap-2"
+                        className="group p-4 rounded-2xl bg-white/64 hover:bg-white/88 backdrop-blur-2xl backdrop-saturate-150 border border-white/85 ring-1 ring-slate-900/[0.04] hover:border-[#2563EB]/55 shadow-[0_10px_28px_rgba(15,23,42,0.05),inset_0_1px_2px_rgba(255,255,255,0.95)] transition-all duration-150 flex flex-col justify-between gap-2"
                       >
                         <div>
                           <div className="flex items-center justify-between gap-2">
@@ -439,7 +439,7 @@ export default async function BlogPostPage({ params }: Props) {
               {post.faqs.length > 0 && (
                 <section
                   aria-label="Frequently Asked Questions"
-                  className="mt-10 pt-8 border-t border-slate-200"
+                  className="mt-10 pt-8 border-t border-white/80"
                 >
                   <h2 className="text-lg sm:text-xl font-bold text-[#0B112C] mb-4">
                     Frequently Asked Questions
@@ -448,7 +448,7 @@ export default async function BlogPostPage({ params }: Props) {
                     {post.faqs.map((faq, idx) => (
                       <div
                         key={idx}
-                        className="p-5 rounded-2xl bg-white border border-slate-200/90"
+                        className="p-5 rounded-2xl bg-white/64 hover:bg-white/86 backdrop-blur-2xl backdrop-saturate-150 border border-white/85 ring-1 ring-slate-900/[0.04] shadow-[0_10px_28px_rgba(15,23,42,0.04),inset_0_1px_2px_rgba(255,255,255,0.95)] transition-colors"
                       >
                         <h3 className="text-[15px] font-bold text-[#0B112C] leading-snug">
                           {faq.question}
@@ -460,9 +460,13 @@ export default async function BlogPostPage({ params }: Props) {
                 </section>
               )}
 
-              {/* Bottom Conversion Banner */}
-              <div className="mt-10 p-6 sm:p-8 rounded-2xl sm:rounded-3xl bg-[#0B112C] text-white flex flex-col sm:flex-row sm:items-center justify-between gap-5">
-                <div className="space-y-1.5">
+              {/* Smoked Sapphire Bottom Conversion Banner */}
+              <div className="relative overflow-hidden mt-10 p-6 sm:p-8 rounded-2xl sm:rounded-3xl bg-[#080E24]/86 backdrop-blur-2xl backdrop-saturate-150 border border-white/18 shadow-[0_20px_50px_rgba(8,14,36,0.26),inset_0_1px_2px_rgba(255,255,255,0.18)] text-white flex flex-col sm:flex-row sm:items-center justify-between gap-5">
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -top-16 -right-12 w-56 h-56 rounded-full bg-blue-500/20 blur-3xl"
+                />
+                <div className="relative space-y-1.5">
                   <h3 className="text-lg sm:text-xl font-bold text-white">
                     Put this UK CV advice into practice
                   </h3>
@@ -473,7 +477,7 @@ export default async function BlogPostPage({ params }: Props) {
                 </div>
                 <Link
                   href={post.content.ctaLink}
-                  className="min-h-[46px] px-6 py-3 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-semibold text-sm inline-flex items-center justify-center gap-2 transition-colors whitespace-nowrap shrink-0"
+                  className="relative min-h-[46px] px-6 py-3 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-semibold text-sm inline-flex items-center justify-center gap-2 shadow-[0_8px_24px_rgba(37,99,235,0.35)] transition-colors whitespace-nowrap shrink-0"
                 >
                   <span>{post.content.ctaText}</span>
                   <ArrowRight className="w-4 h-4 shrink-0" />
@@ -484,7 +488,7 @@ export default async function BlogPostPage({ params }: Props) {
               {relatedPosts.length > 0 && (
                 <section
                   aria-label="Related UK career guides"
-                  className="mt-12 pt-8 border-t border-slate-200"
+                  className="mt-12 pt-8 border-t border-white/80"
                 >
                   <div className="flex items-center justify-between gap-3 mb-5">
                     <h2 className="text-lg sm:text-xl font-bold text-[#0B112C]">
@@ -498,31 +502,31 @@ export default async function BlogPostPage({ params }: Props) {
                     </Link>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     {relatedPosts.map((rel) => (
                       <Link
                         key={rel.id}
                         href={`/blog/${rel.id}`}
-                        className="group rounded-2xl bg-white border border-slate-200/90 hover:border-[#2563EB] overflow-hidden shadow-[0_2px_12px_rgba(15,23,42,0.03)] transition-all flex flex-col justify-between"
+                        className="group rounded-2xl bg-white/64 hover:bg-white/88 backdrop-blur-2xl backdrop-saturate-150 border border-white/85 ring-1 ring-slate-900/[0.04] hover:border-[#2563EB]/55 overflow-hidden shadow-[0_10px_30px_rgba(15,23,42,0.05),inset_0_1px_2px_rgba(255,255,255,0.95)] transition-all flex flex-col justify-between"
                       >
                         <div className="relative aspect-[16/9] w-full bg-slate-100 overflow-hidden">
                           <Image
                             src={rel.image}
                             alt={rel.imageAlt || rel.title}
                             fill
-                            sizes="(max-width: 640px) 100vw, 380px"
+                            sizes="(max-width: 640px) 100vw, 260px"
                             className="object-cover group-hover:scale-[1.03] transition-transform duration-300"
                             referrerPolicy="no-referrer"
                           />
                         </div>
-                        <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between gap-3">
+                        <div className="p-4 flex-1 flex flex-col justify-between gap-3">
                           <div>
-                            <div className="flex items-center gap-1.5 text-[11px] font-medium text-slate-500">
+                            <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[11px] font-medium text-slate-500">
                               <span className="font-semibold text-[#2563EB]">{rel.category}</span>
                               <span aria-hidden="true">·</span>
-                              <span>{rel.readTime}</span>
+                              <span className="tabular-nums">{rel.readTime}</span>
                             </div>
-                            <h3 className="text-[15px] font-bold text-[#0B112C] group-hover:text-[#2563EB] transition-colors mt-1.5 leading-snug line-clamp-2">
+                            <h3 className="text-sm font-bold text-[#0B112C] group-hover:text-[#2563EB] transition-colors mt-1.5 leading-snug line-clamp-2">
                               {rel.title}
                             </h3>
                           </div>
@@ -538,15 +542,15 @@ export default async function BlogPostPage({ params }: Props) {
               )}
             </article>
 
-            {/* Right Sticky Sidebar (Desktop lg+): Table of Contents + Quick Template Links */}
-            <aside className="hidden lg:block lg:col-span-4 sticky top-[88px] space-y-6">
+            {/* Right Sticky Sidebar (Desktop lg+): Table of Contents + Read Next + Quick Builder Card */}
+            <aside className="hidden lg:block lg:col-span-4 sticky top-[88px] space-y-5">
               {/* Table of Contents */}
-              <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-[0_2px_12px_rgba(15,23,42,0.03)]">
-                <div className="flex items-center gap-2 text-xs font-bold text-[#0B112C] mb-3.5">
+              <div className="p-5 rounded-2xl bg-white/66 backdrop-blur-2xl backdrop-saturate-150 border border-white/85 ring-1 ring-slate-900/[0.04] shadow-[0_12px_34px_rgba(15,23,42,0.06),inset_0_1px_2px_rgba(255,255,255,0.95)]">
+                <div className="flex items-center gap-2 text-xs font-bold text-[#0B112C] mb-3">
                   <BookOpen className="w-4 h-4 text-[#2563EB]" />
                   <span>On this page</span>
                 </div>
-                <ol className="space-y-2.5 text-[13px]">
+                <ol className="space-y-2 text-[13px]">
                   {post.content.sections.map((sec) => (
                     <li key={sec.id}>
                       <a
@@ -560,30 +564,91 @@ export default async function BlogPostPage({ params }: Props) {
                 </ol>
               </div>
 
-              {/* Quick UK CV Builder Card */}
-              <div className="p-5 rounded-2xl bg-[#0B112C] text-white space-y-4">
-                <div className="flex items-center gap-2 text-xs font-semibold text-blue-300">
+              {/* Read Next: 3 Related Articles Based on Category */}
+              {relatedPosts.length > 0 && (
+                <nav
+                  aria-labelledby="sidebar-read-next-heading"
+                  className="p-5 rounded-2xl bg-white/66 backdrop-blur-2xl backdrop-saturate-150 border border-white/85 ring-1 ring-slate-900/[0.04] shadow-[0_12px_34px_rgba(15,23,42,0.06),inset_0_1px_2px_rgba(255,255,255,0.95)]"
+                >
+                  <div className="flex items-center justify-between gap-2 mb-3.5">
+                    <h2
+                      id="sidebar-read-next-heading"
+                      className="text-xs font-bold uppercase tracking-[0.08em] text-[#0B112C]"
+                    >
+                      Read Next
+                    </h2>
+                    <Link
+                      href="/blog"
+                      className="text-[11px] font-semibold text-[#2563EB] hover:text-[#1D4ED8] transition-colors"
+                    >
+                      All guides
+                    </Link>
+                  </div>
+
+                  <ul className="divide-y divide-white/75">
+                    {relatedPosts.map((related) => (
+                      <li key={related.id} className="py-3.5 first:pt-0 last:pb-0">
+                        <Link
+                          href={`/blog/${related.id}`}
+                          className="group flex items-start gap-3 rounded-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#2563EB]"
+                        >
+                          <div className="relative w-14 h-14 rounded-xl overflow-hidden bg-slate-100 border border-white/85 ring-1 ring-slate-900/[0.05] shrink-0 mt-0.5">
+                            <Image
+                              src={related.image}
+                              alt={related.imageAlt || related.title}
+                              fill
+                              sizes="56px"
+                              className="object-cover group-hover:scale-105 transition-transform duration-300"
+                              referrerPolicy="no-referrer"
+                            />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[11px] font-medium text-slate-500">
+                              <span className="font-semibold text-[#2563EB]">
+                                {related.category}
+                              </span>
+                              <span aria-hidden="true">·</span>
+                              <span className="tabular-nums">{related.readTime}</span>
+                            </div>
+                            <h3 className="text-[13px] font-bold text-[#0B112C] group-hover:text-[#2563EB] transition-colors leading-snug mt-1 line-clamp-2">
+                              {related.title}
+                            </h3>
+                          </div>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+              )}
+
+              {/* Smoked Sapphire Quick UK CV Builder Card */}
+              <div className="relative overflow-hidden p-5 rounded-2xl bg-[#080E24]/86 backdrop-blur-2xl backdrop-saturate-150 border border-white/18 shadow-[0_18px_46px_rgba(8,14,36,0.26),inset_0_1px_2px_rgba(255,255,255,0.18)] text-white space-y-3.5">
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -top-12 -right-10 w-36 h-36 rounded-full bg-blue-500/22 blur-2xl"
+                />
+                <div className="relative flex items-center gap-2 text-xs font-semibold text-blue-300">
                   <FileText className="w-4 h-4 text-blue-400" />
                   <span>Free British A4 Builder</span>
                 </div>
-                <h3 className="text-base font-bold text-white leading-snug">
+                <h3 className="relative text-[15px] font-bold text-white leading-snug">
                   Build an ATS-ready UK CV in minutes
                 </h3>
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <p className="relative text-xs text-slate-300 leading-relaxed">
                   Choose from 20+ recruiter-tested British templates or import an existing PDF/Word
                   CV with instant free downloads.
                 </p>
-                <div className="space-y-2 pt-1">
+                <div className="relative space-y-2 pt-0.5">
                   <Link
                     href="/start"
-                    className="w-full min-h-[42px] px-4 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors whitespace-nowrap"
+                    className="w-full min-h-[40px] px-4 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-semibold flex items-center justify-center gap-1.5 shadow-[0_6px_18px_rgba(37,99,235,0.35)] transition-colors whitespace-nowrap"
                   >
                     <span>Start Free UK CV</span>
                     <ArrowRight className="w-3.5 h-3.5 shrink-0" />
                   </Link>
                   <Link
                     href="/cv-templates"
-                    className="w-full min-h-[40px] px-4 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-semibold flex items-center justify-center transition-colors whitespace-nowrap"
+                    className="w-full min-h-[38px] px-4 rounded-xl bg-white/10 hover:bg-white/18 backdrop-blur-md border border-white/18 text-white text-xs font-semibold flex items-center justify-center transition-colors whitespace-nowrap"
                   >
                     Browse A4 Templates
                   </Link>

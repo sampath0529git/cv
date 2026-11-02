@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getGeminiClient, SUMMARY_REWRITE_MODEL } from '@/lib/gemini';
+import {
+  SUMMARY_REWRITE_MODEL,
+  generateContentWithFallback,
+  formatGeminiRouteError,
+} from '@/lib/gemini';
 
 interface RewriteExperienceContext {
   jobTitle?: string;
@@ -52,7 +56,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const ai = getGeminiClient();
+
 
     const languageRule = language.toLowerCase().includes('français')
       ? 'Write the output in professional French suitable for a modern CV.'
@@ -116,8 +120,8 @@ export async function POST(req: NextRequest) {
           contextLines.join('\n'),
         ].join('\n\n');
 
-    const response = await ai.models.generateContent({
-      model: SUMMARY_REWRITE_MODEL,
+    const response = await generateContentWithFallback({
+      preferredModel: SUMMARY_REWRITE_MODEL,
       contents: userPrompt,
       config: {
         systemInstruction,
@@ -140,10 +144,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ summary: cleanedSummary });
   } catch (err: unknown) {
     console.error('AI summary rewrite error:', err);
-    const message =
-      err instanceof Error && err.message
-        ? err.message
-        : 'Unable to rewrite summary right now. Please try again.';
-    return NextResponse.json({ error: message }, { status: 500 });
+    const { message, status } = formatGeminiRouteError(
+      err,
+      'Unable to rewrite summary right now. Please try again.'
+    );
+    return NextResponse.json({ error: message }, { status });
   }
 }

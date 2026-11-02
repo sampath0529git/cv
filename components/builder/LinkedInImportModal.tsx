@@ -361,7 +361,7 @@ export default function LinkedInImportModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-[#0F1B4D]/45 backdrop-blur-[2px] p-0 sm:p-4"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-[#080E24]/52 backdrop-blur-md p-0 sm:p-4"
       onClick={handleCloseModal}
     >
       <div
@@ -369,13 +369,13 @@ export default function LinkedInImportModal({
         aria-modal="true"
         aria-labelledby="linkedin-import-modal-title"
         onClick={(e) => e.stopPropagation()}
-        className="w-full sm:max-w-[580px] max-h-[92vh] flex flex-col bg-white rounded-t-3xl sm:rounded-3xl border border-[#E8EAF5] shadow-[0_20px_60px_rgba(15,27,77,0.18)] overflow-hidden"
+        className="w-full sm:max-w-[580px] max-h-[92vh] flex flex-col bg-white/84 backdrop-blur-2xl backdrop-saturate-150 rounded-t-3xl sm:rounded-3xl border border-white/90 ring-1 ring-slate-900/[0.05] shadow-[0_24px_70px_rgba(8,14,36,0.26),inset_0_1px_2px_rgba(255,255,255,0.95)] overflow-hidden"
       >
         {/* Modal Header */}
-        <div className="px-5 sm:px-6 pt-5 pb-4 border-b border-slate-100 flex items-start justify-between gap-3 shrink-0">
+        <div className="px-5 sm:px-6 pt-5 pb-4 border-b border-white/80 flex items-start justify-between gap-3 shrink-0">
           <div className="min-w-0">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-[#0A66C2]/10 text-[#0A66C2] flex items-center justify-center shrink-0">
+              <div className="w-8 h-8 rounded-xl bg-[#0A66C2]/12 border border-white/85 text-[#0A66C2] flex items-center justify-center shrink-0">
                 <Linkedin className="w-4 h-4" />
               </div>
               <h2
@@ -393,7 +393,7 @@ export default function LinkedInImportModal({
             type="button"
             onClick={handleCloseModal}
             aria-label="Close LinkedIn import dialog"
-            className="min-h-[36px] min-w-[36px] rounded-xl text-slate-400 hover:text-[#0F1B4D] hover:bg-slate-100 flex items-center justify-center transition-colors cursor-pointer shrink-0"
+            className="min-h-[36px] min-w-[36px] rounded-xl text-slate-400 hover:text-[#0F1B4D] hover:bg-white/80 flex items-center justify-center transition-colors cursor-pointer shrink-0"
           >
             <X className="w-4 h-4" />
           </button>
@@ -402,14 +402,14 @@ export default function LinkedInImportModal({
         {/* Scrollable Body */}
         <div className="p-5 sm:p-6 overflow-y-auto space-y-5 flex-1">
           {errorMessage && (
-            <div className="p-3.5 rounded-xl border border-red-200 bg-red-50/70 flex items-start gap-2.5 text-xs sm:text-sm text-red-700">
+            <div className="p-3.5 rounded-xl border border-red-200 bg-red-50/85 backdrop-blur-md flex items-start gap-2.5 text-xs sm:text-sm text-red-700">
               <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
               <span className="leading-relaxed">{errorMessage}</span>
             </div>
           )}
 
           {/* Section 1: LinkedIn OAuth 2.0 Connection */}
-          <div className="rounded-2xl border border-[#E8EAF5] bg-[#FAFBFD] p-4 sm:p-5 space-y-3.5">
+          <div className="rounded-2xl border border-white/85 ring-1 ring-slate-900/[0.04] bg-white/64 backdrop-blur-xl p-4 sm:p-5 space-y-3.5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="min-w-0">
                 <h3 className="text-sm font-bold text-[#0F1B4D]">
@@ -421,7 +421,7 @@ export default function LinkedInImportModal({
               </div>
 
               {isLoadingConfig ? (
-                <div className="min-h-[42px] px-4 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-500 inline-flex items-center justify-center gap-2 shrink-0 whitespace-nowrap">
+                <div className="min-h-[42px] px-4 rounded-xl border border-white/85 bg-white/80 text-xs font-semibold text-slate-500 inline-flex items-center justify-center gap-2 shrink-0 whitespace-nowrap">
                   <Loader2 className="w-3.5 h-3.5 animate-spin text-[#0A66C2]" />
                   <span>Checking OAuth...</span>
                 </div>
@@ -503,7 +503,7 @@ export default function LinkedInImportModal({
 
           {/* Authenticated / Parsed Preview Summary */}
           {importedPayload && (
-            <div className="rounded-2xl border border-[#DCE3F7] bg-white p-4 sm:p-5 space-y-3">
+            <div className="rounded-2xl border border-white/85 ring-1 ring-slate-900/[0.04] bg-white/72 backdrop-blur-xl p-4 sm:p-5 space-y-3">
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
                   {importedPayload.photoUrl ? (
@@ -511,7 +511,7 @@ export default function LinkedInImportModal({
                       src={importedPayload.photoUrl}
                       alt={fullNamePreview || 'LinkedIn profile'}
                       referrerPolicy="no-referrer"
-                      className="w-11 h-11 rounded-full object-cover border border-slate-200 shrink-0"
+                      className="w-11 h-11 rounded-full object-cover border border-white/85 shrink-0"
                     />
                   ) : (
                     <div className="w-11 h-11 rounded-full bg-[#EEF1FF] text-[#4B4DED] font-bold text-sm flex items-center justify-center shrink-0">
@@ -534,7 +534,7 @@ export default function LinkedInImportModal({
                   type="button"
                   onClick={() => setImportedPayload(null)}
                   title="Clear extracted preview"
-                  className="min-h-[34px] px-2.5 rounded-lg text-xs font-semibold text-slate-500 hover:text-slate-800 hover:bg-slate-100 inline-flex items-center gap-1 cursor-pointer shrink-0 whitespace-nowrap"
+                  className="min-h-[34px] px-2.5 rounded-lg text-xs font-semibold text-slate-500 hover:text-slate-800 hover:bg-white/80 inline-flex items-center gap-1 cursor-pointer shrink-0 whitespace-nowrap"
                 >
                   <RefreshCw className="w-3.5 h-3.5" />
                   <span>Reset</span>
@@ -542,7 +542,7 @@ export default function LinkedInImportModal({
               </div>
 
               {/* Unboxed Tabular Stats Line (Zero-Pill Rule) */}
-              <p className="text-xs text-slate-600 tabular-nums pt-2 border-t border-slate-100">
+              <p className="text-xs text-slate-600 tabular-nums pt-2 border-t border-white/75">
                 <span className="font-semibold text-[#0F1B4D]">{expCount}</span>{' '}
                 {expCount === 1 ? 'role' : 'roles'}
                 <span aria-hidden="true" className="mx-1.5 text-slate-300">
@@ -586,13 +586,13 @@ export default function LinkedInImportModal({
                 </p>
               </div>
 
-              <div className="inline-flex bg-[#F4F7FE] p-1 rounded-xl border border-[#E4E9FA] self-start shrink-0">
+              <div className="inline-flex bg-white/60 backdrop-blur-md p-1 rounded-xl border border-white/85 ring-1 ring-slate-900/[0.04] self-start shrink-0">
                 <button
                   type="button"
                   onClick={() => setEnrichMode('pdf')}
                   className={`min-h-[32px] px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
                     enrichMode === 'pdf'
-                      ? 'bg-white text-[#4B4DED] shadow-2xs border border-[#DCE3F7]'
+                      ? 'bg-white/95 text-[#4B4DED] shadow-2xs border border-white/90'
                       : 'text-slate-600 hover:text-[#0F1B4D]'
                   }`}
                 >
@@ -603,7 +603,7 @@ export default function LinkedInImportModal({
                   onClick={() => setEnrichMode('text')}
                   className={`min-h-[32px] px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
                     enrichMode === 'text'
-                      ? 'bg-white text-[#4B4DED] shadow-2xs border border-[#DCE3F7]'
+                      ? 'bg-white/95 text-[#4B4DED] shadow-2xs border border-white/90'
                       : 'text-slate-600 hover:text-[#0F1B4D]'
                   }`}
                 >
@@ -636,12 +636,12 @@ export default function LinkedInImportModal({
                     setIsDraggingPdf(false);
                     handleSelectPdfFile(e.dataTransfer.files?.[0]);
                   }}
-                  className={`p-5 rounded-2xl border-2 border-dashed transition-colors text-center cursor-pointer ${
+                  className={`p-5 rounded-2xl border-2 border-dashed backdrop-blur-xl transition-colors text-center cursor-pointer ${
                     isDraggingPdf
-                      ? 'border-[#4B4DED] bg-[#EEF1FF]/50'
+                      ? 'border-[#4B4DED] bg-blue-50/75'
                       : selectedPdfFile
-                      ? 'border-[#4B4DED]/60 bg-[#FAFBFD]'
-                      : 'border-slate-200 hover:border-[#4B4DED] bg-[#FAFBFD]'
+                      ? 'border-[#4B4DED]/60 bg-white/75'
+                      : 'border-indigo-200/85 hover:border-[#4B4DED] bg-white/56 hover:bg-white/80'
                   }`}
                 >
                   {selectedPdfFile ? (
@@ -692,7 +692,7 @@ export default function LinkedInImportModal({
                   value={pastedText}
                   onChange={(e) => setPastedText(e.target.value)}
                   placeholder="Paste your LinkedIn headline, About summary, Experience roles, Education, and Skills here..."
-                  className="w-full p-3.5 rounded-2xl border border-slate-200 bg-[#FAFBFD] focus:bg-white text-base sm:text-xs text-slate-900 placeholder:text-slate-400 focus:outline-hidden focus:border-[#4B4DED] focus:ring-3 focus:ring-[#4B4DED]/12 leading-relaxed"
+                  className="w-full p-3.5 rounded-2xl border border-white/85 ring-1 ring-slate-900/[0.05] bg-white/75 focus:bg-white/95 backdrop-blur-md text-base sm:text-xs text-slate-900 placeholder:text-slate-400 focus:outline-hidden focus:border-[#4B4DED] focus:ring-3 focus:ring-[#4B4DED]/12 leading-relaxed"
                 />
               </div>
             )}
@@ -705,7 +705,7 @@ export default function LinkedInImportModal({
                   isParsingProfile ||
                   (enrichMode === 'pdf' ? !selectedPdfFile : !pastedText.trim())
                 }
-                className="min-h-[40px] px-4 py-2 rounded-xl border border-[#DCE3F7] bg-white hover:bg-[#EEF1FF]/70 hover:border-[#4B4DED]/60 text-[#0F1B4D] text-xs sm:text-sm font-semibold inline-flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap shrink-0"
+                className="min-h-[40px] px-4 py-2 rounded-xl border border-white/85 ring-1 ring-slate-900/[0.05] bg-white/80 hover:bg-white hover:border-[#4B4DED]/60 text-[#0F1B4D] text-xs sm:text-sm font-semibold inline-flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap shrink-0"
               >
                 {isParsingProfile ? (
                   <>
@@ -728,17 +728,17 @@ export default function LinkedInImportModal({
 
           {/* Import Strategy Selector when payload is ready */}
           {importedPayload && (
-            <div className="pt-2 border-t border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+            <div className="pt-2 border-t border-white/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
               <span className="text-xs font-semibold text-[#0F1B4D]">
                 How should this populate your CV?
               </span>
-              <div className="inline-flex bg-[#F4F7FE] p-1 rounded-xl border border-[#E4E9FA] self-start shrink-0">
+              <div className="inline-flex bg-white/60 backdrop-blur-md p-1 rounded-xl border border-white/85 ring-1 ring-slate-900/[0.04] self-start shrink-0">
                 <button
                   type="button"
                   onClick={() => setApplyMode('replace')}
                   className={`min-h-[32px] px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
                     applyMode === 'replace'
-                      ? 'bg-white text-[#4B4DED] shadow-2xs border border-[#DCE3F7]'
+                      ? 'bg-white/95 text-[#4B4DED] shadow-2xs border border-white/90'
                       : 'text-slate-600 hover:text-[#0F1B4D]'
                   }`}
                 >
@@ -749,7 +749,7 @@ export default function LinkedInImportModal({
                   onClick={() => setApplyMode('merge')}
                   className={`min-h-[32px] px-3 py-1 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
                     applyMode === 'merge'
-                      ? 'bg-white text-[#4B4DED] shadow-2xs border border-[#DCE3F7]'
+                      ? 'bg-white/95 text-[#4B4DED] shadow-2xs border border-white/90'
                       : 'text-slate-600 hover:text-[#0F1B4D]'
                   }`}
                 >
@@ -761,11 +761,11 @@ export default function LinkedInImportModal({
         </div>
 
         {/* Modal Footer */}
-        <div className="px-5 sm:px-6 py-3.5 bg-[#F8F9FE] border-t border-slate-100 flex items-center justify-between gap-3 shrink-0 pb-[max(0.875rem,env(safe-area-inset-bottom))]">
+        <div className="px-5 sm:px-6 py-3.5 bg-white/55 backdrop-blur-md border-t border-white/80 flex items-center justify-between gap-3 shrink-0 pb-[max(0.875rem,env(safe-area-inset-bottom))]">
           <button
             type="button"
             onClick={handleCloseModal}
-            className="min-h-[40px] px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-[#0F1B4D] hover:bg-white border border-transparent hover:border-slate-200 transition-colors cursor-pointer whitespace-nowrap shrink-0"
+            className="min-h-[40px] px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-[#0F1B4D] hover:bg-white/85 border border-transparent hover:border-white/90 transition-colors cursor-pointer whitespace-nowrap shrink-0"
           >
             Cancel
           </button>

@@ -10,16 +10,16 @@ export default function HeroSection() {
   return (
     <section
       aria-label="freecvmakeruk.co.uk Hero"
-      className="relative overflow-hidden w-full bg-gradient-to-b from-[#F0F5FF] via-[#F8FAFF] to-white pt-4 sm:pt-10 lg:pt-14 pb-8 sm:pb-16 lg:pb-20 border-b border-slate-100"
+      className="relative overflow-hidden w-full bg-gradient-to-b from-blue-100/35 via-white/25 to-white/10 pt-4 sm:pt-10 lg:pt-14 pb-8 sm:pb-16 lg:pb-20 border-b border-white/75"
     >
       {/* Multi-layered soft ambient glass glows */}
       <div
         aria-hidden="true"
-        className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-br from-blue-300/35 via-indigo-200/30 to-purple-200/25 rounded-full blur-3xl pointer-events-none -translate-y-1/3 translate-x-1/4"
+        className="absolute top-0 right-0 w-[640px] h-[640px] bg-gradient-to-br from-blue-400/30 via-indigo-300/25 to-purple-300/20 rounded-full blur-3xl pointer-events-none -translate-y-1/4 translate-x-1/5"
       />
       <div
         aria-hidden="true"
-        className="absolute top-1/2 left-0 w-[450px] h-[450px] bg-gradient-to-tr from-cyan-200/30 to-blue-200/20 rounded-full blur-3xl pointer-events-none -translate-y-1/2 -translate-x-1/3"
+        className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-gradient-to-tr from-sky-300/30 to-emerald-200/20 rounded-full blur-3xl pointer-events-none -translate-y-1/2 -translate-x-1/4"
       />
 
       <div className="relative z-10 max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -78,9 +78,9 @@ export default function HeroSection() {
 
               <Link
                 href="/import"
-                className="min-h-[44px] sm:min-h-[52px] inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2 sm:py-3.5 rounded-full bg-white/75 hover:bg-white/95 backdrop-blur-xl text-slate-800 font-semibold text-[14px] sm:text-base border border-white/80 shadow-[0_4px_20px_rgba(15,23,42,0.05),inset_0_1px_2px_rgba(255,255,255,0.95)] hover:shadow-[0_8px_24px_rgba(15,23,42,0.08)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-200 whitespace-nowrap cursor-pointer"
+                className="min-h-[44px] sm:min-h-[52px] inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2 sm:py-3.5 rounded-full bg-white/62 hover:bg-white/88 backdrop-blur-2xl backdrop-saturate-150 text-slate-800 font-semibold text-[14px] sm:text-base border border-white/85 ring-1 ring-slate-900/[0.04] shadow-[0_8px_28px_rgba(15,23,42,0.06),inset_0_1px_2px_rgba(255,255,255,0.95)] hover:shadow-[0_12px_32px_rgba(37,99,235,0.12)] hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all duration-200 whitespace-nowrap cursor-pointer"
               >
-                <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-blue-50/80 text-[#2563EB] flex items-center justify-center">
+                <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-blue-500/12 border border-blue-400/25 text-[#2563EB] flex items-center justify-center">
                   <Upload className="w-2.5 h-2.5 sm:w-3 sm:h-3 stroke-[2.5]" />
                 </div>
                 <span>Import My CV</span>
@@ -94,7 +94,7 @@ export default function HeroSection() {
                 transition={{ duration: 0.5, delay: 0.32, ease: [0.22, 1, 0.36, 1] }}
                 className="pt-1 sm:pt-3"
               >
-                <div className="inline-flex items-center gap-3 bg-white/70 backdrop-blur-xl border border-white/80 rounded-2xl px-3.5 py-2 shadow-[0_4px_20px_rgba(15,23,42,0.04),inset_0_1px_1px_rgba(255,255,255,0.95)]">
+                <div className="inline-flex items-center gap-3 bg-white/60 backdrop-blur-2xl backdrop-saturate-150 border border-white/85 ring-1 ring-slate-900/[0.04] rounded-2xl px-3.5 py-2 shadow-[0_10px_30px_rgba(15,23,42,0.06),inset_0_1px_2px_rgba(255,255,255,0.95)]">
                   <div className="flex items-center -space-x-2 shrink-0">
                     <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full border-2 border-white overflow-hidden bg-slate-200 relative shadow-xs">
                       <Image
@@ -154,9 +154,9 @@ export default function HeroSection() {
               transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
               className="lg:col-span-6 xl:col-span-6 relative flex justify-center items-center w-full mt-2 lg:mt-0"
             >
-              <div className="relative w-full max-w-[480px] lg:max-w-[540px] aspect-[16/11] sm:aspect-[1.15/1] flex items-center justify-center">
+              <div className="relative w-full max-w-[480px] lg:max-w-[540px] aspect-[16/11] sm:aspect-[1.15/1] flex items-center justify-center rounded-3xl bg-white/44 backdrop-blur-2xl backdrop-saturate-150 border border-white/85 ring-1 ring-slate-900/[0.04] p-2.5 sm:p-4 shadow-[0_20px_54px_rgba(37,99,235,0.12),inset_0_1px_2px_rgba(255,255,255,0.95)]">
                 {/* Background Soft Pastel Halo */}
-                <div className="absolute inset-0 bg-gradient-to-tr from-blue-300/40 via-cyan-200/40 to-indigo-200/50 rounded-3xl blur-2xl transform scale-95" />
+                <div className="absolute inset-0 bg-gradient-to-tr from-blue-400/35 via-sky-300/30 to-indigo-300/35 rounded-3xl blur-2xl transform scale-95 pointer-events-none" />
 
                 {/* Candidate Composition Artwork */}
                 <div className="relative z-10 w-full h-full rounded-2xl overflow-hidden flex items-center justify-center">
@@ -171,8 +171,8 @@ export default function HeroSection() {
                   />
                 </div>
 
-                {/* Floating Badge: Frosted Glass Dark Aesthetic */}
-                <div className="absolute top-3 sm:top-8 right-2 sm:right-6 z-20 px-3 sm:px-4 py-1.5 rounded-full bg-slate-950/75 backdrop-blur-xl text-white text-[10px] sm:text-xs font-semibold flex items-center gap-1.5 shadow-[0_8px_32px_rgba(0,0,0,0.35),inset_0_1px_1px_rgba(255,255,255,0.25)] border border-white/20">
+                {/* Floating Badge: Frosted Smoked Glass Aesthetic */}
+                <div className="absolute top-3 sm:top-6 right-2.5 sm:right-5 z-20 px-3 sm:px-4 py-1.5 rounded-full bg-[#080E24]/80 backdrop-blur-2xl backdrop-saturate-150 text-white text-[10px] sm:text-xs font-semibold flex items-center gap-1.5 shadow-[0_10px_32px_rgba(8,14,36,0.35),inset_0_1px_1px_rgba(255,255,255,0.28)] border border-white/20">
                   <Check className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-400 stroke-[3]" />
                   <span>Professional &amp; Modern</span>
                 </div>

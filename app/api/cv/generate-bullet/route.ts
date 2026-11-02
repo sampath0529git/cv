@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getGeminiClient, BULLET_GENERATE_MODEL } from '@/lib/gemini';
+import {
+  BULLET_GENERATE_MODEL,
+  generateContentWithFallback,
+  formatGeminiRouteError,
+} from '@/lib/gemini';
 
 interface GenerateBulletPayload {
   jobTitle?: string;
@@ -27,7 +31,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const ai = getGeminiClient();
+
 
     const languageRule = language.toLowerCase().includes('français')
       ? 'Write the bullet point in professional French suitable for a modern CV.'
@@ -61,8 +65,8 @@ export async function POST(req: NextRequest) {
       prompt += `Generate ONE high-impact achievement bullet point demonstrating proven value and quantifiable success in this role.`;
     }
 
-    const response = await ai.models.generateContent({
-      model: BULLET_GENERATE_MODEL,
+    const response = await generateContentWithFallback({
+      preferredModel: BULLET_GENERATE_MODEL,
       contents: prompt,
       config: {
         systemInstruction,
@@ -83,10 +87,10 @@ export async function POST(req: NextRequest) {
     });
   } catch (error: unknown) {
     console.error('Bullet generation error:', error);
-    const message =
-      error instanceof Error && error.message
-        ? error.message
-        : 'Failed to generate achievement bullet point. Please try again.';
-    return NextResponse.json({ error: message }, { status: 500 });
+    const { message, status } = formatGeminiRouteError(
+      error,
+      'Failed to generate achievement bullet point. Please try again.'
+    );
+    return NextResponse.json({ error: message }, { status });
   }
 }

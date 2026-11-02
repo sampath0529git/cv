@@ -26,10 +26,10 @@ export default function StartOptionCard({
   return (
     <Link
       href={href}
-      className={`group flex flex-col justify-between w-full rounded-2xl sm:rounded-3xl bg-white border transition-colors duration-150 p-5 sm:p-7 cursor-pointer ${
+      className={`group flex flex-col justify-between w-full rounded-2xl sm:rounded-3xl bg-white/64 hover:bg-white/86 backdrop-blur-2xl backdrop-saturate-150 border transition-all duration-200 p-5 sm:p-7 cursor-pointer ${
         recommended
-          ? 'border-[#2563EB]/45 shadow-[0_8px_28px_rgba(37,99,235,0.08)] hover:border-[#2563EB]'
-          : 'border-slate-200/90 shadow-[0_2px_16px_rgba(15,23,42,0.03)] hover:border-slate-300'
+          ? 'border-blue-400/60 shadow-[0_14px_40px_rgba(37,99,235,0.10),inset_0_1px_2px_rgba(255,255,255,0.95)] hover:border-[#2563EB]'
+          : 'border-white/85 ring-1 ring-slate-900/[0.04] shadow-[0_12px_36px_rgba(15,23,42,0.06),inset_0_1px_2px_rgba(255,255,255,0.95)] hover:border-blue-300/70'
       }`}
     >
       <div>
@@ -47,7 +47,7 @@ export default function StartOptionCard({
         </div>
 
         <div className="flex items-start gap-4 mb-3">
-          <div className="w-12 h-12 rounded-2xl bg-blue-50 text-[#2563EB] flex items-center justify-center shrink-0">
+          <div className="w-12 h-12 rounded-2xl bg-blue-500/12 border border-blue-400/25 text-[#2563EB] flex items-center justify-center shrink-0 shadow-[inset_0_1px_1px_rgba(255,255,255,0.85)]">
             {icon}
           </div>
           <div className="min-w-0">

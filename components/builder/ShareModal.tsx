@@ -132,7 +132,7 @@ export default function ShareModal({ isOpen, onClose }: ShareModalProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-[#0F1B4D]/45 backdrop-blur-[2px] p-0 sm:p-4"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-[#080E24]/52 backdrop-blur-md p-0 sm:p-4"
       onClick={onClose}
     >
       <div
@@ -140,13 +140,13 @@ export default function ShareModal({ isOpen, onClose }: ShareModalProps) {
         aria-modal="true"
         aria-labelledby="share-cv-modal-title"
         onClick={(e) => e.stopPropagation()}
-        className="w-full sm:max-w-[520px] bg-white rounded-t-3xl sm:rounded-3xl border border-[#E8EAF5] shadow-[0_20px_60px_rgba(15,27,77,0.18)] overflow-hidden"
+        className="w-full sm:max-w-[520px] bg-white/84 backdrop-blur-2xl backdrop-saturate-150 rounded-t-3xl sm:rounded-3xl border border-white/90 ring-1 ring-slate-900/[0.05] shadow-[0_24px_70px_rgba(8,14,36,0.26),inset_0_1px_2px_rgba(255,255,255,0.95)] overflow-hidden"
       >
         {/* Modal Header */}
-        <div className="px-5 sm:px-6 pt-5 pb-4 border-b border-slate-100 flex items-start justify-between gap-3">
+        <div className="px-5 sm:px-6 pt-5 pb-4 border-b border-white/80 flex items-start justify-between gap-3">
           <div className="min-w-0">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-xl bg-[#EEF1FF] text-[#4B4DED] flex items-center justify-center shrink-0">
+              <div className="w-8 h-8 rounded-xl bg-[#4B4DED]/12 border border-white/85 text-[#4B4DED] flex items-center justify-center shrink-0">
                 <Link2 className="w-4 h-4" />
               </div>
               <h2
@@ -185,7 +185,7 @@ export default function ShareModal({ isOpen, onClose }: ShareModalProps) {
                 </span>
               )}
             </div>
-            <div className="grid grid-cols-4 gap-1.5 bg-[#F4F7FE] p-1 rounded-xl border border-[#E4E9FA]">
+            <div className="grid grid-cols-4 gap-1.5 bg-white/60 backdrop-blur-md p-1 rounded-xl border border-white/85 ring-1 ring-slate-900/[0.04]">
               {SHARE_EXPIRY_OPTIONS.map((opt) => {
                 const active = preset === opt.id;
                 return (
@@ -195,7 +195,7 @@ export default function ShareModal({ isOpen, onClose }: ShareModalProps) {
                     onClick={() => handleSelectPreset(opt.id)}
                     className={`min-h-[36px] px-2 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap tabular-nums ${
                       active
-                        ? 'bg-white text-[#4B4DED] shadow-xs border border-[#DCE3F7]'
+                        ? 'bg-white/95 text-[#4B4DED] shadow-xs border border-white/90'
                         : 'text-slate-600 hover:text-[#0F1B4D]'
                     }`}
                   >
@@ -224,7 +224,7 @@ export default function ShareModal({ isOpen, onClose }: ShareModalProps) {
                   readOnly
                   value={isGenerating ? 'Encoding CV snapshot...' : shareData?.url || ''}
                   onFocus={(e) => e.currentTarget.select()}
-                  className="w-full min-h-[42px] px-3.5 py-2 rounded-xl border border-slate-200 bg-[#FAFBFD] text-xs font-mono text-slate-700 focus:outline-hidden focus:border-[#4B4DED] truncate"
+                  className="w-full min-h-[42px] px-3.5 py-2 rounded-xl border border-white/85 ring-1 ring-slate-900/[0.05] bg-white/75 backdrop-blur-md text-xs font-mono text-slate-700 focus:outline-hidden focus:border-[#4B4DED] truncate"
                 />
               </div>
               <button
@@ -288,12 +288,12 @@ export default function ShareModal({ isOpen, onClose }: ShareModalProps) {
         </div>
 
         {/* Modal Footer */}
-        <div className="px-5 sm:px-6 py-3.5 bg-[#F8F9FE] border-t border-slate-100 flex items-center justify-between gap-3 pb-[max(0.875rem,env(safe-area-inset-bottom))]">
+        <div className="px-5 sm:px-6 py-3.5 bg-white/55 backdrop-blur-md border-t border-white/80 flex items-center justify-between gap-3 pb-[max(0.875rem,env(safe-area-inset-bottom))]">
           <button
             type="button"
             onClick={() => void regenerateLink(preset)}
             disabled={isGenerating}
-            className="min-h-[38px] px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-[#0F1B4D] hover:bg-white border border-transparent hover:border-slate-200 flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50 whitespace-nowrap shrink-0"
+            className="min-h-[38px] px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-[#0F1B4D] hover:bg-white/85 border border-transparent hover:border-white/90 flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50 whitespace-nowrap shrink-0"
           >
             <RefreshCw className={`w-3.5 h-3.5 text-[#4B4DED] ${isGenerating ? 'animate-spin' : ''}`} />
             <span>New unique link</span>
@@ -303,7 +303,7 @@ export default function ShareModal({ isOpen, onClose }: ShareModalProps) {
             <Link
               href={shareData.relativePath}
               onClick={onClose}
-              className="min-h-[38px] px-3.5 py-1.5 rounded-xl bg-white hover:bg-[#EEF1FF]/70 border border-[#DCE3F7] text-[#0F1B4D] text-xs font-semibold inline-flex items-center gap-1.5 transition-colors whitespace-nowrap shrink-0"
+              className="min-h-[38px] px-3.5 py-1.5 rounded-xl bg-white/80 hover:bg-white border border-white/85 ring-1 ring-slate-900/[0.05] text-[#0F1B4D] text-xs font-semibold inline-flex items-center gap-1.5 transition-colors whitespace-nowrap shrink-0"
             >
               <Eye className="w-3.5 h-3.5 text-[#4B4DED] shrink-0" />
               <span>Open shared preview</span>

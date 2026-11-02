@@ -49,12 +49,12 @@ export default function BlogPage() {
   const secondaryPosts = showEditorialLeadLayout ? filteredPosts.slice(1) : filteredPosts;
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F8FAFC] text-slate-900">
+    <div className="min-h-screen flex flex-col bg-transparent text-slate-900">
       <TopNav />
 
       <main className="flex-1">
         {/* Editorial Header */}
-        <section className="bg-white border-b border-slate-200/85 pt-6 sm:pt-10 pb-10 sm:pb-14">
+        <section className="bg-white/44 backdrop-blur-2xl backdrop-saturate-150 border-b border-white/80 pt-6 sm:pt-10 pb-10 sm:pb-14 shadow-[0_8px_30px_rgba(15,23,42,0.03)]">
           <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
             <nav
               aria-label="Breadcrumb"
@@ -94,7 +94,7 @@ export default function BlogPage() {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     aria-label="Search UK CV writing guides"
-                    className="w-full min-h-[46px] pl-10 pr-4 rounded-xl bg-slate-50 hover:bg-white focus:bg-white border border-slate-200/95 text-slate-900 placeholder-slate-400 text-sm focus:outline-hidden focus:border-[#2563EB] focus:ring-3 focus:ring-[#2563EB]/12 transition-all"
+                    className="w-full min-h-[46px] pl-10 pr-4 rounded-xl bg-white/68 hover:bg-white/92 focus:bg-white/96 backdrop-blur-xl border border-white/85 ring-1 ring-slate-900/[0.05] shadow-[inset_0_1px_2px_rgba(255,255,255,0.9)] text-slate-900 placeholder-slate-400 text-sm focus:outline-hidden focus:border-[#2563EB] focus:ring-3 focus:ring-[#2563EB]/12 transition-all"
                   />
                 </div>
               </div>
@@ -104,7 +104,7 @@ export default function BlogPage() {
             <div
               role="tablist"
               aria-label="Filter guides by topic"
-              className="mt-7 pt-5 border-t border-slate-100 flex items-center gap-2 overflow-x-auto scrollbar-none"
+              className="mt-7 pt-5 border-t border-white/75 flex items-center gap-2 overflow-x-auto scrollbar-none"
             >
               {CATEGORIES.map((cat) => {
                 const isSelected = selectedCategory === cat;
@@ -117,8 +117,8 @@ export default function BlogPage() {
                     onClick={() => setSelectedCategory(cat)}
                     className={`min-h-[38px] px-4 py-1.5 rounded-xl text-xs sm:text-[13px] font-semibold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                       isSelected
-                        ? 'bg-[#0B112C] text-white shadow-2xs'
-                        : 'bg-slate-100 hover:bg-slate-200/80 text-slate-700'
+                        ? 'bg-[#0B112C] text-white border border-[#0B112C] shadow-[0_6px_16px_rgba(11,17,44,0.18)]'
+                        : 'bg-white/62 hover:bg-white/88 backdrop-blur-xl border border-white/85 ring-1 ring-slate-900/[0.04] text-slate-700'
                     }`}
                   >
                     {cat}
@@ -132,7 +132,7 @@ export default function BlogPage() {
         {/* Blog Articles Showcase */}
         <section className="py-10 sm:py-14 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
           {filteredPosts.length === 0 ? (
-            <div className="text-center py-16 bg-white rounded-2xl border border-slate-200/85 space-y-3">
+            <div className="text-center py-16 bg-white/66 backdrop-blur-2xl backdrop-saturate-150 rounded-2xl border border-white/85 ring-1 ring-slate-900/[0.04] shadow-[0_12px_36px_rgba(15,23,42,0.06),inset_0_1px_2px_rgba(255,255,255,0.95)] space-y-3">
               <p className="text-base sm:text-lg font-bold text-slate-800">
                 No guides matched &ldquo;{searchQuery}&rdquo;.
               </p>
@@ -151,7 +151,7 @@ export default function BlogPage() {
             <div className="space-y-8 sm:space-y-10">
               {/* Tier 1: Featured Lead Pillar Guide */}
               {leadPost && (
-                <article className="group bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 hover:border-[#2563EB]/60 shadow-[0_4px_24px_rgba(15,23,42,0.04)] overflow-hidden transition-all grid grid-cols-1 lg:grid-cols-12 items-stretch">
+                <article className="group bg-white/64 hover:bg-white/86 backdrop-blur-2xl backdrop-saturate-150 rounded-2xl sm:rounded-3xl border border-white/85 ring-1 ring-slate-900/[0.04] hover:border-[#2563EB]/55 shadow-[0_14px_40px_rgba(15,23,42,0.06),inset_0_1px_2px_rgba(255,255,255,0.95)] overflow-hidden transition-all grid grid-cols-1 lg:grid-cols-12 items-stretch">
                   <Link
                     href={`/blog/${leadPost.id}`}
                     className="lg:col-span-7 relative aspect-[16/9] lg:aspect-auto lg:min-h-[340px] bg-slate-100 block overflow-hidden"
@@ -186,7 +186,7 @@ export default function BlogPage() {
                       </p>
                     </div>
 
-                    <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+                    <div className="pt-4 border-t border-white/75 flex items-center justify-between gap-3">
                       <div className="text-xs">
                         <span className="font-bold text-slate-900">{leadPost.author.name}</span>
                         <span className="text-slate-400 mx-1.5" aria-hidden="true">
@@ -212,7 +212,7 @@ export default function BlogPage() {
                 {secondaryPosts.map((post) => (
                   <article
                     key={post.id}
-                    className="group bg-white rounded-2xl border border-slate-200/90 hover:border-[#2563EB]/60 overflow-hidden shadow-[0_2px_16px_rgba(15,23,42,0.03)] hover:shadow-lg transition-all flex flex-col min-w-0"
+                    className="group bg-white/64 hover:bg-white/86 backdrop-blur-2xl backdrop-saturate-150 rounded-2xl border border-white/85 ring-1 ring-slate-900/[0.04] hover:border-[#2563EB]/55 overflow-hidden shadow-[0_12px_34px_rgba(15,23,42,0.05),inset_0_1px_2px_rgba(255,255,255,0.95)] hover:shadow-[0_18px_44px_rgba(15,23,42,0.08),inset_0_1px_2px_rgba(255,255,255,0.98)] transition-all flex flex-col min-w-0"
                   >
                     <Link
                       href={`/blog/${post.id}`}
@@ -247,7 +247,7 @@ export default function BlogPage() {
                         </p>
                       </div>
 
-                      <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+                      <div className="pt-4 border-t border-white/75 flex items-center justify-between gap-3">
                         <div className="text-xs min-w-0 truncate">
                           <span className="font-bold text-slate-900">{post.author.name}</span>
                           <span className="text-slate-400 mx-1.5" aria-hidden="true">
@@ -275,7 +275,7 @@ export default function BlogPage() {
         {/* Internal Link Hub: Popular UK CV Template Collections */}
         <section
           aria-label="Explore UK CV templates by career stage"
-          className="py-12 sm:py-14 bg-white border-t border-slate-200/85"
+          className="py-12 sm:py-14 bg-white/34 backdrop-blur-2xl border-t border-white/80"
         >
           <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-6">
@@ -302,7 +302,7 @@ export default function BlogPage() {
                 <Link
                   key={hub.href}
                   href={hub.href}
-                  className="group min-h-[48px] px-4 py-3 rounded-xl bg-[#F8FAFC] hover:bg-white border border-slate-200/90 hover:border-[#2563EB] text-xs sm:text-[13.5px] font-semibold text-slate-800 hover:text-[#2563EB] flex items-center justify-between gap-2 transition-all"
+                  className="group min-h-[48px] px-4 py-3 rounded-xl bg-white/62 hover:bg-white/88 backdrop-blur-xl border border-white/85 ring-1 ring-slate-900/[0.04] hover:border-[#2563EB]/55 shadow-[0_6px_20px_rgba(15,23,42,0.04),inset_0_1px_1px_rgba(255,255,255,0.95)] text-xs sm:text-[13.5px] font-semibold text-slate-800 hover:text-[#2563EB] flex items-center justify-between gap-2 transition-all"
                 >
                   <span className="truncate">{hub.label}</span>
                   <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-[#2563EB] shrink-0" />
@@ -312,9 +312,13 @@ export default function BlogPage() {
           </div>
         </section>
 
-        {/* Newsletter Section */}
-        <section className="bg-[#0B112C] text-white py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl mx-auto text-center space-y-4">
+        {/* Smoked Sapphire Glass Newsletter Section */}
+        <section className="relative overflow-hidden bg-[#080E24]/86 backdrop-blur-2xl backdrop-saturate-150 border-t border-white/18 text-white py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 w-[520px] h-[220px] rounded-full bg-blue-500/20 blur-3xl"
+          />
+          <div className="relative max-w-2xl mx-auto text-center space-y-4">
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
               Get UK CV &amp; interview guides in your inbox
             </h2>
@@ -323,7 +327,7 @@ export default function BlogPage() {
               checklists—sent weekly with one-click unsubscribe.
             </p>
             {newsletterSubscribed ? (
-              <div className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-emerald-500/15 border border-emerald-400/30 text-emerald-300 text-sm font-medium">
+              <div className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-emerald-500/18 backdrop-blur-md border border-emerald-400/35 text-emerald-300 text-sm font-medium">
                 <CheckCircle2 className="w-4 h-4 shrink-0" />
                 <span>Subscribed! Your first UK CV checklist is on its way.</span>
               </div>
@@ -339,11 +343,11 @@ export default function BlogPage() {
                   type="email"
                   placeholder="Enter your email address"
                   required
-                  className="flex-1 min-h-[46px] px-4 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-400"
+                  className="flex-1 min-h-[46px] px-4 rounded-xl bg-white/10 hover:bg-white/14 focus:bg-white/16 backdrop-blur-md border border-white/22 text-white placeholder-slate-400 text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-400 transition-colors"
                 />
                 <button
                   type="submit"
-                  className="min-h-[46px] px-6 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-semibold text-sm transition-colors cursor-pointer whitespace-nowrap"
+                  className="min-h-[46px] px-6 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-semibold text-sm shadow-[0_8px_24px_rgba(37,99,235,0.35)] transition-colors cursor-pointer whitespace-nowrap"
                 >
                   Subscribe
                 </button>

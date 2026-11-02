@@ -288,14 +288,14 @@ export default function SampleCvPresets({
               type="button"
               disabled={disabled}
               onClick={() => onSelectPreset(preset)}
-              className="group text-left p-3.5 rounded-2xl border border-slate-200/90 bg-white hover:border-[#4B4DED] hover:shadow-[0_4px_16px_rgba(75,77,237,0.08)] hover:-translate-y-0.5 transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:border-slate-200 flex flex-col justify-between"
+              className="group text-left p-3.5 rounded-2xl border border-white/85 ring-1 ring-slate-900/[0.04] bg-white/60 hover:bg-white/88 backdrop-blur-xl shadow-[0_6px_20px_rgba(15,23,42,0.04),inset_0_1px_1px_rgba(255,255,255,0.95)] hover:border-[#4B4DED]/70 hover:shadow-[0_10px_24px_rgba(75,77,237,0.10)] hover:-translate-y-0.5 transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-center justify-between gap-2 mb-2">
-                  <span className="text-[10px] font-semibold tracking-wide uppercase px-2 py-0.5 rounded-md bg-indigo-50 text-[#4B4DED]">
+                  <span className="text-[10.5px] font-semibold tracking-wide text-[#4B4DED]">
                     {preset.badge}
                   </span>
-                  <div className="w-6 h-6 rounded-lg bg-slate-100 group-hover:bg-[#4B4DED] text-slate-600 group-hover:text-white flex items-center justify-center transition-colors">
+                  <div className="w-6 h-6 rounded-lg bg-white/80 border border-white/90 group-hover:bg-[#4B4DED] group-hover:border-[#4B4DED] text-slate-600 group-hover:text-white flex items-center justify-center transition-colors">
                     <IconComponent className="w-3.5 h-3.5" />
                   </div>
                 </div>
@@ -311,7 +311,7 @@ export default function SampleCvPresets({
                 </p>
               </div>
 
-              <div className="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[11px] font-medium text-[#4B4DED]">
+              <div className="mt-3 pt-2.5 border-t border-white/75 flex items-center justify-between text-[11px] font-medium text-[#4B4DED]">
                 <span>Load sample profile</span>
                 <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
               </div>

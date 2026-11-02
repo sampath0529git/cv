@@ -135,22 +135,22 @@ export default function TemplatePreviewModal({
       role="dialog"
       aria-modal="true"
       aria-label={`${template.name} CV Template Preview`}
-      className="fixed inset-0 z-50 bg-[#070D1F]/80 backdrop-blur-md flex flex-col justify-between overflow-hidden animate-[fadeIn_0.2s_ease-out]"
+      className="fixed inset-0 z-50 bg-[#070D1F]/68 backdrop-blur-xl flex flex-col justify-between overflow-hidden animate-[fadeIn_0.2s_ease-out]"
       onClick={onClose}
     >
-      {/* Top Header Bar */}
+      {/* Top Smoked Sapphire Glass Header Bar */}
       <header
         onClick={(e) => e.stopPropagation()}
-        className="w-full bg-[#0F1B4D] border-b border-white/10 text-white px-3 sm:px-6 py-2.5 sm:py-3.5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 shrink-0 shadow-lg z-20"
+        className="w-full bg-[#0B1437]/82 backdrop-blur-2xl backdrop-saturate-150 border-b border-white/15 text-white px-3 sm:px-6 py-2.5 sm:py-3.5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 shrink-0 shadow-[0_12px_36px_rgba(0,0,0,0.3),inset_0_-1px_0_rgba(255,255,255,0.12)] z-20"
       >
         {/* Template Information — Clean Inline Typographic Metadata */}
         <div className="flex items-center justify-between sm:justify-start gap-2.5 min-w-0">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-1.5 text-[11px] font-medium text-blue-200/90">
               <span>{template.category}</span>
-              <span className="text-slate-500">·</span>
+              <span className="text-slate-400">·</span>
               <span>ISO A4</span>
-              <span className="text-slate-500">·</span>
+              <span className="text-slate-400">·</span>
               <span>{template.supportsPhoto ? 'Photo Optional' : 'Text-Only Layout'}</span>
             </div>
             <h2 className="text-base sm:text-xl font-bold tracking-tight text-white truncate mt-0.5">
@@ -161,7 +161,7 @@ export default function TemplatePreviewModal({
           <button
             type="button"
             onClick={onClose}
-            className="sm:hidden min-h-[36px] min-w-[36px] flex items-center justify-center rounded-xl bg-white/10 hover:bg-white/20 text-slate-200 transition-colors cursor-pointer"
+            className="sm:hidden min-h-[36px] min-w-[36px] flex items-center justify-center rounded-xl bg-white/12 hover:bg-white/22 border border-white/15 backdrop-blur-md text-slate-200 transition-colors cursor-pointer"
             aria-label="Close template preview"
           >
             <X className="w-5 h-5" />
@@ -170,7 +170,7 @@ export default function TemplatePreviewModal({
 
         {/* Center / Action Toolbar: Zoom Controls & CTAs */}
         <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0 flex-wrap">
-          <div className="flex items-center bg-white/10 rounded-xl border border-white/10 p-0.5">
+          <div className="flex items-center bg-white/10 backdrop-blur-md rounded-xl border border-white/18 p-0.5 shadow-[inset_0_1px_1px_rgba(255,255,255,0.15)]">
             <button
               type="button"
               onClick={handleZoomOut}
@@ -275,10 +275,10 @@ export default function TemplatePreviewModal({
         </div>
       </main>
 
-      {/* Footer Info Strip */}
+      {/* Footer Smoked Glass Info Strip */}
       <footer
         onClick={(e) => e.stopPropagation()}
-        className="bg-[#0A1230] border-t border-white/10 text-slate-300 px-4 py-2 text-xs flex flex-wrap items-center justify-between gap-2 shrink-0 z-20"
+        className="bg-[#081029]/82 backdrop-blur-2xl backdrop-saturate-150 border-t border-white/15 text-slate-300 px-4 py-2 text-xs flex flex-wrap items-center justify-between gap-2 shrink-0 z-20"
       >
         <div className="flex items-center gap-2 text-[11px] sm:text-xs">
           <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />

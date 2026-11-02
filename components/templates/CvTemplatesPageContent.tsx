@@ -89,12 +89,12 @@ export default function CvTemplatesPageContent({
       : CV_TEMPLATES.filter((t) => t.category.toLowerCase() === libraryFilter.toLowerCase());
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F8FAFC] text-slate-900">
+    <div className="min-h-screen flex flex-col bg-transparent text-slate-900">
       <TopNav />
 
       <main className="flex-1">
         {/* 1. Proposition Hero & Breadcrumb */}
-        <section className="bg-white border-b border-slate-200/80 pt-6 sm:pt-9 pb-12 sm:pb-16">
+        <section className="bg-white/44 backdrop-blur-2xl backdrop-saturate-150 border-b border-white/80 shadow-[inset_0_-1px_0_rgba(255,255,255,0.65)] pt-6 sm:pt-9 pb-12 sm:pb-16">
           <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8">
             {/* Breadcrumb Navigation */}
             <nav
@@ -221,7 +221,7 @@ export default function CvTemplatesPageContent({
         {isHub && (
           <section
             aria-labelledby="specialist-categories-heading"
-            className="py-12 sm:py-16 bg-white border-y border-slate-200/80"
+            className="py-12 sm:py-16 bg-white/30 backdrop-blur-xl border-y border-white/75"
           >
             <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8">
               <div className="max-w-2xl mb-9">
@@ -244,7 +244,7 @@ export default function CvTemplatesPageContent({
                   <Link
                     key={spoke.slug}
                     href={spoke.urlPath}
-                    className="group p-6 rounded-2xl bg-[#F8FAFC] hover:bg-white border border-slate-200/90 hover:border-blue-500/50 hover:shadow-lg transition-all flex flex-col justify-between gap-5"
+                    className="group p-6 rounded-2xl bg-white/62 hover:bg-white/88 backdrop-blur-2xl backdrop-saturate-150 border border-white/85 hover:border-blue-400/70 ring-1 ring-slate-900/[0.04] shadow-[0_10px_32px_rgba(15,23,42,0.05),inset_0_1px_2px_rgba(255,255,255,0.95)] hover:shadow-[0_16px_40px_rgba(37,99,235,0.12)] transition-all flex flex-col justify-between gap-5"
                   >
                     <div>
                       <div className="flex items-center justify-between gap-2 text-xs text-slate-500">
@@ -261,7 +261,7 @@ export default function CvTemplatesPageContent({
                       </p>
                     </div>
 
-                    <div className="pt-3 border-t border-slate-200/70 flex items-center justify-between text-xs font-semibold text-slate-700 group-hover:text-[#2563EB]">
+                    <div className="pt-3 border-t border-white/75 flex items-center justify-between text-xs font-semibold text-slate-700 group-hover:text-[#2563EB]">
                       <span>Explore {spoke.categoryLabel.toLowerCase()} layouts</span>
                       <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                     </div>
@@ -314,8 +314,8 @@ export default function CvTemplatesPageContent({
                     onClick={() => setLibraryFilter(cat)}
                     className={`min-h-[38px] px-4 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                       isSelected
-                        ? 'bg-[#0B112C] text-white shadow-xs'
-                        : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200'
+                        ? 'bg-[#0B112C] text-white shadow-sm'
+                        : 'bg-white/62 hover:bg-white/88 backdrop-blur-xl text-slate-700 border border-white/85 ring-1 ring-slate-900/[0.04]'
                     }`}
                   >
                     {cat}
@@ -362,7 +362,7 @@ export default function CvTemplatesPageContent({
         )}
 
         {/* 5. UK Recruiter Formatting Rules & Recommended Section Structure */}
-        <section className="py-14 sm:py-20 bg-white border-t border-slate-200/80">
+        <section className="py-14 sm:py-20 bg-white/30 backdrop-blur-xl border-t border-white/75">
           <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
               {/* Left 7 Cols: Niche UK Recruiter Guidance */}
@@ -383,10 +383,10 @@ export default function CvTemplatesPageContent({
                   {config.formattingRules.map((rule, idx) => (
                     <div
                       key={idx}
-                      className="p-5 sm:p-6 rounded-2xl bg-[#F8FAFC] border border-slate-200/80"
+                      className="p-5 sm:p-6 rounded-2xl bg-white/62 hover:bg-white/82 backdrop-blur-2xl backdrop-saturate-150 border border-white/85 ring-1 ring-slate-900/[0.04] shadow-[0_8px_28px_rgba(15,23,42,0.04),inset_0_1px_2px_rgba(255,255,255,0.95)] transition-colors"
                     >
                       <div className="flex items-start gap-3.5">
-                        <span className="w-6 h-6 rounded-lg bg-blue-600/10 text-[#2563EB] text-xs font-bold flex items-center justify-center shrink-0 mt-0.5 tabular-nums">
+                        <span className="w-6 h-6 rounded-lg bg-blue-500/12 border border-blue-400/25 text-[#2563EB] text-xs font-bold flex items-center justify-center shrink-0 mt-0.5 tabular-nums">
                           {idx + 1}
                         </span>
                         <div>
@@ -401,9 +401,11 @@ export default function CvTemplatesPageContent({
                 </div>
               </div>
 
-              {/* Right 5 Cols: Recommended Section Order Blueprint */}
-              <aside className="lg:col-span-5 p-6 sm:p-8 rounded-2xl bg-[#0B112C] text-white space-y-6">
-                <div className="space-y-1.5">
+              {/* Right 5 Cols: Recommended Section Order Smoked-Glass Blueprint */}
+              <aside className="relative overflow-hidden lg:col-span-5 p-6 sm:p-8 rounded-2xl bg-[#080E24]/86 backdrop-blur-2xl backdrop-saturate-150 border border-white/18 text-white space-y-6 shadow-[0_20px_50px_rgba(8,14,36,0.28),inset_0_1px_2px_rgba(255,255,255,0.18)]">
+                <div aria-hidden="true" className="pointer-events-none absolute -top-20 -right-16 w-64 h-64 rounded-full bg-blue-500/20 blur-3xl" />
+
+                <div className="relative space-y-1.5">
                   <div className="inline-flex items-center gap-2 text-xs font-semibold text-blue-300">
                     <FileCheck2 className="w-4 h-4 text-blue-400" />
                     <span>Recommended UK Section Order</span>
@@ -416,11 +418,11 @@ export default function CvTemplatesPageContent({
                   </p>
                 </div>
 
-                <ol className="space-y-3">
+                <ol className="relative space-y-3">
                   {config.recommendedSectionOrder.map((stepLabel, idx) => (
                     <li
                       key={idx}
-                      className="flex items-start gap-3 p-3 rounded-xl bg-white/5 border border-white/10 text-xs sm:text-sm"
+                      className="flex items-start gap-3 p-3 rounded-xl bg-white/[0.08] backdrop-blur-md border border-white/15 text-xs sm:text-sm shadow-[inset_0_1px_1px_rgba(255,255,255,0.12)]"
                     >
                       <span className="font-mono text-xs font-bold text-blue-300 tabular-nums mt-0.5">
                         0{idx + 1}
@@ -430,16 +432,16 @@ export default function CvTemplatesPageContent({
                   ))}
                 </ol>
 
-                <div className="pt-2 space-y-2.5">
+                <div className="relative pt-2 space-y-2.5">
                   <button
                     type="button"
                     onClick={() => handleUseTemplate(featuredTemplates[0]?.id || 'classic-corporate')}
-                    className="w-full min-h-[46px] px-5 py-3 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-semibold text-sm flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                    className="w-full min-h-[46px] px-5 py-3 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-semibold text-sm flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-md"
                   >
                     <span>Open {featuredTemplates[0]?.name} in CV Builder</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
-                  <div className="flex items-center justify-center gap-4 text-[11px] text-slate-400 pt-1">
+                  <div className="flex items-center justify-center gap-4 text-[11px] text-slate-300/80 pt-1">
                     <span className="inline-flex items-center gap-1">
                       <Check className="w-3.5 h-3.5 text-emerald-400" /> Free PDF
                     </span>
@@ -461,7 +463,7 @@ export default function CvTemplatesPageContent({
           aria-label={`${config.categoryLabel} Frequently Asked Questions`}
           itemScope
           itemType="https://schema.org/FAQPage"
-          className="py-14 sm:py-20 bg-[#F8FAFC] border-t border-slate-200/80"
+          className="py-14 sm:py-20 bg-transparent border-t border-white/75"
         >
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <NicheFaqAccordion
@@ -472,7 +474,7 @@ export default function CvTemplatesPageContent({
 
             {/* Related UK CV Template Spokes */}
             {!isHub && relatedConfigs.length > 0 && (
-              <div className="mt-14 pt-10 border-t border-slate-200">
+              <div className="mt-14 pt-10 border-t border-white/75">
                 <div className="flex items-center justify-between gap-4 mb-5">
                   <h3 className="text-base sm:text-lg font-bold text-slate-900">
                     Related UK CV Template Collections
@@ -490,7 +492,7 @@ export default function CvTemplatesPageContent({
                     <Link
                       key={rel.slug}
                       href={rel.urlPath}
-                      className="group p-4 rounded-xl bg-white border border-slate-200 hover:border-blue-500/50 hover:shadow-md transition-all flex flex-col justify-between gap-2"
+                      className="group p-4 rounded-xl bg-white/62 hover:bg-white/88 backdrop-blur-2xl backdrop-saturate-150 border border-white/85 hover:border-blue-400/70 ring-1 ring-slate-900/[0.04] shadow-[0_8px_24px_rgba(15,23,42,0.04),inset_0_1px_1px_rgba(255,255,255,0.95)] hover:shadow-md transition-all flex flex-col justify-between gap-2"
                     >
                       <div>
                         <span className="text-[11px] font-semibold text-[#2563EB]">
@@ -501,7 +503,7 @@ export default function CvTemplatesPageContent({
                           {rel.breadcrumbLabel}
                         </h4>
                       </div>
-                      <span className="text-xs font-semibold text-slate-500 group-hover:text-[#2563EB] inline-flex items-center gap-1 pt-1">
+                      <span className="text-xs font-semibold text-slate-600 group-hover:text-[#2563EB] inline-flex items-center gap-1 pt-1">
                         <span>View templates</span>
                         <ArrowRight className="w-3 h-3" />
                       </span>
@@ -513,13 +515,13 @@ export default function CvTemplatesPageContent({
 
             {/* Contextual UK CV Writing Guides Cross-Links */}
             {relatedBlogPosts.length > 0 && (
-              <div className="mt-12 pt-10 border-t border-slate-200">
+              <div className="mt-12 pt-10 border-t border-white/75">
                 <div className="flex items-center justify-between gap-4 mb-5">
                   <div>
                     <h3 className="text-base sm:text-lg font-bold text-slate-900">
                       UK CV Writing &amp; Formatting Guides
                     </h3>
-                    <p className="text-xs text-slate-500 mt-0.5">
+                    <p className="text-xs text-slate-600 mt-0.5">
                       Step-by-step recruiter advice on personal profiles, ATS keywords, and British
                       A4 layout standards.
                     </p>
@@ -537,7 +539,7 @@ export default function CvTemplatesPageContent({
                     <Link
                       key={post.id}
                       href={`/blog/${post.id}`}
-                      className="group p-4 rounded-xl bg-white border border-slate-200 hover:border-blue-500/50 hover:shadow-md transition-all flex flex-col justify-between gap-3"
+                      className="group p-4 rounded-xl bg-white/62 hover:bg-white/88 backdrop-blur-2xl backdrop-saturate-150 border border-white/85 hover:border-blue-400/70 ring-1 ring-slate-900/[0.04] shadow-[0_8px_24px_rgba(15,23,42,0.04),inset_0_1px_1px_rgba(255,255,255,0.95)] hover:shadow-md transition-all flex flex-col justify-between gap-3"
                     >
                       <div>
                         <div className="flex items-center gap-1.5 text-[11px] font-medium text-slate-500">

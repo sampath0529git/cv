@@ -850,17 +850,17 @@ export default function BuilderPage() {
 
   // text-base on mobile (<640px) prevents iOS Safari input auto-zoom; sm:text-sm keeps desktop crisp
   const inputClass =
-    'w-full min-h-[46px] sm:min-h-[42px] px-3.5 sm:px-4 py-2.5 rounded-xl border border-slate-200/95 bg-[#FAFBFD] hover:bg-white focus:bg-white text-base sm:text-sm text-slate-900 placeholder:text-slate-400 transition-all focus:outline-hidden focus:border-[#4B4DED] focus:ring-3 focus:ring-[#4B4DED]/12';
+    'w-full min-h-[46px] sm:min-h-[42px] px-3.5 sm:px-4 py-2.5 rounded-xl border border-white/85 ring-1 ring-slate-900/[0.06] bg-white/72 hover:bg-white/92 focus:bg-white/96 backdrop-blur-md shadow-[inset_0_1px_2px_rgba(255,255,255,0.9)] text-base sm:text-sm text-slate-900 placeholder:text-slate-400 transition-all focus:outline-hidden focus:border-[#4B4DED] focus:ring-3 focus:ring-[#4B4DED]/12';
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F4F7FE] text-slate-900 font-sans pb-[66px] lg:pb-0">
+    <div className="min-h-screen flex flex-col bg-transparent text-slate-900 font-sans pb-[66px] lg:pb-0">
       {/* Clean Minimal Sticky Top App Bar (Top Bar Contract: Brand — Studio Switch — Single Primary CTA) */}
-      <header className="w-full bg-white/95 backdrop-blur-md border-b border-slate-200/90 sticky top-0 z-40">
+      <header className="w-full bg-white/60 backdrop-blur-2xl backdrop-saturate-150 border-b border-white/85 shadow-[0_8px_30px_rgba(15,23,42,0.05),inset_0_-1px_0_rgba(255,255,255,0.7)] sticky top-0 z-40">
         <div className="max-w-[1640px] mx-auto px-3.5 sm:px-6 lg:px-8 h-14 sm:h-16 flex items-center justify-between gap-3 sm:gap-4">
           {/* Left: Brand Logo + Clean Typographic Document Title */}
           <div className="flex items-center gap-3 min-w-0 shrink-0">
             <Logo variant="dark" href="/" />
-            <div className="hidden md:flex items-center gap-2.5 pl-3.5 border-l border-slate-200 min-w-0">
+            <div className="hidden md:flex items-center gap-2.5 pl-3.5 border-l border-slate-200/80 min-w-0">
               <span className="text-xs sm:text-[13px] font-semibold text-slate-700 truncate max-w-[180px]">
                 {contact.firstName
                   ? `${contact.firstName} ${contact.lastName || ''}`.trim() + ' CV'
@@ -871,13 +871,13 @@ export default function BuilderPage() {
           </div>
 
           {/* Center (Desktop lg+): Clean Icon-Free Content | Design Segmented Switch */}
-          <div className="hidden lg:flex items-center bg-slate-100/90 p-1 rounded-xl border border-slate-200/80">
+          <div className="hidden lg:flex items-center bg-white/52 backdrop-blur-md p-1 rounded-xl border border-white/85 ring-1 ring-slate-900/[0.04]">
             <button
               type="button"
               onClick={() => handleSwitchDesktopTab('content')}
               className={`min-h-[36px] px-5 py-1.5 rounded-lg text-xs xl:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap ${
                 editorTab === 'content'
-                  ? 'bg-white text-[#0F1B4D] shadow-2xs border border-slate-200/70'
+                  ? 'bg-white/95 text-[#0F1B4D] shadow-[0_2px_10px_rgba(15,27,77,0.08)] border border-white/90'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -888,7 +888,7 @@ export default function BuilderPage() {
               onClick={() => handleSwitchDesktopTab('design')}
               className={`min-h-[36px] px-5 py-1.5 rounded-lg text-xs xl:text-sm font-semibold transition-all cursor-pointer whitespace-nowrap ${
                 editorTab === 'design'
-                  ? 'bg-white text-[#0F1B4D] shadow-2xs border border-slate-200/70'
+                  ? 'bg-white/95 text-[#0F1B4D] shadow-[0_2px_10px_rgba(15,27,77,0.08)] border border-white/90'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -926,7 +926,7 @@ export default function BuilderPage() {
         </div>
 
         {/* Hairline Step Progress Track */}
-        <div className="w-full h-[2px] bg-slate-100 overflow-hidden">
+        <div className="w-full h-[2px] bg-white/50 overflow-hidden">
           <div
             className="h-full bg-[#4B4DED] transition-all duration-300"
             style={{ width: `${progressPercent}%` }}
@@ -938,7 +938,7 @@ export default function BuilderPage() {
       <main className="flex-1 max-w-[1640px] w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 xl:gap-7 items-start">
         {/* Left Panel: Content Editor or Design Studio (Hidden on mobile ONLY when Preview mode is active) */}
         <div
-          className={`lg:col-span-6 xl:col-span-5 bg-white rounded-2xl sm:rounded-3xl border border-slate-200/90 shadow-[0_4px_24px_rgba(15,27,77,0.04)] p-4 sm:p-6 lg:p-7 ${
+          className={`lg:col-span-6 xl:col-span-5 bg-white/64 backdrop-blur-2xl backdrop-saturate-150 rounded-2xl sm:rounded-3xl border border-white/85 ring-1 ring-slate-900/[0.04] shadow-[0_16px_46px_rgba(15,27,77,0.07),inset_0_1px_2px_rgba(255,255,255,0.95)] p-4 sm:p-6 lg:p-7 ${
             mobileMode === 'preview' ? 'hidden lg:block' : 'block'
           }`}
         >
@@ -953,7 +953,7 @@ export default function BuilderPage() {
                   onDismiss={() => store.clearImportStatus()}
                 />
               ) : store.lastImportBackup ? (
-                <div className="p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-indigo-50/90 to-blue-50/80 border border-indigo-200/90 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+                <div className="p-3.5 sm:p-4 rounded-2xl bg-white/68 backdrop-blur-xl border border-white/85 ring-1 ring-indigo-500/15 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-[0_8px_24px_rgba(15,27,77,0.05)]">
                   <div className="flex items-start sm:items-center gap-3 min-w-0">
                     <div className="w-8 h-8 rounded-xl bg-[#4a4df2] text-white flex items-center justify-center shrink-0 shadow-xs">
                       <FileCheck2 className="w-4 h-4" />
@@ -971,7 +971,7 @@ export default function BuilderPage() {
                     <button
                       type="button"
                       onClick={handleRevertImport}
-                      className="px-3.5 py-1.5 rounded-xl bg-white border border-indigo-200 text-[#4a4df2] hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5 cursor-pointer hover:scale-[1.02] active:scale-98"
+                      className="px-3.5 py-1.5 rounded-xl bg-white/90 border border-indigo-200 text-[#4a4df2] hover:bg-red-50 hover:text-red-600 hover:border-red-200 text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5 cursor-pointer hover:scale-[1.02] active:scale-98"
                     >
                       <RotateCcw className="w-3.5 h-3.5" />
                       <span>Revert Import</span>
@@ -989,7 +989,7 @@ export default function BuilderPage() {
               ) : null}
 
               {revertToast && (
-                <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs sm:text-sm flex items-center justify-between gap-2 shadow-2xs animate-toast-slide-up animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <div className="p-3 rounded-xl bg-emerald-50/90 backdrop-blur-md border border-emerald-200 text-emerald-800 text-xs sm:text-sm flex items-center justify-between gap-2 shadow-2xs animate-toast-slide-up animate-in fade-in slide-in-from-bottom-2 duration-300">
                   <div className="flex items-center gap-2">
                     <Check className="w-4 h-4 text-emerald-600 shrink-0 stroke-[2.5]" />
                     <span>{revertToast}</span>
@@ -1005,7 +1005,7 @@ export default function BuilderPage() {
               )}
 
               {/* Auto-Centering Horizontal Step Navigation Strip */}
-              <div className="flex items-center gap-1.5 overflow-x-auto pb-2.5 -mx-1 px-1 scrollbar-none border-b border-slate-100">
+              <div className="flex items-center gap-1.5 overflow-x-auto pb-2.5 -mx-1 px-1 scrollbar-none border-b border-white/75">
                 {STEPS.map((step) => {
                   const isActive = currentStep === step.id;
                   const isDone = currentStep > step.id || isStepPopulated(step.id);
@@ -1030,8 +1030,8 @@ export default function BuilderPage() {
                         isActive
                           ? 'bg-gradient-to-r from-[#4a4df2] to-[#6366f1] text-white shadow-sm shadow-[#4a4df2]/25 ring-2 ring-[#4a4df2]/20'
                           : isDone
-                          ? 'bg-[#EEF1FF] text-[#4a4df2] hover:bg-[#E0E5FA]'
-                          : 'bg-slate-50 text-slate-500 hover:text-slate-800 hover:bg-slate-100 border border-slate-200/60'
+                          ? 'bg-[#EEF1FF]/90 text-[#4a4df2] hover:bg-white border border-white/85'
+                          : 'bg-white/65 text-slate-600 hover:text-slate-900 hover:bg-white/90 border border-white/85 ring-1 ring-slate-900/[0.04]'
                       }`}
                     >
                       <span
@@ -1118,9 +1118,9 @@ export default function BuilderPage() {
               {currentStep === 1 && (
                 <div className="space-y-4">
                   {/* Quick Import from LinkedIn Card */}
-                  <div className="p-3.5 sm:p-4 rounded-2xl border border-[#DCE3F7] bg-[#FAFBFD] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="p-3.5 sm:p-4 rounded-2xl border border-white/85 ring-1 ring-slate-900/[0.05] bg-white/68 backdrop-blur-xl shadow-[0_6px_20px_rgba(15,27,77,0.04)] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="flex items-center gap-3 min-w-0">
-                      <div className="w-10 h-10 rounded-xl bg-[#0A66C2]/10 text-[#0A66C2] flex items-center justify-center shrink-0">
+                      <div className="w-10 h-10 rounded-xl bg-[#0A66C2]/10 border border-white/85 text-[#0A66C2] flex items-center justify-center shrink-0">
                         <Linkedin className="w-5 h-5" />
                       </div>
                       <div className="min-w-0">
@@ -3907,15 +3907,15 @@ export default function BuilderPage() {
           }`}
         >
           {/* Unified Document Preview Studio Frame */}
-          <div className="w-full rounded-2xl sm:rounded-3xl border border-slate-200/95 bg-[#EAEEF7] shadow-[0_8px_30px_rgba(15,27,77,0.06)] overflow-hidden flex flex-col">
+          <div className="w-full rounded-2xl sm:rounded-3xl border border-white/85 ring-1 ring-slate-900/[0.05] bg-white/40 backdrop-blur-2xl backdrop-saturate-150 shadow-[0_18px_50px_rgba(15,27,77,0.08),inset_0_1px_2px_rgba(255,255,255,0.9)] overflow-hidden flex flex-col">
             {/* Integrated Single-Bar Studio Control Strip */}
-            <div className="w-full bg-white border-b border-slate-200/90 px-3 sm:px-4 py-2.5 flex flex-wrap items-center justify-between gap-2">
+            <div className="w-full bg-white/68 backdrop-blur-xl border-b border-white/85 px-3 sm:px-4 py-2.5 flex flex-wrap items-center justify-between gap-2">
               {/* Left: Template Picker + Quick Accent Dots + Typographic Sheet Info */}
               <div className="flex items-center gap-2.5 min-w-0">
                 <button
                   type="button"
                   onClick={() => setIsTemplateModalOpen(true)}
-                  className="min-h-[36px] px-3 py-1.5 rounded-xl bg-slate-50 hover:bg-[#EEF1FF]/70 border border-slate-200/90 hover:border-[#4B4DED]/60 text-[#0F1B4D] text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
+                  className="min-h-[36px] px-3 py-1.5 rounded-xl bg-white/75 hover:bg-white/95 backdrop-blur-md border border-white/85 ring-1 ring-slate-900/[0.05] hover:border-[#4B4DED]/60 text-[#0F1B4D] text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
                   title="Switch CV template layout"
                 >
                   <LayoutGrid className="w-3.5 h-3.5 text-[#4B4DED] shrink-0" />
@@ -3962,7 +3962,7 @@ export default function BuilderPage() {
               <div className="flex items-center gap-1.5 sm:gap-2 ml-auto">
                 {/* Multi-Page Navigation */}
                 {totalPages > 1 && (
-                  <div className="flex items-center bg-slate-50 rounded-xl border border-slate-200/90 px-1 py-0.5">
+                  <div className="flex items-center bg-white/72 backdrop-blur-md rounded-xl border border-white/85 ring-1 ring-slate-900/[0.05] px-1 py-0.5">
                     <button
                       type="button"
                       disabled={activePreviewPage <= 1}
@@ -3990,7 +3990,7 @@ export default function BuilderPage() {
                 )}
 
                 {/* Zoom & Auto-Fit Cluster */}
-                <div className="flex items-center bg-slate-50 rounded-xl border border-slate-200/90 p-0.5">
+                <div className="flex items-center bg-white/72 backdrop-blur-md rounded-xl border border-white/85 ring-1 ring-slate-900/[0.05] p-0.5">
                   <button
                     type="button"
                     onClick={() =>
@@ -4040,7 +4040,7 @@ export default function BuilderPage() {
                   className={`hidden sm:flex min-h-[36px] min-w-[36px] rounded-xl border items-center justify-center transition-colors cursor-pointer ${
                     showMarginGuides
                       ? 'border-[#4B4DED] bg-[#EEF1FF] text-[#4B4DED]'
-                      : 'border-slate-200/90 bg-white hover:bg-slate-50 text-slate-600 hover:text-[#0F1B4D]'
+                      : 'border-white/85 ring-1 ring-slate-900/[0.05] bg-white/75 hover:bg-white/95 text-slate-600 hover:text-[#0F1B4D]'
                   }`}
                   title="Toggle 12mm safe A4 print margin guides"
                   aria-label="Toggle A4 margin guides"
@@ -4052,7 +4052,7 @@ export default function BuilderPage() {
                 <button
                   type="button"
                   onClick={handleOpenFullscreenPreview}
-                  className="min-h-[36px] px-2.5 sm:px-3 rounded-xl border border-slate-200/90 bg-white hover:bg-slate-50 text-[#0F1B4D] text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
+                  className="min-h-[36px] px-2.5 sm:px-3 rounded-xl border border-white/85 ring-1 ring-slate-900/[0.05] bg-white/75 hover:bg-white/95 text-[#0F1B4D] text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
                   title="Open full-screen A4 CV inspection view"
                   aria-label="Expand full-screen preview"
                 >
@@ -4064,7 +4064,7 @@ export default function BuilderPage() {
                 <button
                   type="button"
                   onClick={handleBrowserPrint}
-                  className="hidden sm:flex min-h-[36px] min-w-[36px] rounded-xl border border-slate-200/90 bg-white hover:bg-slate-50 text-slate-600 hover:text-[#0F1B4D] items-center justify-center transition-colors cursor-pointer"
+                  className="hidden sm:flex min-h-[36px] min-w-[36px] rounded-xl border border-white/85 ring-1 ring-slate-900/[0.05] bg-white/75 hover:bg-white/95 text-slate-600 hover:text-[#0F1B4D] items-center justify-center transition-colors cursor-pointer"
                   title="Print / Save Vector A4 PDF"
                   aria-label="Print CV"
                 >
@@ -4073,11 +4073,11 @@ export default function BuilderPage() {
               </div>
             </div>
 
-            {/* Architectural A4 Paper Stage with Precision Dot-Grid Backdrop */}
+            {/* Architectural A4 Paper Stage with Precision Dot-Grid Backdrop (inner A4 sheets stay 100% opaque white) */}
             <div
               ref={previewContainerRef}
               onScroll={handlePreviewScroll}
-              className="w-full lg:h-[calc(100vh-146px)] lg:min-h-[600px] bg-[#EAEEF7] bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:18px_18px] overflow-x-auto overflow-y-auto flex justify-center items-start p-3 sm:p-6"
+              className="w-full lg:h-[calc(100vh-146px)] lg:min-h-[600px] bg-white/25 bg-[radial-gradient(rgba(148,163,184,0.45)_1px,transparent_1px)] [background-size:18px_18px] overflow-x-auto overflow-y-auto flex justify-center items-start p-3 sm:p-6"
             >
               <CvPreview
                 showControlsBar={false}
@@ -4089,7 +4089,7 @@ export default function BuilderPage() {
           </div>
 
           {/* Mobile Quick Export Card inside Preview Tab */}
-          <div className="lg:hidden w-full mt-4 p-3.5 rounded-2xl bg-white border border-slate-200/90 flex items-center gap-2.5 shadow-2xs">
+          <div className="lg:hidden w-full mt-4 p-3.5 rounded-2xl bg-white/68 backdrop-blur-2xl border border-white/85 ring-1 ring-slate-900/[0.04] flex items-center gap-2.5 shadow-[0_10px_28px_rgba(15,27,77,0.06)]">
             <PdfDownloadButton
               fileName={resolvedFileName}
               onBeforeDownload={commitPendingInputs}
@@ -4100,7 +4100,7 @@ export default function BuilderPage() {
               type="button"
               onClick={handleDownloadDocx}
               disabled={isDownloadingDocx}
-              className="min-h-[46px] px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-[#0F1B4D] text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shrink-0 whitespace-nowrap disabled:opacity-60"
+              className="min-h-[46px] px-3.5 py-2.5 rounded-xl border border-white/85 ring-1 ring-slate-900/[0.05] bg-white/75 hover:bg-white/95 text-[#0F1B4D] text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shrink-0 whitespace-nowrap disabled:opacity-60"
             >
               <FileText className="w-4 h-4 text-[#4B4DED]" />
               <span>DOCX</span>
@@ -4108,7 +4108,7 @@ export default function BuilderPage() {
             <button
               type="button"
               onClick={handleBrowserPrint}
-              className="min-h-[46px] px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-[#0F1B4D] text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shrink-0 whitespace-nowrap"
+              className="min-h-[46px] px-3.5 py-2.5 rounded-xl border border-white/85 ring-1 ring-slate-900/[0.05] bg-white/75 hover:bg-white/95 text-[#0F1B4D] text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shrink-0 whitespace-nowrap"
             >
               <Printer className="w-4 h-4 text-[#4B4DED]" />
               <span>Print</span>
@@ -4120,7 +4120,7 @@ export default function BuilderPage() {
       {/* Fixed Bottom Mobile Workspace Navigation Bar (58px + safe area — Natural Thumb Zone) */}
       <nav
         aria-label="Mobile Builder Workspace Switcher"
-        className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-[#E8EAF5] shadow-[0_-4px_20px_rgba(15,27,77,0.06)] pb-[env(safe-area-inset-bottom)]"
+        className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/76 backdrop-blur-2xl backdrop-saturate-150 border-t border-white/85 shadow-[0_-8px_28px_rgba(15,27,77,0.08)] pb-[env(safe-area-inset-bottom)]"
       >
         <div className="max-w-lg mx-auto px-2 h-[58px] grid grid-cols-3 gap-1 items-center">
           <button
@@ -4180,26 +4180,26 @@ export default function BuilderPage() {
           role="dialog"
           aria-modal="true"
           aria-label="Full-Screen CV Inspection"
-          className="fixed inset-0 z-[45] bg-slate-950/85 backdrop-blur-sm flex flex-col"
+          className="fixed inset-0 z-[45] bg-[#070D1F]/72 backdrop-blur-xl flex flex-col"
         >
-          <div className="w-full bg-white border-b border-slate-200 px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-3 shrink-0">
+          <div className="w-full bg-white/84 backdrop-blur-2xl backdrop-saturate-150 border-b border-white/85 px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between gap-3 shrink-0 shadow-[0_8px_30px_rgba(8,14,36,0.12)]">
             <div className="flex items-center gap-3 min-w-0">
               <button
                 type="button"
                 onClick={() => setIsTemplateModalOpen(true)}
-                className="min-h-[38px] px-3 py-1.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-[#0F1B4D] text-xs font-semibold flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
+                className="min-h-[38px] px-3 py-1.5 rounded-xl border border-white/85 ring-1 ring-slate-900/[0.05] bg-white/75 hover:bg-white/95 text-[#0F1B4D] text-xs font-semibold flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
               >
                 <LayoutGrid className="w-3.5 h-3.5 text-[#4B4DED]" />
                 <span>{activeTemplate.name}</span>
                 <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
               </button>
-              <span className="hidden sm:inline text-xs font-medium text-slate-500 tabular-nums whitespace-nowrap">
+              <span className="hidden sm:inline text-xs font-medium text-slate-600 tabular-nums whitespace-nowrap">
                 A4 (210 × 297 mm) · {totalPages} {totalPages === 1 ? 'Page' : 'Pages'}
               </span>
             </div>
 
             <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
-              <div className="flex items-center bg-slate-100 rounded-xl border border-slate-200 p-0.5">
+              <div className="flex items-center bg-white/70 rounded-xl border border-white/85 ring-1 ring-slate-900/[0.05] p-0.5">
                 <button
                   type="button"
                   onClick={() => setFullscreenZoom((z) => Math.max(30, z - 10))}
@@ -4247,7 +4247,7 @@ export default function BuilderPage() {
                 className={`hidden md:flex min-h-[38px] px-3 rounded-xl border text-xs font-semibold items-center gap-1.5 cursor-pointer ${
                   showMarginGuides
                     ? 'border-[#4B4DED] bg-[#EEF1FF] text-[#4B4DED]'
-                    : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
+                    : 'border-white/85 ring-1 ring-slate-900/[0.05] bg-white/75 hover:bg-white/95 text-slate-700'
                 }`}
               >
                 <Ruler className="w-3.5 h-3.5" />
@@ -4257,7 +4257,7 @@ export default function BuilderPage() {
               <button
                 type="button"
                 onClick={handleBrowserPrint}
-                className="hidden sm:flex min-h-[38px] px-3 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold items-center gap-1.5 cursor-pointer"
+                className="hidden sm:flex min-h-[38px] px-3 rounded-xl border border-white/85 ring-1 ring-slate-900/[0.05] bg-white/75 hover:bg-white/95 text-slate-700 text-xs font-semibold items-center gap-1.5 cursor-pointer"
               >
                 <Printer className="w-3.5 h-3.5 text-[#4B4DED]" />
                 <span>Print</span>
@@ -4273,7 +4273,7 @@ export default function BuilderPage() {
               <button
                 type="button"
                 onClick={() => setIsFullscreenPreviewOpen(false)}
-                className="min-h-[38px] px-3 rounded-xl border border-slate-200 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
+                className="min-h-[38px] px-3 rounded-xl border border-white/85 ring-1 ring-slate-900/[0.05] bg-white/75 hover:bg-white/95 text-slate-800 text-xs font-semibold flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
                 aria-label="Close full-screen preview"
               >
                 <Minimize2 className="w-3.5 h-3.5" />
@@ -4286,7 +4286,7 @@ export default function BuilderPage() {
             onClick={(e) => {
               if (e.target === e.currentTarget) setIsFullscreenPreviewOpen(false);
             }}
-            className="flex-1 overflow-auto flex justify-center items-start p-4 sm:p-8 bg-slate-900/60"
+            className="flex-1 overflow-auto flex justify-center items-start p-4 sm:p-8 bg-transparent"
           >
             <CvPreview
               isPrimary={false}

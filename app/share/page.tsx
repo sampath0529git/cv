@@ -158,13 +158,13 @@ function SharedCvWorkspace() {
 
   if (!decoded) {
     return (
-      <div className="min-h-screen flex flex-col bg-[#F4F7FE] text-slate-900 font-sans">
-        <header className="w-full bg-white/95 border-b border-[#E8EAF5] h-14 sm:h-16 flex items-center px-4 sm:px-8">
+      <div className="min-h-screen flex flex-col bg-transparent text-slate-900 font-sans">
+        <header className="w-full bg-white/60 backdrop-blur-2xl backdrop-saturate-150 border-b border-white/85 h-14 sm:h-16 flex items-center px-4 sm:px-8">
           <Logo variant="dark" href="/" />
         </header>
         <main className="flex-1 flex flex-col items-center justify-center p-6">
-          <div className="w-full max-w-[640px] h-[720px] bg-white rounded-2xl border border-[#E8EAF5] shadow-xs p-8 flex flex-col gap-4 animate-pulse">
-            <div className="h-6 w-48 bg-slate-200 rounded-md" />
+          <div className="w-full max-w-[640px] h-[720px] bg-white/70 backdrop-blur-2xl rounded-2xl border border-white/85 ring-1 ring-slate-900/[0.04] shadow-[0_14px_40px_rgba(15,23,42,0.06)] p-8 flex flex-col gap-4 animate-pulse">
+            <div className="h-6 w-48 bg-slate-200/80 rounded-md" />
             <div className="h-4 w-32 bg-slate-100 rounded-md" />
             <div className="h-px w-full bg-slate-100 my-2" />
             <div className="h-4 w-full bg-slate-100 rounded-md" />
@@ -179,8 +179,8 @@ function SharedCvWorkspace() {
   if (decoded.status === 'expired' || decoded.status === 'invalid') {
     const isExpired = decoded.status === 'expired';
     return (
-      <div className="min-h-screen flex flex-col bg-[#F4F7FE] text-slate-900 font-sans">
-        <header className="w-full bg-white/95 border-b border-[#E8EAF5]">
+      <div className="min-h-screen flex flex-col bg-transparent text-slate-900 font-sans">
+        <header className="w-full bg-white/60 backdrop-blur-2xl backdrop-saturate-150 border-b border-white/85 shadow-[0_8px_30px_rgba(15,23,42,0.04)]">
           <div className="max-w-[1360px] mx-auto px-4 sm:px-8 h-14 sm:h-16 flex items-center justify-between gap-3">
             <Logo variant="dark" href="/" />
             <Link
@@ -194,12 +194,12 @@ function SharedCvWorkspace() {
         </header>
 
         <main className="flex-1 flex items-center justify-center p-4 sm:p-8">
-          <div className="w-full max-w-md bg-white rounded-3xl border border-[#E8EAF5] p-6 sm:p-8 text-center shadow-[0_8px_30px_rgba(15,27,77,0.05)]">
+          <div className="w-full max-w-md bg-white/70 backdrop-blur-2xl backdrop-saturate-150 rounded-3xl border border-white/85 ring-1 ring-slate-900/[0.04] p-6 sm:p-8 text-center shadow-[0_18px_48px_rgba(15,27,77,0.08),inset_0_1px_2px_rgba(255,255,255,0.95)]">
             <div
-              className={`w-12 h-12 mx-auto rounded-2xl flex items-center justify-center mb-4 ${
+              className={`w-12 h-12 mx-auto rounded-2xl border border-white/85 backdrop-blur-md flex items-center justify-center mb-4 ${
                 isExpired
-                  ? 'bg-amber-50 text-[#D97706]'
-                  : 'bg-red-50 text-[#DC2626]'
+                  ? 'bg-amber-500/12 text-[#D97706]'
+                  : 'bg-red-500/12 text-[#DC2626]'
               }`}
             >
               {isExpired ? <Clock className="w-6 h-6" /> : <AlertCircle className="w-6 h-6" />}
@@ -227,7 +227,7 @@ function SharedCvWorkspace() {
               </Link>
               <Link
                 href="/"
-                className="w-full sm:w-auto min-h-[42px] px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-[#0F1B4D] text-sm font-semibold inline-flex items-center justify-center transition-colors whitespace-nowrap"
+                className="w-full sm:w-auto min-h-[42px] px-4 py-2.5 rounded-xl bg-white/70 hover:bg-white/95 backdrop-blur-md border border-white/85 ring-1 ring-slate-900/[0.05] text-[#0F1B4D] text-sm font-semibold inline-flex items-center justify-center transition-colors whitespace-nowrap"
               >
                 Home
               </Link>
@@ -288,9 +288,9 @@ function SharedCvWorkspace() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F4F7FE] text-slate-900 font-sans">
+    <div className="min-h-screen flex flex-col bg-transparent text-slate-900 font-sans">
       {/* Sticky Public Preview Header */}
-      <header className="w-full bg-white/95 backdrop-blur-md border-b border-[#E8EAF5] sticky top-0 z-40">
+      <header className="w-full bg-white/60 backdrop-blur-2xl backdrop-saturate-150 border-b border-white/85 shadow-[0_8px_30px_rgba(15,23,42,0.05),inset_0_-1px_0_rgba(255,255,255,0.7)] sticky top-0 z-40">
         <div className="max-w-[1360px] mx-auto px-3.5 sm:px-6 lg:px-10 h-14 sm:h-16 flex items-center justify-between gap-3">
           {/* Left: Brand + Candidate Context */}
           <div className="flex items-center gap-3 min-w-0">
@@ -314,7 +314,7 @@ function SharedCvWorkspace() {
           <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
             <Link
               href="/builder"
-              className="min-h-[40px] px-3 sm:px-3.5 py-2 rounded-xl border border-[#DCE3F7] bg-white hover:bg-[#EEF1FF]/60 text-[#0F1B4D] text-xs sm:text-sm font-semibold inline-flex items-center gap-1.5 transition-colors whitespace-nowrap shrink-0"
+              className="min-h-[40px] px-3 sm:px-3.5 py-2 rounded-xl border border-white/85 ring-1 ring-slate-900/[0.05] bg-white/72 hover:bg-white/95 backdrop-blur-md text-[#0F1B4D] text-xs sm:text-sm font-semibold inline-flex items-center gap-1.5 transition-colors whitespace-nowrap shrink-0"
             >
               <ArrowLeft className="w-3.5 h-3.5 text-[#4B4DED] shrink-0" />
               <span className="hidden sm:inline">CV Builder</span>
@@ -328,8 +328,8 @@ function SharedCvWorkspace() {
               title="Download editable Microsoft Word (.docx)"
               className={`min-h-[40px] px-2.5 sm:px-3.5 py-2 rounded-xl border text-xs sm:text-sm font-semibold inline-flex items-center gap-1.5 transition-colors cursor-pointer disabled:opacity-60 whitespace-nowrap shrink-0 ${
                 docxDone
-                  ? 'border-emerald-200 bg-emerald-50 text-emerald-700'
-                  : 'border-slate-200 bg-white hover:bg-slate-50 text-[#0F1B4D]'
+                  ? 'border-emerald-300/80 bg-emerald-50/90 backdrop-blur-md text-emerald-700'
+                  : 'border-white/85 ring-1 ring-slate-900/[0.05] bg-white/72 hover:bg-white/95 backdrop-blur-md text-[#0F1B4D]'
               }`}
             >
               {isDownloadingDocx ? (
@@ -356,7 +356,7 @@ function SharedCvWorkspace() {
               onClick={handlePrintSharedCv}
               disabled={isDownloading}
               title="Vector Print (Recommended: Margins None, Scale 100%)"
-              className="hidden sm:inline-flex min-h-[40px] px-3.5 py-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-[#0F1B4D] text-xs sm:text-sm font-semibold items-center gap-1.5 transition-colors cursor-pointer disabled:opacity-60 whitespace-nowrap shrink-0"
+              className="hidden sm:inline-flex min-h-[40px] px-3.5 py-2 rounded-xl border border-white/85 ring-1 ring-slate-900/[0.05] bg-white/72 hover:bg-white/95 backdrop-blur-md text-[#0F1B4D] text-xs sm:text-sm font-semibold items-center gap-1.5 transition-colors cursor-pointer disabled:opacity-60 whitespace-nowrap shrink-0"
             >
               <Printer className="w-4 h-4 text-[#4B4DED] shrink-0" />
               <span>Print</span>
@@ -403,10 +403,10 @@ function SharedCvWorkspace() {
           </div>
         </div>
 
-        {/* Crisp A4 Document Stage */}
+        {/* Crisp A4 Document Stage (inner A4 CV sheets remain 100% opaque white) */}
         <div
           ref={previewContainerRef}
-          className="w-full bg-[#E9EEFB]/70 rounded-2xl sm:rounded-3xl border border-[#DCE3F7] overflow-x-auto overflow-y-auto flex justify-center items-start p-2.5 sm:p-6"
+          className="w-full bg-white/38 backdrop-blur-xl rounded-2xl sm:rounded-3xl border border-white/85 ring-1 ring-slate-900/[0.04] shadow-[0_16px_44px_rgba(15,27,77,0.06),inset_0_1px_2px_rgba(255,255,255,0.88)] overflow-x-auto overflow-y-auto flex justify-center items-start p-2.5 sm:p-6"
         >
           <UnifiedCvPreview
             cv={cv}
@@ -417,8 +417,8 @@ function SharedCvWorkspace() {
           />
         </div>
 
-        {/* Floating Navy Zoom & Page Controls Dock */}
-        <div className="mt-4 bg-[#0F1B4D] text-white rounded-2xl px-3 sm:px-5 py-1.5 sm:py-2 flex items-center justify-center gap-1.5 sm:gap-3 shadow-[0_8px_24px_rgba(15,27,77,0.22)] max-w-full">
+        {/* Smoked Sapphire Floating Zoom & Page Controls Dock */}
+        <div className="mt-4 bg-[#080E24]/84 backdrop-blur-2xl backdrop-saturate-150 border border-white/18 text-white rounded-2xl px-3 sm:px-5 py-1.5 sm:py-2 flex items-center justify-center gap-1.5 sm:gap-3 shadow-[0_14px_38px_rgba(8,14,36,0.28),inset_0_1px_1px_rgba(255,255,255,0.18)] max-w-full">
           <button
             type="button"
             disabled={activePreviewPage <= 1}
@@ -510,7 +510,7 @@ export default function SharedCvPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen flex items-center justify-center bg-[#F4F7FE] text-slate-500 text-sm">
+        <div className="min-h-screen flex items-center justify-center bg-transparent text-slate-500 text-sm">
           Loading shared CV preview...
         </div>
       }

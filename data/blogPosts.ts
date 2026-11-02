@@ -417,10 +417,393 @@ export const BLOG_POSTS: BlogPost[] = [
       ctaLink: '/start',
     },
   },
+  {
+    id: 'uk-cv-personal-statement-examples',
+    title: 'UK CV Personal Statement Examples: How to Write a Winning 4-Line Profile',
+    seoTitle: 'UK CV Personal Statement Examples & Formula (2026 Guide)',
+    metaDescription:
+      'See recruiter-tested UK CV personal statement examples for corporate, finance, NHS nursing, graduates, and career changers—plus a simple 4-line British formula.',
+    excerpt:
+      'Replace generic clichés with a sharp four-line Personal Profile. Explore tailored British examples for experienced hires, career changers, NHS clinicians, and first-time applicants.',
+    category: 'CV Tips',
+    readTime: '6 min read',
+    date: '2 November 2026',
+    datePublished: '2026-11-02T11:00:00.000Z',
+    dateModified: '2026-11-02T11:00:00.000Z',
+    author: {
+      name: 'Eleanor Vance',
+      role: 'Senior UK Recruitment Lead',
+    },
+    image: '/assets/blog/uk-personal-statement-cv.jpg',
+    imageAlt:
+      'Printed British A4 CV personal profile page beside a fountain pen, notebook, and mug of tea by a bright sash window',
+    keywords: [
+      'cv personal statement examples uk',
+      'personal profile cv uk',
+      'how to start a cv uk',
+      'executive summary cv uk',
+      'career change personal statement cv uk',
+    ],
+    keyTakeaways: [
+      'Limit your UK Personal Profile to 50–80 words (3 to 4 crisp lines) directly beneath your header contact bar.',
+      'Follow the 3-part British formula: Professional Identity + Quantified Track Record + Next Target Role.',
+      'Write in implied first person ("Experienced Commercial Analyst driving...") without repetitive "I" pronouns or third-person phrasing.',
+      'Tailor two or three domain terms in your opening lines to match each UK job specification you apply for.',
+    ],
+    relatedTemplateLinks: [
+      {
+        label: 'Free UK CV Templates Hub',
+        href: '/cv-templates',
+        description: 'Preview clean Personal Profile spacing across 20+ British A4 layouts.',
+      },
+      {
+        label: 'Finance & Banking CV Template',
+        href: '/finance-cv-template',
+        description: 'Executive summary layouts tailored for City & Canary Wharf roles.',
+      },
+      {
+        label: 'NHS & Nursing CV Template',
+        href: '/nursing-cv-template',
+        description: 'Clinical personal statement structures highlighting NMC PIN and Band level.',
+      },
+      {
+        label: 'Live UK CV Builder',
+        href: '/builder',
+        description: 'Draft and refine your 4-line personal profile with instant A4 preview.',
+      },
+    ],
+    faqs: [
+      {
+        question: 'Should a UK CV personal statement be written in first or third person?',
+        answer:
+          'British recruiters prefer implied first person—dropping "I" and "my" at the start of sentences (for example, "Chartered Management Accountant with 5 years’ experience leading FTSE 250 month-end reporting..."). Avoid writing in the third person ("Eleanor is a manager..."), which reads unnaturally on a British CV.',
+      },
+      {
+        question: 'Is a CV Personal Profile the same as a UCAS Personal Statement?',
+        answer:
+          'No. A UCAS statement is a 4,000-character academic essay for university admissions, whereas a UK employment CV Personal Profile is a tight 3–4 line commercial pitch sitting at the top of page one.',
+      },
+      {
+        question: 'How often should I update my CV personal statement?',
+        answer:
+          'Keep your core metric sentence consistent, but tweak your opening job title and target skills in the final sentence for every high-priority application so hiring managers see an immediate match.',
+      },
+    ],
+    content: {
+      intro:
+        'Your Personal Profile occupies the highest-value real estate on page one of a British CV. Before scanning your employment dates, hiring managers read those four opening lines to decide whether your seniority, sector background, and commercial focus match their vacancy. Pair the formula below with any layout from our [free UK CV templates](/cv-templates) to hook recruiters in seconds.',
+      sections: [
+        {
+          id: 'the-3-part-british-personal-profile-formula',
+          heading: '1. The 3-Part British Personal Profile Formula',
+          body: [
+            'Most weak personal statements fail because they string together unverifiable adjectives: "enthusiastic, motivated self-starter who works well alone or in a team." Because any candidate can claim those traits, UK recruiters skip right past them.',
+            'Anchor your opening paragraph in concrete evidence instead. Sentence one states your current title, years of experience, and sector. Sentence two proves your impact with one or two hard metrics (£ revenue, % efficiency, caseload, or qualification). Sentence three names the exact role and value you bring next—matching the structure in our [complete UK CV writing guide](/blog/how-to-write-a-cv-uk).',
+          ],
+          bullets: [
+            'Line 1 (Identity): Title + years/qualification + industry specialism.',
+            'Lines 2–3 (Proof): Quantified commercial, technical, or clinical outcome.',
+            'Line 4 (Goal): Target UK role title and specific contribution.',
+          ],
+        },
+        {
+          id: 'sector-specific-uk-examples',
+          heading: '2. Sector-Specific UK Personal Statement Examples',
+          body: [
+            '**Corporate & Operations:** "Operations Lead with 7 years’ experience optimising multi-site UK grocery and 3PL supply chains. Reduced regional fulfilment costs by £340k YoY while lifting on-time store deliveries from 91% to 98.4%. Targeting a Senior Supply Chain Manager post to scale automated warehouse workflows."',
+            '**Finance & Accountancy:** "ACCA-qualified Financial Analyst with 4 years’ FP&A and statutory reporting experience across mid-market SaaS firms. Built rolling 13-week cash-flow models covering £28m ARR and shortened month-end close by three working days." Format profiles like this cleanly on our [finance CV template](/finance-cv-template) or clinical equivalents on our [NHS nursing CV template](/nursing-cv-template).',
+          ],
+        },
+        {
+          id: 'career-changers-and-first-job-profiles',
+          heading: '3. Writing a Profile When Changing Careers or Starting Out',
+          body: [
+            'Pivoting industries? Bridge your past transferable achievements directly to the new discipline—mentioning completed UK certifications (such as PRINCE2, CIPD Level 5, or CompTIA) in sentence one so ATS parsers and hiring leads understand your transition immediately.',
+            'If you are still at school or university, focus on academic rigour, reliability, and availability. See dedicated student phrasing inside our [first CV guide for 16-year-olds, school leavers, and graduates](/blog/first-cv-guide-16-year-old-school-leaver-graduate-uk).',
+          ],
+        },
+      ],
+      conclusion:
+        'Four focused lines of evidence beat half a page of buzzwords every time. Draft your profile inside our [free British A4 CV builder](/builder) and see how cleanly it sits at the top of your page.',
+      ctaText: 'Build Your Personal Profile Free',
+      ctaLink: '/builder',
+    },
+  },
+  {
+    id: 'uk-cv-keywords-and-action-verbs-ats',
+    title: 'Best CV Keywords & Action Verbs for UK Job Applications (2026 ATS Guide)',
+    seoTitle: 'Best UK CV Keywords & Action Verbs to Pass ATS Scanners',
+    metaDescription:
+      'Upgrade weak duties with high-impact British CV action verbs and industry ATS keywords tested across Workday, Reed, Civil Service Jobs, and NHS Trac.',
+    excerpt:
+      'Swap passive phrases like "responsible for" with measurable British action verbs and exact job-spec keywords that rank higher in recruiter Boolean searches.',
+    category: 'ATS Guide',
+    readTime: '6 min read',
+    date: '2 November 2026',
+    datePublished: '2026-11-02T11:30:00.000Z',
+    dateModified: '2026-11-02T11:30:00.000Z',
+    author: {
+      name: 'Marcus Sterling',
+      role: 'HR Tech & Talent Acquisition Specialist',
+    },
+    image: '/assets/blog/uk-ats-keywords-cv.jpg',
+    imageAlt:
+      'Printed British A4 CVs and silver laptop on a modern London glass meeting table overlooking the city skyline',
+    keywords: [
+      'cv keywords uk',
+      'action verbs for cv uk',
+      'ats keywords uk job application',
+      'power words for cv uk',
+      'replace responsible for on cv',
+    ],
+    keyTakeaways: [
+      'Eliminate passive fillers ("Responsible for", "Assisted with", "Duties included") and open every bullet with a decisive past-tense verb.',
+      'Pair hard competency nouns (e.g., "P&L Forecasting", "CQC Compliance", "Agile Delivery") with concrete outcomes rather than dumping isolated word lists.',
+      'Include both British qualification titles and abbreviations—for example, "Chartered Institute of Personnel and Development (CIPD)".',
+      'Keep British spelling consistent ("optimised", "standardised", "commercialised") when applying to UK-headquartered employers.',
+    ],
+    relatedTemplateLinks: [
+      {
+        label: 'ATS-Friendly CV Templates',
+        href: '/ats-friendly-cv-template',
+        description: 'Clean single-column British A4 templates engineered for keyword clarity.',
+      },
+      {
+        label: 'Upload & Parse Existing CV',
+        href: '/import',
+        description: 'Import your current PDF or Word CV and sharpen weak bullet points fast.',
+      },
+      {
+        label: 'Finance & Corporate Templates',
+        href: '/finance-cv-template',
+        description: 'High-density A4 layouts ideal for quantified commercial bullet points.',
+      },
+      {
+        label: 'All Free UK CV Templates',
+        href: '/cv-templates',
+        description: 'Compare classic, modern, and technical A4 templates side by side.',
+      },
+    ],
+    faqs: [
+      {
+        question: 'How many keywords from the job advert should I include on my UK CV?',
+        answer:
+          'Aim to mirror the 6 to 10 core essential criteria listed in the Person Specification—such as specific software, regulatory frameworks, qualifications, and core responsibilities—woven naturally into your Personal Profile, Core Skills, and Work Experience bullets.',
+      },
+      {
+        question: 'Should I use past or present tense action verbs on my CV?',
+        answer:
+          'Use present tense verbs ("Lead", "Oversee", "Deliver") for responsibilities in your current role, and past tense verbs ("Negotiated", "Streamlined", "Delivered") for all previous roles and completed projects.',
+      },
+      {
+        question: 'Does British vs American spelling affect UK ATS keyword matching?',
+        answer:
+          'While modern semantic search engines recognise many variants, strict Boolean filters used by UK agency consultants on Reed or CV-Library commonly query British spellings ("Financial Modelling", "Organisation", "Licence"). Stick to UK English unless applying to a US firm.',
+      },
+    ],
+    content: {
+      intro:
+        'Once your layout follows clean structural rules—as covered in our [UK ATS formatting guide](/blog/ats-friendly-cv-uk-guide)—the words inside your bullet points determine where you rank in recruiter searches. Combining precise domain nouns with strong British action verbs turns flat job descriptions into persuasive evidence on any [ATS-friendly CV template](/ats-friendly-cv-template).',
+      sections: [
+        {
+          id: 'hard-nouns-vs-action-verbs-in-ats',
+          heading: '1. Why ATS Scanners Search Nouns While Humans Read Verbs',
+          body: [
+            'Recruiters rarely type verbs like "spearheaded" into Bullhorn or Workday search bars. Instead, they search hard nouns: job titles, software tools, UK regulatory standards, and accredited qualifications (`"Project Manager" AND "PRINCE2" AND "RAID Logs"`).',
+            'Once your CV surfaces in that shortlist, the human hiring manager reads your bullet points—and strong action verbs ("Delivered", "Restructured", "Negotiated", "Safeguarded") immediately signal ownership rather than passive attendance.',
+          ],
+          bullets: [
+            'Leadership & Ownership: Directed, Mobilised, Mentored, Chaired, Spearheaded.',
+            'Commercial & Revenue: Negotiated, Accelerated, Captured, Retained, Monetised.',
+            'Operations & Efficiency: Streamlined, Automated, Consolidated, Standardized, Audited.',
+          ],
+        },
+        {
+          id: 'mirroring-uk-person-specifications',
+          heading: '2. Extracting High-Value Keywords From UK Person Specifications',
+          body: [
+            'Public sector portals (NHS Trac, Civil Service Jobs, university HR systems) and FTSE corporate careers pages score applications directly against "Essential" and "Desirable" criteria. Highlight recurring multi-word phrases in the job pack—for example, "Stakeholder Management", "GDPR Data Governance", "Multi-Agency Safeguarding", or "IFRS 16 Reporting".',
+            'Weave those exact phrases into your **Core Skills** list and prove each one inside a dated **Work Experience** bullet. You can test how cleanly your current bullets extract by uploading your file to our [free UK CV importer](/import).',
+          ],
+        },
+        {
+          id: 'rewriting-weak-cv-bullets-before-and-after',
+          heading: '3. Before & After: Upgrading Passive UK CV Bullets',
+          body: [
+            'Compare *"Responsible for looking after key client accounts and dealing with renewals"* against *"Managed a £1.8m portfolio of 34 UK enterprise accounts, lifting annual contract renewals from 82% to 94% through quarterly executive business reviews."*',
+            'Combine this phrasing discipline with our [UK CV Personal Statement guide](/blog/uk-cv-personal-statement-examples) so your entire page reads with unmistakable authority.',
+          ],
+        },
+      ],
+      conclusion:
+        'Strong UK CV writing pairs recruiter search terms with tangible commercial or clinical proof. Open any layout in our [British CV template hub](/cv-templates) to put sharp, ATS-ready phrasing to work immediately.',
+      ctaText: 'Try an ATS-Ready UK Template',
+      ctaLink: '/ats-friendly-cv-template',
+    },
+  },
+  {
+    id: 'uk-apprenticeship-cv-guide',
+    title: 'How to Write a UK Apprenticeship CV: Level 3, Higher & Degree Apprenticeships',
+    seoTitle: 'UK Apprenticeship CV Guide: Degree & School Leaver Tips',
+    metaDescription:
+      'Applying for Level 3, Higher, or Degree Apprenticeships in the UK? Learn how to structure your A-Levels, BTECs, T-Levels, projects, and transferable skills.',
+    excerpt:
+      'Stand out on Gov.uk, UCAS, and FTSE 100 apprenticeship portals with a crisp one-page British CV that turns school projects, part-time shifts, and predicted grades into real workplace potential.',
+    category: 'Graduate & School Leaver',
+    readTime: '7 min read',
+    date: '2 November 2026',
+    datePublished: '2026-11-02T12:00:00.000Z',
+    dateModified: '2026-11-02T12:00:00.000Z',
+    author: {
+      name: 'Hannah Alverton',
+      role: 'UK Early Careers & Campus Adviser',
+    },
+    image: '/assets/blog/uk-apprenticeship-cv.jpg',
+    imageAlt:
+      'Printed one-page UK apprenticeship CV beside a closed notebook and laptop in a bright British sixth form and university study space',
+    keywords: [
+      'apprenticeship cv uk',
+      'degree apprenticeship cv template uk',
+      'school leaver apprenticeship cv',
+      'how to write a cv for an apprenticeship uk',
+      'higher apprenticeship cv examples',
+    ],
+    keyTakeaways: [
+      'Match your CV focus to the apprenticeship tier: practical reliability for Level 2–3, and analytical coursework plus commercial curiosity for Level 4–6 Higher & Degree pathways.',
+      'Highlight virtual work experience (Springpod, Forage), EPQ topics, T-Level industry placements, and STEM or business societies prominently.',
+      'List GCSE English and Mathematics grades explicitly—almost every UK apprenticeship provider checks Level 2 numeracy and literacy eligibility first.',
+      'Keep your apprenticeship CV to a crisp single ISO A4 page unless technical project portfolios justify a second page.',
+    ],
+    relatedTemplateLinks: [
+      {
+        label: 'School Leaver & Apprenticeship CVs',
+        href: '/school-leaver-cv-template',
+        description: 'Purpose-built A4 layouts for Sixth Form, BTEC, T-Level, and apprenticeship applicants.',
+      },
+      {
+        label: '16-Year-Old GCSE CV Templates',
+        href: '/cv-template-16-year-old',
+        description: 'Clean one-page templates for post-16 Level 2 and Level 3 apprenticeships.',
+      },
+      {
+        label: 'UK Graduate CV Templates',
+        href: '/graduate-cv-templates',
+        description: 'Structured academic & project layouts for competitive corporate intakes.',
+      },
+      {
+        label: 'Guided Free UK CV Start',
+        href: '/start',
+        description: 'Build your apprenticeship CV step by step in minutes with zero watermarks.',
+      },
+    ],
+    faqs: [
+      {
+        question: 'Do UK degree apprenticeships require a different CV from university applications?',
+        answer:
+          'Yes. Unlike UCAS university admissions, degree apprenticeship employers (such as Rolls-Royce, BAE Systems, PwC, Dyson, and the NHS) recruit you as a salaried employee. They want a structured one-page business CV showing teamwork, problem-solving, relevant subjects, and genuine interest in their industry.',
+      },
+      {
+        question: 'Should I include GCSE English and Maths if I am already studying A-Levels or a BTEC?',
+        answer:
+          'Always. UK apprenticeship funding rules require evidence of GCSE English Language and Mathematics at Grade 4/C or above (and often Grade 6+ for engineering or finance degree apprenticeships), so recruiters look for those exact grades immediately.',
+      },
+      {
+        question: 'Can I include virtual work experience on an apprenticeship CV?',
+        answer:
+          'Absolutely. Structured UK insight programmes (such as Forage, Speakers for Schools, or employer insight days) show proactive industry motivation—list the host company, date, and one practical task you completed.',
+      },
+    ],
+    content: {
+      intro:
+        'Competition for UK Higher and Degree Apprenticeships now rivals Russell Group university admissions, while Level 3 trade, digital, and business apprenticeships attract dozens of applicants per post. Using a dedicated [school leaver and apprenticeship CV template](/school-leaver-cv-template) ensures apprenticeship assessors immediately spot your qualifications, technical curiosity, and workplace readiness.',
+      sections: [
+        {
+          id: 'tailoring-for-level-3-vs-degree-apprenticeships',
+          heading: '1. Tailoring Your Layout for Level 3 vs Level 6 Degree Apprenticeships',
+          body: [
+            'Post-GCSE applicants targeting Level 2 or Level 3 apprenticeships in engineering maintenance, IT support, dental nursing, or business administration should lead with practical dependability, hands-on school subjects, and punctuality—using a crisp one-page layout from our [16-year-old CV template collection](/cv-template-16-year-old).',
+            'Sixth Formers and college leavers targeting Level 4–6 Higher or Degree Apprenticeships in software engineering, quantity surveying, audit, or aerospace need stronger technical proof. Unpack relevant A-Level, T-Level, or BTEC modules, Extended Project Qualifications (EPQ), coding repositories, or CAD coursework right beneath your education entry.',
+          ],
+        },
+        {
+          id: 'proving-workplace-competencies-early',
+          heading: '2. Proving Workplace Competencies Without Corporate History',
+          body: [
+            'Apprenticeship recruiters score early-career CVs against core behaviours: teamwork, time management, communication, and resilience. Frame Saturday hospitality shifts, T-Level placements, volunteering, or sports leadership using measurable outcomes—just as outlined in our [first UK CV guide for students and graduates](/blog/first-cv-guide-16-year-old-school-leaver-graduate-uk).',
+            'Even a 10-hour virtual insight programme or school STEM challenge counts when you describe what you solved: *"Completed a 3-day civil engineering insight project, collaborating in a team of four to cost a sustainable flood-defence proposal in Excel."*',
+          ],
+          bullets: [
+            'State GCSE English Language and Mathematics grades clearly under Education.',
+            'Highlight technical tools early: Excel, Python, SolidWorks, Canva, or laboratory safety.',
+            'Explain why you chose an earn-and-learn pathway in your 3-line Personal Profile.',
+          ],
+        },
+        {
+          id: 'passing-apprenticeship-ats-screening',
+          heading: '3. Formatting Cleanly for Employer & Gov.uk Portals',
+          body: [
+            'Major apprenticeship employers screen CV uploads through automated portals before inviting candidates to online situational judgement tests. Avoid graphic sidebars, skill stars, or profile photos, and double-check your headings against our [UK ATS formatting guide](/blog/ats-friendly-cv-uk-guide) so every predicted grade extracts accurately.',
+          ],
+        },
+      ],
+      conclusion:
+        'A winning UK apprenticeship CV shows employers you are ready to learn fast, show up reliably, and contribute from week one. Pick a free ISO A4 design on our [school leaver CV template page](/school-leaver-cv-template) and export your PDF today.',
+      ctaText: 'Browse Apprenticeship CV Templates',
+      ctaLink: '/school-leaver-cv-template',
+    },
+  },
 ];
 
 export function getBlogPostBySlug(slug: string): BlogPost | undefined {
   return BLOG_POSTS.find((p) => p.id === slug);
+}
+
+/**
+ * Selects related blog posts for the 'Read Next' sidebar and cross-navigation,
+ * prioritizing articles in the exact same category first and ranking remaining
+ * candidates by shared template hubs and topic keywords so `limit` (default 3)
+ * articles are reliably returned.
+ */
+export function getRelatedBlogPosts(currentSlug: string, limit = 3): BlogPost[] {
+  const currentPost = getBlogPostBySlug(currentSlug);
+  const candidates = BLOG_POSTS.filter((p) => p.id !== currentSlug);
+
+  if (!currentPost) {
+    return candidates.slice(0, limit);
+  }
+
+  const currentHrefs = new Set(currentPost.relatedTemplateLinks.map((link) => link.href));
+  const currentKeywords = new Set(
+    currentPost.keywords.flatMap((kw) => kw.toLowerCase().split(/\s+/))
+  );
+
+  return [...candidates]
+    .sort((a, b) => {
+      const score = (post: BlogPost) => {
+        let total = 0;
+        if (post.category === currentPost.category) {
+          total += 100;
+        }
+        for (const link of post.relatedTemplateLinks) {
+          if (currentHrefs.has(link.href)) {
+            total += 12;
+          }
+        }
+        for (const kw of post.keywords) {
+          for (const word of kw.toLowerCase().split(/\s+/)) {
+            if (word.length > 3 && currentKeywords.has(word)) {
+              total += 3;
+            }
+          }
+        }
+        return total;
+      };
+
+      const diff = score(b) - score(a);
+      if (diff !== 0) return diff;
+      return new Date(b.datePublished).getTime() - new Date(a.datePublished).getTime();
+    })
+    .slice(0, limit);
 }
 
 /**
@@ -430,15 +813,22 @@ export function getBlogPostBySlug(slug: string): BlogPost | undefined {
 export function getBlogPostsForCategorySlug(categorySlug: string): BlogPost[] {
   const byId = (id: string) => BLOG_POSTS.find((p) => p.id === id);
 
+  if (categorySlug === 'school-leaver-cv-template') {
+    return [
+      byId('uk-apprenticeship-cv-guide'),
+      byId('first-cv-guide-16-year-old-school-leaver-graduate-uk'),
+      byId('how-to-write-a-cv-uk'),
+    ].filter((p): p is BlogPost => Boolean(p));
+  }
+
   if (
     categorySlug === 'cv-template-16-year-old' ||
-    categorySlug === 'school-leaver-cv-template' ||
     categorySlug === 'graduate-cv-templates'
   ) {
     return [
       byId('first-cv-guide-16-year-old-school-leaver-graduate-uk'),
-      byId('how-to-write-a-cv-uk'),
-      byId('ats-friendly-cv-uk-guide'),
+      byId('uk-apprenticeship-cv-guide'),
+      byId('uk-cv-personal-statement-examples'),
     ].filter((p): p is BlogPost => Boolean(p));
   }
 
@@ -449,10 +839,14 @@ export function getBlogPostsForCategorySlug(categorySlug: string): BlogPost[] {
   ) {
     return [
       byId('ats-friendly-cv-uk-guide'),
-      byId('how-to-write-a-cv-uk'),
-      byId('first-cv-guide-16-year-old-school-leaver-graduate-uk'),
+      byId('uk-cv-keywords-and-action-verbs-ats'),
+      byId('uk-cv-personal-statement-examples'),
     ].filter((p): p is BlogPost => Boolean(p));
   }
 
-  return BLOG_POSTS;
+  return [
+    byId('how-to-write-a-cv-uk'),
+    byId('uk-cv-personal-statement-examples'),
+    byId('ats-friendly-cv-uk-guide'),
+  ].filter((p): p is BlogPost => Boolean(p));
 }

@@ -43,13 +43,13 @@ export default function StartCvModal({ isOpen, onClose, initialMode = 'default' 
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-200">
-      <div className="relative w-full max-w-2xl bg-[#f4f7fe] rounded-3xl shadow-2xl border border-slate-200/80 overflow-hidden text-slate-900 transition-all">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-[#080E24]/56 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-200">
+      <div className="relative w-full max-w-2xl bg-white/82 backdrop-blur-2xl backdrop-saturate-150 rounded-3xl shadow-[0_28px_80px_rgba(8,14,36,0.28),inset_0_1px_2px_rgba(255,255,255,0.95)] border border-white/90 ring-1 ring-slate-900/[0.05] overflow-hidden text-slate-900 transition-all">
         {/* Top Close Button */}
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/80 hover:bg-white text-slate-500 hover:text-slate-900 border border-slate-200/80 flex items-center justify-center transition-colors shadow-2xs z-30 cursor-pointer"
+          className="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/80 hover:bg-white backdrop-blur-md text-slate-500 hover:text-slate-900 border border-white/90 flex items-center justify-center transition-colors shadow-2xs z-30 cursor-pointer"
           aria-label="Close"
         >
           <X className="w-5 h-5" />
@@ -70,10 +70,10 @@ export default function StartCvModal({ isOpen, onClose, initialMode = 'default' 
               {/* Card 1: Import my CV */}
               <div
                 onClick={handleStartImport}
-                className="group relative bg-white rounded-3xl border border-slate-200 shadow-md hover:shadow-xl hover:border-[#4a4df2] transition-all duration-200 p-6 sm:p-7 flex items-center gap-5 sm:gap-6 cursor-pointer overflow-hidden"
+                className="group relative bg-white/75 hover:bg-white/95 backdrop-blur-xl rounded-3xl border border-white/90 ring-1 ring-slate-900/[0.05] shadow-[0_12px_34px_rgba(15,23,42,0.06)] hover:shadow-xl hover:border-[#4a4df2] transition-all duration-200 p-6 sm:p-7 flex items-center gap-5 sm:gap-6 cursor-pointer overflow-hidden"
               >
                 {/* Left Icon Box */}
-                <div className="relative z-10 w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-[#eff3fd] flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
+                <div className="relative z-10 w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-[#eff3fd]/90 border border-white/85 flex items-center justify-center shrink-0 shadow-2xs group-hover:scale-105 transition-transform">
                   {/* Document with Arrow Import SVG */}
                   <svg
                     className="w-9 h-9 sm:w-10 sm:h-10 text-[#4a4df2]"
@@ -106,10 +106,10 @@ export default function StartCvModal({ isOpen, onClose, initialMode = 'default' 
               {/* Card 2: From scratch (Recommended) */}
               <div
                 onClick={handleStartScratch}
-                className="group relative bg-white rounded-3xl border border-slate-200 shadow-md hover:shadow-xl hover:border-[#4a4df2] transition-all duration-200 p-6 sm:p-7 flex items-center gap-5 sm:gap-6 cursor-pointer overflow-hidden"
+                className="group relative bg-white/75 hover:bg-white/95 backdrop-blur-xl rounded-3xl border border-white/90 ring-1 ring-slate-900/[0.05] shadow-[0_12px_34px_rgba(15,23,42,0.06)] hover:shadow-xl hover:border-[#4a4df2] transition-all duration-200 p-6 sm:p-7 flex items-center gap-5 sm:gap-6 cursor-pointer overflow-hidden"
               >
-                {/* 1. Recommended Pill Badge (Top Right) */}
-                <div className="absolute top-0 right-6 -translate-y-1/2 bg-[#131a47] text-white text-[11.5px] font-semibold px-3.5 py-1 rounded-full shadow-md flex items-center gap-1.5 z-20 border border-indigo-400/20">
+                {/* 1. Recommended Smoked-Glass Badge (Top Right) */}
+                <div className="absolute top-0 right-6 -translate-y-1/2 bg-[#080E24]/90 backdrop-blur-md text-white text-[11.5px] font-semibold px-3.5 py-1 rounded-full shadow-md flex items-center gap-1.5 z-20 border border-white/20">
                   <Sparkles className="w-3.5 h-3.5 text-cyan-300" />
                   <span>Recommended</span>
                 </div>
@@ -160,7 +160,7 @@ export default function StartCvModal({ isOpen, onClose, initialMode = 'default' 
             {/* Drag & Drop Area */}
             <div
               onClick={() => handleSimulateUpload('My_Resume.pdf')}
-              className="border-2 border-dashed border-indigo-200 hover:border-[#4a4df2] bg-white rounded-2xl p-8 sm:p-10 flex flex-col items-center justify-center text-center cursor-pointer transition-all hover:bg-blue-50/30 group"
+              className="border-2 border-dashed border-indigo-200 hover:border-[#4a4df2] bg-white/70 hover:bg-white/95 backdrop-blur-xl rounded-2xl p-8 sm:p-10 flex flex-col items-center justify-center text-center cursor-pointer transition-all group"
             >
               <div className="w-14 h-14 rounded-full bg-indigo-50 text-[#4a4df2] flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                 <UploadCloud className="w-7 h-7" />

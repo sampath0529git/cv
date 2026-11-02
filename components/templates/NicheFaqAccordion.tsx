@@ -202,7 +202,7 @@ export default function NicheFaqAccordion({
           <button
             type="button"
             onClick={handleToggleAll}
-            className="min-h-[38px] px-3.5 py-1.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-700 inline-flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap shrink-0 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#2563EB]"
+            className="min-h-[38px] px-3.5 py-1.5 rounded-xl bg-white/68 hover:bg-white/92 backdrop-blur-xl border border-white/85 ring-1 ring-slate-900/[0.05] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] text-xs font-semibold text-slate-700 inline-flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap shrink-0 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#2563EB]"
           >
             <ChevronsUpDown className="w-3.5 h-3.5 text-slate-500" />
             <span>{allVisibleExpanded ? 'Collapse All' : 'Expand All'}</span>
@@ -216,7 +216,7 @@ export default function NicheFaqAccordion({
           <div
             role="tablist"
             aria-label="Filter FAQs by UK CV niche"
-            className="flex items-center gap-1.5 overflow-x-auto scrollbar-none p-1.5 rounded-2xl bg-slate-200/60 border border-slate-200/80"
+            className="flex items-center gap-1.5 overflow-x-auto scrollbar-none p-1.5 rounded-2xl bg-white/50 backdrop-blur-2xl backdrop-saturate-150 border border-white/85 ring-1 ring-slate-900/[0.04] shadow-[inset_0_1px_2px_rgba(255,255,255,0.85)]"
           >
             <button
               type="button"
@@ -225,8 +225,8 @@ export default function NicheFaqAccordion({
               onClick={() => handleSelectNicheTab('cv-templates')}
               className={`min-h-[36px] px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all duration-150 cursor-pointer whitespace-nowrap shrink-0 ${
                 selectedHubNicheSlug === 'cv-templates'
-                  ? 'bg-white text-slate-900 shadow-xs'
-                  : 'text-slate-600 hover:text-slate-900'
+                  ? 'bg-white/95 text-slate-900 shadow-xs ring-1 ring-slate-900/[0.05]'
+                  : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
               }`}
             >
               General UK CV
@@ -242,8 +242,8 @@ export default function NicheFaqAccordion({
                   onClick={() => handleSelectNicheTab(spoke.slug)}
                   className={`min-h-[36px] px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all duration-150 cursor-pointer whitespace-nowrap shrink-0 ${
                     isSelected
-                      ? 'bg-white text-slate-900 shadow-xs'
-                      : 'text-slate-600 hover:text-slate-900'
+                      ? 'bg-white/95 text-slate-900 shadow-xs ring-1 ring-slate-900/[0.05]'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-white/50'
                   }`}
                 >
                   {spoke.categoryLabel}
@@ -284,14 +284,14 @@ export default function NicheFaqAccordion({
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder={`Filter ${activeConfig.categoryLabel.toLowerCase()} CV questions (e.g. page length, ATS, grades, photo)...`}
           aria-label={`Search ${activeConfig.categoryLabel} frequently asked questions`}
-          className="w-full min-h-[44px] pl-10 pr-10 py-2.5 rounded-xl bg-white border border-slate-200/90 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-hidden focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all"
+          className="w-full min-h-[44px] pl-10 pr-10 py-2.5 rounded-xl bg-white/68 hover:bg-white/88 focus:bg-white/95 backdrop-blur-xl border border-white/85 ring-1 ring-slate-900/[0.05] shadow-[inset_0_1px_2px_rgba(255,255,255,0.9)] text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-hidden focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 transition-all"
         />
         {searchQuery && (
           <button
             type="button"
             onClick={() => setSearchQuery('')}
             aria-label="Clear question search"
-            className="absolute right-2.5 top-1/2 -translate-y-1/2 min-h-[32px] min-w-[32px] rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center transition-colors cursor-pointer"
+            className="absolute right-2.5 top-1/2 -translate-y-1/2 min-h-[32px] min-w-[32px] rounded-lg text-slate-400 hover:text-slate-700 hover:bg-white/80 flex items-center justify-center transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -300,7 +300,7 @@ export default function NicheFaqAccordion({
 
       {/* Crawl-Friendly Interactive Accordion List */}
       {visibleFaqs.length === 0 ? (
-        <div className="p-8 rounded-2xl bg-white border border-slate-200/90 text-center space-y-3">
+        <div className="p-8 rounded-2xl bg-white/64 backdrop-blur-2xl border border-white/85 ring-1 ring-slate-900/[0.04] text-center space-y-3">
           <p className="text-sm font-semibold text-slate-800">
             No questions matched &ldquo;{searchQuery}&rdquo; in {activeConfig.categoryLabel}.
           </p>
@@ -329,10 +329,10 @@ export default function NicheFaqAccordion({
                 itemScope
                 itemProp="mainEntity"
                 itemType="https://schema.org/Question"
-                className={`rounded-2xl bg-white border transition-colors duration-150 ${
+                className={`rounded-2xl backdrop-blur-2xl backdrop-saturate-150 border transition-all duration-150 ${
                   isOpen
-                    ? 'border-blue-500/40 shadow-[0_4px_20px_rgba(15,23,42,0.04)]'
-                    : 'border-slate-200/90 hover:border-slate-300'
+                    ? 'bg-white/78 border-blue-400/60 ring-1 ring-blue-500/10 shadow-[0_12px_32px_rgba(37,99,235,0.08),inset_0_1px_2px_rgba(255,255,255,0.95)]'
+                    : 'bg-white/60 hover:bg-white/82 border-white/85 ring-1 ring-slate-900/[0.04] shadow-[0_6px_22px_rgba(15,23,42,0.04),inset_0_1px_1px_rgba(255,255,255,0.95)]'
                 }`}
               >
                 <h3 itemProp="name" className="m-0">
@@ -362,8 +362,8 @@ export default function NicheFaqAccordion({
                       transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
                       className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
                         isOpen
-                          ? 'bg-blue-50 text-[#2563EB]'
-                          : 'bg-slate-100 text-slate-500'
+                          ? 'bg-blue-500/12 border border-blue-400/25 text-[#2563EB]'
+                          : 'bg-white/75 border border-white/85 text-slate-500'
                       }`}
                     >
                       <ChevronDown className="w-4 h-4" />
@@ -387,7 +387,7 @@ export default function NicheFaqAccordion({
                   }`}
                 >
                   <div className="overflow-hidden">
-                    <div className="px-5 sm:px-6 pb-5 pt-3.5 border-t border-slate-100 sm:pl-[52px] space-y-3">
+                    <div className="px-5 sm:px-6 pb-5 pt-3.5 border-t border-white/75 sm:pl-[52px] space-y-3">
                       <p
                         itemProp="text"
                         className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-[70ch]"

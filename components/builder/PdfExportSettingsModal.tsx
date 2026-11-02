@@ -106,7 +106,7 @@ export default function PdfExportSettingsModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-[#0F1B4D]/45 backdrop-blur-[2px] p-0 sm:p-4"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-[#080E24]/52 backdrop-blur-md p-0 sm:p-4"
       onClick={onClose}
     >
       <div
@@ -114,13 +114,13 @@ export default function PdfExportSettingsModal({
         aria-modal="true"
         aria-labelledby="pdf-export-settings-title"
         onClick={(e) => e.stopPropagation()}
-        className="w-full sm:max-w-[520px] bg-white rounded-t-3xl sm:rounded-3xl border border-[#E8EAF5] shadow-[0_20px_60px_rgba(15,27,77,0.18)] overflow-hidden"
+        className="w-full sm:max-w-[520px] bg-white/84 backdrop-blur-2xl backdrop-saturate-150 rounded-t-3xl sm:rounded-3xl border border-white/90 ring-1 ring-slate-900/[0.05] shadow-[0_24px_70px_rgba(8,14,36,0.26),inset_0_1px_2px_rgba(255,255,255,0.95)] overflow-hidden"
       >
         {/* Modal Header */}
-        <div className="px-5 sm:px-6 pt-5 pb-4 border-b border-slate-100 flex items-start justify-between gap-3">
+        <div className="px-5 sm:px-6 pt-5 pb-4 border-b border-white/80 flex items-start justify-between gap-3">
           <div className="min-w-0">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-[#EEF1FF] text-[#4B4DED] flex items-center justify-center shrink-0">
+              <div className="w-8 h-8 rounded-xl bg-[#4B4DED]/12 border border-white/85 text-[#4B4DED] flex items-center justify-center shrink-0">
                 <Sliders className="w-4 h-4" />
               </div>
               <h2
@@ -138,7 +138,7 @@ export default function PdfExportSettingsModal({
             type="button"
             onClick={onClose}
             aria-label="Close PDF Export Settings"
-            className="min-h-[36px] min-w-[36px] rounded-xl text-slate-400 hover:text-[#0F1B4D] hover:bg-slate-100 flex items-center justify-center transition-colors cursor-pointer shrink-0"
+            className="min-h-[36px] min-w-[36px] rounded-xl text-slate-400 hover:text-[#0F1B4D] hover:bg-white/80 flex items-center justify-center transition-colors cursor-pointer shrink-0"
           >
             <X className="w-4 h-4" />
           </button>
@@ -147,7 +147,7 @@ export default function PdfExportSettingsModal({
         {/* Modal Body */}
         <div className="p-5 sm:p-6 space-y-4">
           {/* Estimated PDF File Size Summary Strip */}
-          <div className="p-3.5 rounded-2xl bg-[#F8F9FE] border border-[#E4E9FA] flex flex-wrap items-center justify-between gap-3">
+          <div className="p-3.5 rounded-2xl bg-white/66 backdrop-blur-xl border border-white/85 ring-1 ring-slate-900/[0.04] flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2.5 min-w-0">
               <FileText className="w-4 h-4 text-[#4B4DED] shrink-0" />
               <div className="min-w-0">
@@ -185,10 +185,10 @@ export default function PdfExportSettingsModal({
                 includeHyperlinks: !settings.includeHyperlinks,
               })
             }
-            className={`p-4 rounded-2xl border transition-colors duration-150 cursor-pointer flex items-start justify-between gap-4 ${
+            className={`p-4 rounded-2xl border backdrop-blur-xl transition-colors duration-150 cursor-pointer flex items-start justify-between gap-4 ${
               settings.includeHyperlinks
-                ? 'border-[#4B4DED]/40 bg-[#FAFBFD]'
-                : 'border-slate-200 bg-white hover:border-slate-300'
+                ? 'border-[#4B4DED]/40 bg-white/88 shadow-2xs'
+                : 'border-white/85 ring-1 ring-slate-900/[0.04] bg-white/66 hover:bg-white/88'
             }`}
           >
             <div className="flex items-start gap-3 min-w-0">
@@ -248,10 +248,10 @@ export default function PdfExportSettingsModal({
                 compressImages: !settings.compressImages,
               })
             }
-            className={`p-4 rounded-2xl border transition-colors duration-150 cursor-pointer flex items-start justify-between gap-4 ${
+            className={`p-4 rounded-2xl border backdrop-blur-xl transition-colors duration-150 cursor-pointer flex items-start justify-between gap-4 ${
               settings.compressImages
-                ? 'border-[#4B4DED]/40 bg-[#FAFBFD]'
-                : 'border-slate-200 bg-white hover:border-slate-300'
+                ? 'border-[#4B4DED]/40 bg-white/88 shadow-2xs'
+                : 'border-white/85 ring-1 ring-slate-900/[0.04] bg-white/66 hover:bg-white/88'
             }`}
           >
             <div className="flex items-start gap-3 min-w-0">
@@ -304,12 +304,12 @@ export default function PdfExportSettingsModal({
         </div>
 
         {/* Modal Footer */}
-        <div className="px-5 sm:px-6 py-3.5 bg-[#F8F9FE] border-t border-slate-100 flex flex-wrap items-center justify-between gap-3 pb-[max(0.875rem,env(safe-area-inset-bottom))]">
+        <div className="px-5 sm:px-6 py-3.5 bg-white/55 backdrop-blur-md border-t border-white/80 flex flex-wrap items-center justify-between gap-3 pb-[max(0.875rem,env(safe-area-inset-bottom))]">
           <button
             type="button"
             disabled={isDefault}
             onClick={() => store.resetPdfExportSettings()}
-            className="min-h-[38px] px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-[#0F1B4D] hover:bg-white border border-transparent hover:border-slate-200 flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap shrink-0"
+            className="min-h-[38px] px-3 py-1.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-[#0F1B4D] hover:bg-white/85 border border-transparent hover:border-white/90 flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap shrink-0"
           >
             <RotateCcw className="w-3.5 h-3.5 text-[#4B4DED]" />
             <span>Reset defaults</span>
@@ -319,7 +319,7 @@ export default function PdfExportSettingsModal({
             <button
               type="button"
               onClick={onClose}
-              className="min-h-[38px] px-4 py-1.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-[#0F1B4D] text-xs sm:text-sm font-semibold transition-colors cursor-pointer whitespace-nowrap"
+              className="min-h-[38px] px-4 py-1.5 rounded-xl bg-white/80 hover:bg-white border border-white/85 ring-1 ring-slate-900/[0.05] text-[#0F1B4D] text-xs sm:text-sm font-semibold transition-colors cursor-pointer whitespace-nowrap"
             >
               Done
             </button>

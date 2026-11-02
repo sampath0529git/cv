@@ -43,21 +43,26 @@ export default function Footer() {
   return (
     <footer
       aria-label="freecvmakeruk.co.uk Global Footer"
-      className="bg-slate-900 text-slate-300 border-t border-slate-800"
+      className="relative overflow-hidden bg-[#080E24]/88 backdrop-blur-2xl backdrop-saturate-150 text-slate-300 border-t border-white/15 shadow-[inset_0_1px_0_rgba(255,255,255,0.16)]"
     >
+      {/* Internal smoked-glass sapphire glow pools */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -top-32 left-1/4 w-[480px] h-[320px] rounded-full bg-blue-500/16 blur-3xl" />
+        <div className="absolute bottom-0 right-1/5 w-[440px] h-[280px] rounded-full bg-indigo-500/14 blur-3xl" />
+      </div>
+
       {/* 1. Newsletter & Career Insights Strip */}
-      <div className="border-b border-slate-800/80 bg-slate-950/60 py-10 sm:py-12">
+      <div className="relative border-b border-white/10 bg-white/[0.03] backdrop-blur-xl py-10 sm:py-12">
         <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
             <div className="text-center lg:text-left space-y-1.5 max-w-xl">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/15 text-blue-400 text-xs font-semibold border border-blue-500/20 mb-1">
-                <Sparkles className="w-3.5 h-3.5 text-blue-400" />
-                <span>Weekly Career Advice &amp; CV Tips</span>
+              <div className="text-xs font-semibold tracking-wide text-blue-300 uppercase mb-1">
+                Weekly Career Advice · UK CV Benchmarks
               </div>
               <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
                 Get interview tips &amp; salary benchmarks
               </h3>
-              <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-300/85 leading-relaxed">
                 Join over 250,000+ job seekers receiving recruiter-approved templates, ATS guidance, and career strategies directly to their inbox.
               </p>
             </div>
@@ -65,7 +70,7 @@ export default function Footer() {
             {/* Newsletter Input Form */}
             <div className="w-full lg:w-auto shrink-0">
               {subscribed ? (
-                <div className="flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-sm font-semibold animate-in fade-in">
+                <div className="flex items-center gap-2.5 px-5 py-3 rounded-2xl bg-emerald-500/15 backdrop-blur-md border border-emerald-400/30 text-emerald-300 text-sm font-semibold animate-in fade-in">
                   <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />
                   <span>Thank you! Check your inbox for your free UK CV Checklist.</span>
                 </div>
@@ -75,19 +80,19 @@ export default function Footer() {
                   className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full sm:w-[440px]"
                 >
                   <div className="relative flex-1">
-                    <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                    <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300/80" />
                     <input
                       type="email"
                       value={emailInput}
                       onChange={(e) => setEmailInput(e.target.value)}
                       placeholder="Enter your email address..."
                       required
-                      className="w-full min-h-[46px] pl-10 pr-4 rounded-xl bg-slate-800/80 border border-slate-700/80 text-white placeholder-slate-400 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#2563EB] focus:border-transparent transition-all"
+                      className="w-full min-h-[46px] pl-10 pr-4 rounded-xl bg-white/10 hover:bg-white/14 focus:bg-white/16 backdrop-blur-md border border-white/20 text-white placeholder-slate-400 text-sm focus:outline-hidden focus:ring-2 focus:ring-[#2563EB] focus:border-transparent shadow-[inset_0_1px_1px_rgba(255,255,255,0.12)] transition-all"
                     />
                   </div>
                   <button
                     type="submit"
-                    className="min-h-[46px] px-6 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-semibold text-sm transition-all shadow-md shadow-blue-600/30 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer whitespace-nowrap"
+                    className="min-h-[46px] px-6 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-semibold text-sm transition-all shadow-[0_8px_20px_rgba(37,99,235,0.35)] hover:-translate-y-0.5 active:translate-y-0 cursor-pointer whitespace-nowrap"
                   >
                     Subscribe
                   </button>
@@ -102,7 +107,7 @@ export default function Footer() {
       </div>
 
       {/* 2. Main Multi-Column Sitemap Grid */}
-      <div className="py-14 sm:py-16">
+      <div className="relative py-14 sm:py-16">
         <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-8 text-left">
             {/* Column 1: Brand & Credibility (4 cols on lg) */}
@@ -294,7 +299,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <span className="inline-flex items-center gap-1.5 text-emerald-400 text-xs">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                     <span>Systems Operational</span>
                   </span>
                 </li>
@@ -305,7 +310,7 @@ export default function Footer() {
       </div>
 
       {/* 3. Trademark Disclaimer Notice */}
-      <div className="border-t border-slate-800/80 py-6 text-slate-500 text-[11px] leading-relaxed">
+      <div className="relative border-t border-white/10 py-6 text-slate-400/80 text-[11px] leading-relaxed">
         <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 text-center sm:text-left">
           <p>
             *The names and logos of companies such as Google, Microsoft, Amazon, LinkedIn, Deloitte, Nike, IBM, and Tesla are trademarks belonging to their respective owners. Mention of these companies indicates where our candidates have successfully interviewed or worked and does not imply direct commercial partnership or endorsement.
@@ -314,7 +319,7 @@ export default function Footer() {
       </div>
 
       {/* 4. Bottom Sub-Footer Bar */}
-      <div className="border-t border-slate-800 bg-slate-950 py-6 text-xs text-slate-400">
+      <div className="relative border-t border-white/10 bg-black/25 backdrop-blur-xl py-6 text-xs text-slate-400">
         <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-5">
             {/* Copyright */}
@@ -343,14 +348,14 @@ export default function Footer() {
 
             {/* Social Media Icons & Scroll to Top */}
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 text-slate-400">
+              <div className="flex items-center gap-2 text-slate-300">
                 {/* LinkedIn */}
                 <a
                   href="https://linkedin.com"
                   target="_blank"
                   rel="noreferrer"
                   aria-label="LinkedIn"
-                  className="w-8 h-8 rounded-full bg-slate-800 hover:bg-[#0A66C2] hover:text-white flex items-center justify-center transition-colors"
+                  className="w-8 h-8 rounded-full bg-white/10 border border-white/15 backdrop-blur-md hover:bg-[#0A66C2] hover:border-[#0A66C2] hover:text-white flex items-center justify-center transition-all"
                 >
                   <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
                     <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
@@ -363,7 +368,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noreferrer"
                   aria-label="Twitter / X"
-                  className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 hover:text-white flex items-center justify-center transition-colors"
+                  className="w-8 h-8 rounded-full bg-white/10 border border-white/15 backdrop-blur-md hover:bg-white/25 hover:text-white flex items-center justify-center transition-all"
                 >
                   <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
                     <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -376,7 +381,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noreferrer"
                   aria-label="Facebook"
-                  className="w-8 h-8 rounded-full bg-slate-800 hover:bg-[#1877F2] hover:text-white flex items-center justify-center transition-colors"
+                  className="w-8 h-8 rounded-full bg-white/10 border border-white/15 backdrop-blur-md hover:bg-[#1877F2] hover:border-[#1877F2] hover:text-white flex items-center justify-center transition-all"
                 >
                   <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
                     <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
@@ -389,7 +394,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noreferrer"
                   aria-label="YouTube"
-                  className="w-8 h-8 rounded-full bg-slate-800 hover:bg-[#FF0000] hover:text-white flex items-center justify-center transition-colors"
+                  className="w-8 h-8 rounded-full bg-white/10 border border-white/15 backdrop-blur-md hover:bg-[#FF0000] hover:border-[#FF0000] hover:text-white flex items-center justify-center transition-all"
                 >
                   <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
                     <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />

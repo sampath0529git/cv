@@ -14,7 +14,7 @@ import { StartCvProvider } from '@/components/builder/StartCvContext';
 export default function HomePage() {
   return (
     <StartCvProvider>
-      <div className="min-h-screen flex flex-col bg-white text-slate-900 overflow-x-clip selection:bg-blue-600 selection:text-white">
+      <div className="min-h-screen flex flex-col bg-transparent text-slate-900 overflow-x-clip selection:bg-blue-600 selection:text-white">
         {/* 1. Header Navigation Bar */}
         <TopNav />
 

@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Type } from '@google/genai';
 import mammoth from 'mammoth';
-import { CV_PARSE_MODEL, getGeminiClient } from '@/lib/gemini';
+import {
+  CV_PARSE_MODEL,
+  generateContentWithFallback,
+  cleanJsonModelOutput,
+  formatGeminiRouteError,
+} from '@/lib/gemini';
 import { LinkedInImportPayload } from '@/lib/linkedinImport';
 
 interface ParseLinkedInBody {
@@ -199,7 +204,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const ai = getGeminiClient();
 
     const parts: Array<
       { text: string } | { inlineData: { mimeType: string; data: string } }
@@ -288,8 +292,8 @@ export async function POST(req: NextRequest) {
 
     parts.push({ text: instructionText });
 
-    const response = await ai.models.generateContent({
-      model: CV_PARSE_MODEL,
+    const response = await generateContentWithFallback({
+      preferredModel: CV_PARSE_MODEL,
       contents: [{ role: 'user', parts }],
       config: {
         responseMimeType: 'application/json',
@@ -297,7 +301,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    const rawJsonText = (response.text || '').trim();
+    const rawJsonText = cleanJsonModelOutput(response.text || '');
     if (!rawJsonText) {
       return NextResponse.json(
         { error: 'Could not extract structured data from the provided document.' },
@@ -362,10 +366,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ payload: mergedPayload });
   } catch (err: unknown) {
     console.error('CV / LinkedIn parse error:', err);
-    const message =
-      err instanceof Error && err.message
-        ? err.message
-        : 'Unable to parse document right now. Please try again.';
-    return NextResponse.json({ error: message }, { status: 500 });
+    const { message, status } = formatGeminiRouteError(
+      err,
+      'Unable to parse your CV right now. Please wait a moment and try again.'
+    );
+    return NextResponse.json({ error: message }, { status });
   }
 }

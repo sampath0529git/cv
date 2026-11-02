@@ -87,7 +87,7 @@ export default function ImportStatusBanner({
   };
 
   return (
-    <div className="rounded-2xl bg-gradient-to-r from-emerald-50/95 via-teal-50/70 to-indigo-50/80 border border-emerald-200/90 p-3.5 sm:p-4 shadow-xs space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
+    <div className="rounded-2xl bg-white/70 backdrop-blur-2xl backdrop-saturate-150 border border-white/85 ring-1 ring-emerald-500/20 p-3.5 sm:p-4 shadow-[0_10px_28px_rgba(5,150,105,0.06),inset_0_1px_2px_rgba(255,255,255,0.95)] space-y-3 animate-in fade-in slide-in-from-top-2 duration-300">
       {/* Top Meta Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
         <div className="flex items-center gap-2.5 min-w-0">
@@ -99,8 +99,8 @@ export default function ImportStatusBanner({
               <span className="text-xs font-bold text-emerald-950 uppercase tracking-wide">
                 Import Status
               </span>
-              <span className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-800 bg-emerald-100/80 px-2 py-0.5 rounded-full">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-emerald-800">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
                 {detectedCount} of {sectionsList.length} Sections Auto-Detected
               </span>
             </div>
@@ -116,7 +116,7 @@ export default function ImportStatusBanner({
             <button
               type="button"
               onClick={onRevert}
-              className="px-3 py-1.5 rounded-xl bg-white border border-emerald-300/80 hover:bg-rose-50 hover:text-rose-600 hover:border-rose-300 text-slate-700 text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5 cursor-pointer"
+              className="px-3 py-1.5 rounded-xl bg-white/85 border border-emerald-300/80 hover:bg-red-50 hover:text-red-600 hover:border-red-300 text-slate-700 text-xs font-bold transition-all shadow-2xs flex items-center gap-1.5 cursor-pointer"
               title="Undo this import and restore your previous draft"
             >
               <RotateCcw className="w-3.5 h-3.5" />
@@ -152,8 +152,8 @@ export default function ImportStatusBanner({
                 onClick={() => handleJumpToStep(sec.id)}
                 className={`p-2 rounded-xl border text-left transition-all duration-150 cursor-pointer flex flex-col justify-between group ${
                   sec.detected
-                    ? 'bg-white border-emerald-300/80 hover:border-emerald-500 hover:shadow-2xs'
-                    : 'bg-white/50 border-slate-200/70 opacity-60 hover:opacity-100'
+                    ? 'bg-white/85 hover:bg-white border-emerald-300/80 hover:border-emerald-500 hover:shadow-2xs'
+                    : 'bg-white/50 border-white/80 opacity-60 hover:opacity-100'
                 }`}
                 title={`Jump to ${sec.label}`}
               >

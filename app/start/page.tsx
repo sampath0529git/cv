@@ -112,7 +112,7 @@ export default function StartPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F8FAFC] text-slate-900 selection:bg-[#2563EB] selection:text-white">
+    <div className="min-h-screen flex flex-col bg-transparent text-slate-900 selection:bg-[#2563EB] selection:text-white">
       {/* Unified Mobile & Desktop Navigation Header */}
       <TopNav />
 
@@ -122,7 +122,7 @@ export default function StartPage() {
         {hasSavedDraft && (
           <section
             aria-label="Resume saved CV draft"
-            className="mb-6 sm:mb-8 rounded-2xl bg-white border border-slate-200/90 shadow-[0_2px_16px_rgba(15,23,42,0.04)] p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+            className="mb-6 sm:mb-8 rounded-2xl bg-white/66 backdrop-blur-2xl backdrop-saturate-150 border border-white/85 ring-1 ring-slate-900/[0.04] shadow-[0_12px_36px_rgba(15,23,42,0.06),inset_0_1px_2px_rgba(255,255,255,0.95)] p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
           >
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs font-medium text-slate-500 tabular-nums">
@@ -154,7 +154,7 @@ export default function StartPage() {
                   <button
                     type="button"
                     onClick={() => setConfirmingReset(false)}
-                    className="min-h-[44px] px-3.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-[13px] font-semibold inline-flex items-center justify-center transition-colors duration-150 cursor-pointer whitespace-nowrap"
+                    className="min-h-[44px] px-3.5 rounded-xl border border-white/85 bg-white/70 hover:bg-white/95 backdrop-blur-md text-slate-700 text-xs sm:text-[13px] font-semibold inline-flex items-center justify-center transition-colors duration-150 cursor-pointer whitespace-nowrap"
                   >
                     Cancel
                   </button>
@@ -164,7 +164,7 @@ export default function StartPage() {
                   <button
                     type="button"
                     onClick={() => router.push('/builder')}
-                    className="flex-1 sm:flex-initial min-h-[44px] px-5 rounded-xl bg-[#0B112C] hover:bg-slate-800 text-white text-[13.5px] font-semibold inline-flex items-center justify-center gap-2 transition-colors duration-150 cursor-pointer whitespace-nowrap"
+                    className="flex-1 sm:flex-initial min-h-[44px] px-5 rounded-xl bg-[#0B112C] hover:bg-slate-800 text-white text-[13.5px] font-semibold inline-flex items-center justify-center gap-2 shadow-sm transition-colors duration-150 cursor-pointer whitespace-nowrap"
                   >
                     <span>Continue Editing</span>
                     <ArrowRight className="w-4 h-4 shrink-0" />
@@ -172,7 +172,7 @@ export default function StartPage() {
                   <button
                     type="button"
                     onClick={() => setConfirmingReset(true)}
-                    className="min-h-[44px] px-3.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 hover:text-slate-900 text-[13px] font-medium inline-flex items-center justify-center gap-1.5 transition-colors duration-150 cursor-pointer whitespace-nowrap"
+                    className="min-h-[44px] px-3.5 rounded-xl border border-white/85 bg-white/70 hover:bg-white/95 backdrop-blur-md ring-1 ring-slate-900/[0.04] text-slate-600 hover:text-slate-900 text-[13px] font-medium inline-flex items-center justify-center gap-1.5 transition-colors duration-150 cursor-pointer whitespace-nowrap"
                     title="Clear saved draft and begin with an empty CV"
                   >
                     <RotateCcw className="w-3.5 h-3.5 shrink-0" />
@@ -210,7 +210,7 @@ export default function StartPage() {
           className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 items-stretch"
         >
           {/* Pathway 01: Build from scratch (Primary / Most Popular) */}
-          <div className="group flex flex-col justify-between rounded-2xl sm:rounded-3xl bg-white border border-[#2563EB]/45 shadow-[0_8px_28px_rgba(37,99,235,0.08)] hover:border-[#2563EB] transition-colors duration-150 p-5 sm:p-7">
+          <div className="group flex flex-col justify-between rounded-2xl sm:rounded-3xl bg-white/66 hover:bg-white/86 backdrop-blur-2xl backdrop-saturate-150 border border-blue-400/60 hover:border-[#2563EB] ring-1 ring-blue-500/10 shadow-[0_14px_40px_rgba(37,99,235,0.10),inset_0_1px_2px_rgba(255,255,255,0.95)] transition-all duration-200 p-5 sm:p-7">
             <div>
               <div className="flex items-center justify-between gap-2 text-xs text-slate-500 tabular-nums mb-4">
                 <div className="flex items-center gap-2">
@@ -222,7 +222,7 @@ export default function StartPage() {
               </div>
 
               <div className="flex items-start gap-4 mb-4">
-                <div className="w-12 h-12 rounded-2xl bg-blue-50 text-[#2563EB] flex items-center justify-center shrink-0">
+                <div className="w-12 h-12 rounded-2xl bg-blue-500/12 border border-blue-400/25 text-[#2563EB] flex items-center justify-center shrink-0 shadow-[inset_0_1px_1px_rgba(255,255,255,0.85)]">
                   <FileEdit className="w-6 h-6 stroke-[2.1]" />
                 </div>
                 <div className="min-w-0">
@@ -240,7 +240,7 @@ export default function StartPage() {
                 skills with a real-time A4 preview beside you.
               </p>
 
-              <ul className="space-y-2 text-[13px] text-slate-600 mb-6 pt-4 border-t border-slate-100">
+              <ul className="space-y-2 text-[13px] text-slate-600 mb-6 pt-4 border-t border-white/75">
                 <li className="flex items-center gap-2.5">
                   <Check className="w-4 h-4 text-[#059669] shrink-0 stroke-[2.4]" />
                   <span>Recruiter-approved UK section order</span>
@@ -259,7 +259,7 @@ export default function StartPage() {
             <button
               type="button"
               onClick={handleStartFromScratch}
-              className="w-full min-h-[48px] px-5 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] active:scale-[0.98] text-white text-[14.5px] font-semibold inline-flex items-center justify-center gap-2 shadow-[0_4px_14px_rgba(37,99,235,0.26)] transition-all duration-150 cursor-pointer whitespace-nowrap"
+              className="w-full min-h-[48px] px-5 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] active:scale-[0.98] text-white text-[14.5px] font-semibold inline-flex items-center justify-center gap-2 shadow-[0_6px_18px_rgba(37,99,235,0.28)] transition-all duration-150 cursor-pointer whitespace-nowrap"
             >
               <span>Start Blank CV</span>
               <ArrowRight className="w-4 h-4 shrink-0 transition-transform duration-150 group-hover:translate-x-0.5" />
@@ -267,7 +267,7 @@ export default function StartPage() {
           </div>
 
           {/* Pathway 02: Upload existing CV */}
-          <div className="group flex flex-col justify-between rounded-2xl sm:rounded-3xl bg-white border border-slate-200/90 hover:border-slate-300 shadow-[0_2px_16px_rgba(15,23,42,0.03)] transition-colors duration-150 p-5 sm:p-7">
+          <div className="group flex flex-col justify-between rounded-2xl sm:rounded-3xl bg-white/62 hover:bg-white/86 backdrop-blur-2xl backdrop-saturate-150 border border-white/85 hover:border-blue-300/70 ring-1 ring-slate-900/[0.04] shadow-[0_12px_36px_rgba(15,23,42,0.06),inset_0_1px_2px_rgba(255,255,255,0.95)] transition-all duration-200 p-5 sm:p-7">
             <div>
               <div className="flex items-center justify-between gap-2 text-xs text-slate-500 tabular-nums mb-4">
                 <div className="flex items-center gap-2">
@@ -279,7 +279,7 @@ export default function StartPage() {
               </div>
 
               <div className="flex items-start gap-4 mb-4">
-                <div className="w-12 h-12 rounded-2xl bg-slate-100 text-[#0B112C] flex items-center justify-center shrink-0">
+                <div className="w-12 h-12 rounded-2xl bg-slate-900/[0.06] border border-white/80 text-[#0B112C] flex items-center justify-center shrink-0 shadow-[inset_0_1px_1px_rgba(255,255,255,0.85)]">
                   <FileUp className="w-6 h-6 stroke-[2.1]" />
                 </div>
                 <div className="min-w-0">
@@ -297,7 +297,7 @@ export default function StartPage() {
                 dates, and qualifications into a modern A4 layout.
               </p>
 
-              <ul className="space-y-2 text-[13px] text-slate-600 mb-6 pt-4 border-t border-slate-100">
+              <ul className="space-y-2 text-[13px] text-slate-600 mb-6 pt-4 border-t border-white/75">
                 <li className="flex items-center gap-2.5">
                   <Check className="w-4 h-4 text-[#059669] shrink-0 stroke-[2.4]" />
                   <span>Supports PDF, DOCX &amp; TXT documents</span>
@@ -315,7 +315,7 @@ export default function StartPage() {
 
             <Link
               href="/import"
-              className="w-full min-h-[48px] px-5 rounded-xl border border-slate-200 hover:border-slate-300 bg-slate-50/80 hover:bg-slate-100 active:scale-[0.98] text-[#0B112C] text-[14.5px] font-semibold inline-flex items-center justify-center gap-2 transition-all duration-150 cursor-pointer whitespace-nowrap"
+              className="w-full min-h-[48px] px-5 rounded-xl border border-white/90 hover:border-slate-300 bg-white/72 hover:bg-white/95 backdrop-blur-md ring-1 ring-slate-900/[0.05] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] active:scale-[0.98] text-[#0B112C] text-[14.5px] font-semibold inline-flex items-center justify-center gap-2 transition-all duration-150 cursor-pointer whitespace-nowrap"
             >
               <span>Upload CV File</span>
               <ArrowRight className="w-4 h-4 shrink-0 transition-transform duration-150 group-hover:translate-x-0.5" />
@@ -323,7 +323,7 @@ export default function StartPage() {
           </div>
 
           {/* Pathway 03: Import from LinkedIn */}
-          <div className="group flex flex-col justify-between rounded-2xl sm:rounded-3xl bg-white border border-slate-200/90 hover:border-[#0A66C2]/50 shadow-[0_2px_16px_rgba(15,23,42,0.03)] transition-colors duration-150 p-5 sm:p-7">
+          <div className="group flex flex-col justify-between rounded-2xl sm:rounded-3xl bg-white/62 hover:bg-white/86 backdrop-blur-2xl backdrop-saturate-150 border border-white/85 hover:border-[#0A66C2]/55 ring-1 ring-slate-900/[0.04] shadow-[0_12px_36px_rgba(15,23,42,0.06),inset_0_1px_2px_rgba(255,255,255,0.95)] transition-all duration-200 p-5 sm:p-7">
             <div>
               <div className="flex items-center justify-between gap-2 text-xs text-slate-500 tabular-nums mb-4">
                 <div className="flex items-center gap-2">
@@ -335,7 +335,7 @@ export default function StartPage() {
               </div>
 
               <div className="flex items-start gap-4 mb-4">
-                <div className="w-12 h-12 rounded-2xl bg-[#0A66C2]/10 text-[#0A66C2] flex items-center justify-center shrink-0">
+                <div className="w-12 h-12 rounded-2xl bg-[#0A66C2]/12 border border-[#0A66C2]/20 text-[#0A66C2] flex items-center justify-center shrink-0 shadow-[inset_0_1px_1px_rgba(255,255,255,0.85)]">
                   <Linkedin className="w-6 h-6 stroke-[2.1]" />
                 </div>
                 <div className="min-w-0">
@@ -353,7 +353,7 @@ export default function StartPage() {
                 history into a structured two-page British CV.
               </p>
 
-              <ul className="space-y-2 text-[13px] text-slate-600 mb-6 pt-4 border-t border-slate-100">
+              <ul className="space-y-2 text-[13px] text-slate-600 mb-6 pt-4 border-t border-white/75">
                 <li className="flex items-center gap-2.5">
                   <Check className="w-4 h-4 text-[#059669] shrink-0 stroke-[2.4]" />
                   <span>Direct OAuth sync or PDF profile upload</span>
@@ -372,7 +372,7 @@ export default function StartPage() {
             <button
               type="button"
               onClick={() => setIsLinkedInModalOpen(true)}
-              className="w-full min-h-[48px] px-5 rounded-xl border border-[#0A66C2]/25 bg-[#0A66C2]/8 hover:bg-[#0A66C2] text-[#0A66C2] hover:text-white active:scale-[0.98] text-[14.5px] font-semibold inline-flex items-center justify-center gap-2 transition-all duration-150 cursor-pointer whitespace-nowrap"
+              className="w-full min-h-[48px] px-5 rounded-xl border border-[#0A66C2]/30 bg-[#0A66C2]/10 hover:bg-[#0A66C2] backdrop-blur-md text-[#0A66C2] hover:text-white active:scale-[0.98] text-[14.5px] font-semibold inline-flex items-center justify-center gap-2 transition-all duration-150 cursor-pointer whitespace-nowrap"
             >
               <Linkedin className="w-4 h-4 shrink-0" />
               <span>Connect LinkedIn</span>
@@ -383,7 +383,7 @@ export default function StartPage() {
         {/* Quick-Start UK Career Stage Template Selector */}
         <section
           aria-label="Start directly with a specialist UK template"
-          className="mt-8 sm:mt-12 pt-8 sm:pt-10 border-t border-slate-200/80"
+          className="mt-8 sm:mt-12 pt-8 sm:pt-10 border-t border-white/75"
         >
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 mb-4 sm:mb-5">
             <div>
@@ -409,7 +409,7 @@ export default function StartPage() {
               <Link
                 key={preset.id}
                 href={`/builder?template=${preset.id}`}
-                className="group min-h-[60px] p-3.5 sm:p-4 rounded-2xl bg-white border border-slate-200/90 hover:border-[#2563EB] shadow-[0_1px_6px_rgba(15,23,42,0.02)] transition-all duration-150 flex items-center justify-between gap-2"
+                className="group min-h-[60px] p-3.5 sm:p-4 rounded-2xl bg-white/60 hover:bg-white/88 backdrop-blur-2xl backdrop-saturate-150 border border-white/85 hover:border-[#2563EB]/70 ring-1 ring-slate-900/[0.04] shadow-[0_6px_22px_rgba(15,23,42,0.04),inset_0_1px_1px_rgba(255,255,255,0.95)] transition-all duration-150 flex items-center justify-between gap-2"
               >
                 <div className="min-w-0">
                   <div className="text-[13.5px] sm:text-sm font-bold text-[#0B112C] group-hover:text-[#2563EB] transition-colors truncate">
@@ -426,7 +426,7 @@ export default function StartPage() {
         </section>
 
         {/* Quiet UK Privacy & Standards Assurance Strip */}
-        <div className="mt-8 sm:mt-10 pt-6 border-t border-slate-200/70 flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 text-center text-xs text-slate-500">
+        <div className="mt-8 sm:mt-10 pt-6 border-t border-white/75 flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 text-center text-xs text-slate-600">
           <span>No account required to start</span>
           <span aria-hidden="true" className="hidden sm:inline">
             ·

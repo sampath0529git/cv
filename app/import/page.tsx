@@ -22,7 +22,36 @@ import {
   CheckCircle,
   FileCheck2,
   Sparkles,
+  RefreshCw,
 } from 'lucide-react';
+
+function sanitizeClientErrorMessage(raw: string): string {
+  const trimmed = raw.trim();
+  if (trimmed.startsWith('{')) {
+    try {
+      const parsed = JSON.parse(trimmed) as {
+        error?: { message?: string } | string;
+        message?: string;
+      };
+      if (typeof parsed.error === 'string' && parsed.error.trim()) {
+        return parsed.error.trim();
+      }
+      if (
+        parsed.error &&
+        typeof parsed.error === 'object' &&
+        typeof parsed.error.message === 'string'
+      ) {
+        return parsed.error.message.trim();
+      }
+      if (typeof parsed.message === 'string' && parsed.message.trim()) {
+        return parsed.message.trim();
+      }
+    } catch {
+      return 'The AI parser is temporarily busy. Please click Try Again in a moment.';
+    }
+  }
+  return trimmed;
+}
 
 function readFileAsDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -119,11 +148,11 @@ export default function ImportPage() {
       setParsedPayload(data.payload);
       setStep('preview');
     } catch (err: unknown) {
-      const msg =
+      const rawMsg =
         err instanceof Error && err.message
           ? err.message
           : 'Unable to parse file. Try uploading a PDF or test with a sample preset.';
-      setParseError(msg);
+      setParseError(sanitizeClientErrorMessage(rawMsg));
       setStep('select');
     }
   };
@@ -151,36 +180,35 @@ export default function ImportPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-[#EEF1FF] via-[#F8F9FE] to-white text-slate-900">
+    <div className="min-h-screen flex flex-col bg-transparent text-slate-900">
       <SimpleHeader />
 
       <main className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 py-8 sm:py-14">
         <div className="w-full max-w-[680px]">
           {/* STEP 1: Select File or Preset */}
           {step === 'select' && (
-            <div className="bg-white rounded-3xl border border-[#E8EAF5] shadow-[0_4px_30px_rgba(15,27,77,0.06)] p-6 sm:p-10">
+            <div className="bg-white/64 backdrop-blur-2xl backdrop-saturate-150 rounded-3xl border border-white/85 ring-1 ring-slate-900/[0.04] shadow-[0_20px_54px_rgba(15,27,77,0.09),inset_0_1px_2px_rgba(255,255,255,0.95)] p-6 sm:p-10">
               <div className="text-center mb-6">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100/80 text-xs font-semibold text-[#4B4DED] mb-3">
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>Smart CV Parser</span>
-                </div>
+                <p className="text-xs font-bold tracking-wider uppercase text-[#4B4DED] mb-2">
+                  Smart UK CV Parser
+                </p>
                 <h1 className="text-2xl sm:text-3xl lg:text-[32px] font-bold text-[#0F1B4D] tracking-tight leading-tight">
                   Import your existing CV
                 </h1>
-                <p className="text-slate-500 text-xs sm:text-sm mt-1.5 font-normal max-w-md mx-auto">
+                <p className="text-slate-600 text-xs sm:text-sm mt-1.5 font-normal max-w-md mx-auto">
                   Upload an existing CV, connect your LinkedIn profile, or test instantly with a sample preset.
                 </p>
               </div>
 
               {/* LinkedIn Quick Connect Banner */}
-              <div className="mb-6 p-4 rounded-2xl border border-[#DCE3F7] bg-[#FAFBFD] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="mb-6 p-4 rounded-2xl border border-white/85 bg-white/62 backdrop-blur-xl ring-1 ring-slate-900/[0.04] shadow-[inset_0_1px_1px_rgba(255,255,255,0.9)] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-10 h-10 rounded-xl bg-[#0A66C2]/10 text-[#0A66C2] flex items-center justify-center shrink-0">
+                  <div className="w-10 h-10 rounded-xl bg-[#0A66C2]/12 border border-[#0A66C2]/20 text-[#0A66C2] flex items-center justify-center shrink-0">
                     <Linkedin className="w-5 h-5" />
                   </div>
                   <div className="min-w-0">
                     <p className="text-sm font-bold text-[#0F1B4D]">Import from LinkedIn</p>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-slate-600">
                       Sign in with LinkedIn or upload your profile PDF
                     </p>
                   </div>
@@ -188,25 +216,37 @@ export default function ImportPage() {
                 <button
                   type="button"
                   onClick={() => setIsLinkedInModalOpen(true)}
-                  className="min-h-[40px] px-4 py-2 rounded-xl bg-[#0A66C2] hover:bg-[#004182] text-white text-xs sm:text-sm font-semibold inline-flex items-center justify-center gap-2 transition-colors cursor-pointer whitespace-nowrap shrink-0"
+                  className="min-h-[40px] px-4 py-2 rounded-xl bg-[#0A66C2] hover:bg-[#004182] text-white text-xs sm:text-sm font-semibold inline-flex items-center justify-center gap-2 transition-colors cursor-pointer whitespace-nowrap shrink-0 shadow-xs"
                 >
                   <Linkedin className="w-4 h-4 shrink-0" />
                   <span>Connect LinkedIn</span>
                 </button>
               </div>
 
-              <div className="relative flex items-center justify-center mb-6">
-                <div className="w-full border-t border-slate-200/80" />
-                <span className="bg-white px-3 text-xs font-medium text-slate-400 whitespace-nowrap">
+              <div className="relative flex items-center justify-center gap-3 mb-6">
+                <div className="flex-1 border-t border-slate-300/60" />
+                <span className="px-2 text-xs font-medium text-slate-500 whitespace-nowrap">
                   or upload document
                 </span>
-                <div className="w-full border-t border-slate-200/80" />
+                <div className="flex-1 border-t border-slate-300/60" />
               </div>
 
               {parseError && (
-                <div className="mb-5 p-3.5 rounded-xl border border-red-200 bg-red-50/70 flex items-start gap-2.5 text-xs sm:text-sm text-red-700">
-                  <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
-                  <span>{parseError}</span>
+                <div className="mb-5 p-3.5 sm:p-4 rounded-xl border border-red-200/90 bg-red-50/75 backdrop-blur-md flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs sm:text-sm text-red-800 shadow-[inset_0_1px_1px_rgba(255,255,255,0.75)]">
+                  <div className="flex items-start gap-2.5">
+                    <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+                    <span className="leading-relaxed">{parseError}</span>
+                  </div>
+                  {file && (
+                    <button
+                      type="button"
+                      onClick={() => void handleStartFileImport()}
+                      className="min-h-[36px] px-3.5 py-1.5 rounded-lg bg-white/80 hover:bg-white border border-red-200 text-red-700 font-semibold text-xs inline-flex items-center justify-center gap-1.5 transition-colors cursor-pointer shrink-0 self-end sm:self-center"
+                    >
+                      <RefreshCw className="w-3.5 h-3.5" />
+                      <span>Try Again</span>
+                    </button>
+                  )}
                 </div>
               )}
 
@@ -239,12 +279,12 @@ export default function ImportPage() {
               )}
 
               {/* 1-Click Sample CV Presets */}
-              <div className="pt-2 border-t border-slate-100">
+              <div className="pt-2 border-t border-white/75">
                 <SampleCvPresets onSelectPreset={handleSelectPreset} />
               </div>
 
               {/* Back links */}
-              <div className="flex items-center justify-center gap-4 pt-6 mt-6 border-t border-slate-100">
+              <div className="flex items-center justify-center gap-4 pt-6 mt-6 border-t border-white/75">
                 <Link
                   href="/"
                   className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-slate-500 hover:text-[#4B4DED] transition-colors"

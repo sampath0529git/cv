@@ -59,9 +59,9 @@ export default function CvTemplateShowcaseCard({
   };
 
   return (
-    <article className="group bg-white rounded-xl sm:rounded-2xl border border-slate-200/90 hover:border-blue-500/50 shadow-xs hover:shadow-xl transition-all duration-200 flex flex-col justify-between overflow-hidden min-w-0">
+    <article className="group bg-white/64 hover:bg-white/86 backdrop-blur-2xl backdrop-saturate-150 rounded-xl sm:rounded-2xl border border-white/85 hover:border-blue-400/70 ring-1 ring-slate-900/[0.04] shadow-[0_12px_34px_rgba(15,23,42,0.06),inset_0_1px_2px_rgba(255,255,255,0.95)] hover:shadow-[0_18px_44px_rgba(37,99,235,0.13)] transition-all duration-200 flex flex-col justify-between overflow-hidden min-w-0">
       {/* Live Scaled ISO A4 Preview Stage */}
-      <div className="p-2 sm:p-4 lg:p-5 bg-slate-100/75 border-b border-slate-100 relative">
+      <div className="p-2 sm:p-4 lg:p-5 bg-slate-900/[0.03] border-b border-white/75 relative">
         <div
           ref={containerRef}
           onClick={() => onPreview(template)}
@@ -89,8 +89,8 @@ export default function CvTemplateShowcaseCard({
           </div>
 
           {/* Desktop Hover Inspection Overlay */}
-          <div className="hidden sm:flex absolute inset-0 bg-slate-950/35 backdrop-blur-[1.5px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 items-center justify-center p-4">
-            <span className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white text-slate-900 font-semibold text-xs shadow-lg">
+          <div className="hidden sm:flex absolute inset-0 bg-[#0B112C]/35 backdrop-blur-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200 items-center justify-center p-4">
+            <span className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/88 backdrop-blur-xl border border-white/90 text-slate-900 font-semibold text-xs shadow-lg">
               <Eye className="w-4 h-4 text-[#2563EB]" />
               <span>Inspect Full A4 Layout</span>
             </span>
@@ -124,7 +124,7 @@ export default function CvTemplateShowcaseCard({
           </p>
         </div>
 
-        <div className="space-y-2.5 sm:space-y-3 pt-2.5 sm:pt-3 border-t border-slate-100">
+        <div className="space-y-2.5 sm:space-y-3 pt-2.5 sm:pt-3 border-t border-white/75">
           <p className="hidden sm:block text-[11.5px] text-slate-500 leading-snug">
             <strong className="font-semibold text-slate-700">Best for:</strong> {template.bestFor}
           </p>
@@ -135,7 +135,7 @@ export default function CvTemplateShowcaseCard({
               onClick={() => onPreview(template)}
               aria-label={`Preview ${template.name} template`}
               title={`Preview ${template.name}`}
-              className="min-h-[40px] w-[40px] sm:w-auto px-0 sm:px-3 py-2 rounded-lg sm:rounded-xl border border-slate-200 hover:border-slate-300 bg-white hover:bg-slate-50 active:scale-[0.97] text-slate-700 font-semibold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer whitespace-nowrap shrink-0"
+              className="min-h-[40px] w-[40px] sm:w-auto px-0 sm:px-3 py-2 rounded-lg sm:rounded-xl border border-white/90 hover:border-slate-300 bg-white/70 hover:bg-white/95 backdrop-blur-md ring-1 ring-slate-900/[0.05] active:scale-[0.97] text-slate-700 font-semibold text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer whitespace-nowrap shrink-0"
             >
               <Eye className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-slate-600 sm:text-slate-500 shrink-0" />
               <span className="hidden sm:inline">Preview</span>

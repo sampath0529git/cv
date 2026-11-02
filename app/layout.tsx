@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { BRAND_CONFIG, getSiteUrl } from '@/lib/config';
 import CvStoreHydrator from '@/components/common/CvStoreHydrator';
+import AmbientGlassCanvas from '@/components/layout/AmbientGlassCanvas';
 
 const siteUrl = getSiteUrl();
 const canonicalDomainUrl = `https://${BRAND_CONFIG.domain}`;
@@ -265,7 +266,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
       </head>
-      <body className="font-sans antialiased bg-white text-slate-900 selection:bg-[#4B4DED] selection:text-white" suppressHydrationWarning>
+      <body className="font-sans antialiased bg-[#EEF4FF] print:bg-white relative min-h-screen text-slate-900 selection:bg-[#4B4DED] selection:text-white" suppressHydrationWarning>
+        <AmbientGlassCanvas />
         <CvStoreHydrator />
         {children}
       </body>

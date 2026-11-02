@@ -146,7 +146,7 @@ export default function TemplateControls({
           <select
             value={settings.fontFamily}
             onChange={(e) => onChange({ fontFamily: e.target.value })}
-            className="w-full min-h-[44px] px-3.5 py-2.5 text-base sm:text-xs font-medium bg-white border border-slate-200 rounded-xl shadow-2xs focus:outline-none focus:ring-2 focus:ring-[#4B4DED]/20 focus:border-[#4B4DED] cursor-pointer"
+            className="w-full min-h-[44px] px-3.5 py-2.5 text-base sm:text-xs font-medium bg-white/75 hover:bg-white/95 backdrop-blur-md border border-white/85 ring-1 ring-slate-900/[0.05] rounded-xl shadow-2xs focus:outline-none focus:ring-2 focus:ring-[#4B4DED]/20 focus:border-[#4B4DED] cursor-pointer"
           >
             {Object.entries(FONT_MAP).map(([key, f]) => (
               <option key={key} value={key}>
@@ -160,7 +160,7 @@ export default function TemplateControls({
           <label className="text-xs font-bold uppercase tracking-wider text-slate-700">
             Font Scale
           </label>
-          <div className="grid grid-cols-3 gap-1.5 bg-slate-100 p-1 rounded-xl min-h-[44px]">
+          <div className="grid grid-cols-3 gap-1.5 bg-white/60 backdrop-blur-md border border-white/85 ring-1 ring-slate-900/[0.04] p-1 rounded-xl min-h-[44px]">
             {(['sm', 'md', 'lg'] as FontScale[]).map((scale) => {
               const isSelected = settings.fontScale === scale;
               const labels: Record<FontScale, string> = {
@@ -175,7 +175,7 @@ export default function TemplateControls({
                   onClick={() => onChange({ fontScale: scale })}
                   className={`py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer text-center ${
                     isSelected
-                      ? 'bg-white text-[#4B4DED] shadow-2xs'
+                      ? 'bg-white/95 text-[#4B4DED] shadow-2xs border border-white/90'
                       : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
@@ -218,7 +218,7 @@ export default function TemplateControls({
           id="modal-date-format-select"
           value={normalizeDateFormat(settings.dateFormat)}
           onChange={(e) => onChange({ dateFormat: e.target.value as DateFormatOption })}
-          className="w-full min-h-[44px] px-3.5 py-2.5 text-base sm:text-xs font-medium bg-white border border-slate-200 rounded-xl shadow-2xs focus:outline-none focus:ring-2 focus:ring-[#4B4DED]/20 focus:border-[#4B4DED] cursor-pointer"
+          className="w-full min-h-[44px] px-3.5 py-2.5 text-base sm:text-xs font-medium bg-white/75 hover:bg-white/95 backdrop-blur-md border border-white/85 ring-1 ring-slate-900/[0.05] rounded-xl shadow-2xs focus:outline-none focus:ring-2 focus:ring-[#4B4DED]/20 focus:border-[#4B4DED] cursor-pointer"
         >
           {DATE_FORMAT_OPTIONS.map((opt) => (
             <option key={opt.id} value={opt.id}>
@@ -229,7 +229,7 @@ export default function TemplateControls({
       </div>
 
       {/* 2b. Letter Spacing Slider */}
-      <div className="p-3.5 sm:p-4 rounded-2xl border border-slate-200 bg-slate-50/70 space-y-2.5">
+      <div className="p-3.5 sm:p-4 rounded-2xl border border-white/85 ring-1 ring-slate-900/[0.05] bg-white/64 backdrop-blur-xl space-y-2.5">
         <div className="flex items-center justify-between gap-2">
           <label
             htmlFor="modal-letter-spacing-slider"
@@ -343,7 +343,7 @@ export default function TemplateControls({
         };
 
         return (
-          <div className="p-3.5 sm:p-4 rounded-2xl border border-slate-200 bg-slate-50/70 space-y-3">
+          <div className="p-3.5 sm:p-4 rounded-2xl border border-white/85 ring-1 ring-slate-900/[0.05] bg-white/64 backdrop-blur-xl space-y-3">
             <div className="flex items-center justify-between gap-3">
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5">
@@ -406,8 +406,8 @@ export default function TemplateControls({
                     onClick={() => handleTargetToggle(target.id)}
                     className={`min-h-[46px] px-3 py-2 rounded-xl border text-left transition-all cursor-pointer flex items-center justify-between gap-2 ${
                       isTargetActive
-                        ? 'border-[#4B4DED] bg-white ring-1 ring-[#4B4DED]/20 shadow-2xs'
-                        : 'border-slate-200 bg-white/80 hover:bg-white hover:border-slate-300'
+                        ? 'border-[#4B4DED] bg-white/95 ring-1 ring-[#4B4DED]/20 shadow-2xs'
+                        : 'border-white/85 ring-1 ring-slate-900/[0.04] bg-white/75 hover:bg-white/95'
                     }`}
                   >
                     <div className="min-w-0">
@@ -426,7 +426,7 @@ export default function TemplateControls({
                       className={`w-5 h-5 rounded-md border flex items-center justify-center shrink-0 transition-colors ${
                         isTargetActive
                           ? 'bg-[#4B4DED] border-[#4B4DED] text-white'
-                          : 'border-slate-300 bg-slate-50 text-transparent'
+                          : 'border-slate-300 bg-white/80 text-transparent'
                       }`}
                     >
                       <Check className="w-3 h-3 stroke-[3]" />
@@ -440,7 +440,7 @@ export default function TemplateControls({
       })()}
 
       {/* 3. Photo Toggle */}
-      <div className="p-4 rounded-2xl border border-slate-200 bg-slate-50/70 space-y-2">
+      <div className="p-4 rounded-2xl border border-white/85 ring-1 ring-slate-900/[0.05] bg-white/64 backdrop-blur-xl space-y-2">
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <Camera className="w-4 h-4 text-[#4B4DED]" />
@@ -492,7 +492,7 @@ export default function TemplateControls({
             return (
               <div
                 key={sectionKey}
-                className="flex items-center justify-between px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs sm:text-sm font-medium text-slate-800 shadow-2xs"
+                className="flex items-center justify-between px-3.5 py-2 rounded-xl bg-white/75 hover:bg-white/95 backdrop-blur-md border border-white/85 ring-1 ring-slate-900/[0.04] text-xs sm:text-sm font-medium text-slate-800 shadow-2xs transition-colors"
               >
                 <div className="flex items-center gap-2.5 min-w-0">
                   <span className="w-5 text-center font-mono text-[11px] font-bold text-[#4B4DED] tabular-nums shrink-0">

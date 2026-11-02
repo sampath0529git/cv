@@ -59,19 +59,19 @@ export default function TemplateModal({ isOpen, onClose }: TemplateModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-6 bg-[#0F1B4D]/65 backdrop-blur-xs">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-6 bg-[#080E24]/56 backdrop-blur-md">
       {/* Backdrop */}
       <div className="fixed inset-0" onClick={onClose} />
 
       {/* Main Modal / Mobile Bottom-Sheet Container */}
-      <div className="relative bg-white rounded-t-3xl sm:rounded-3xl w-full max-w-[1280px] border-t sm:border border-slate-200 shadow-2xl overflow-hidden flex flex-col max-h-[92dvh] sm:max-h-[94vh] z-10">
+      <div className="relative bg-white/84 backdrop-blur-2xl backdrop-saturate-150 rounded-t-3xl sm:rounded-3xl w-full max-w-[1280px] border-t sm:border border-white/90 ring-1 ring-slate-900/[0.05] shadow-[0_28px_80px_rgba(8,14,36,0.28),inset_0_1px_2px_rgba(255,255,255,0.95)] overflow-hidden flex flex-col max-h-[92dvh] sm:max-h-[94vh] z-10">
         {/* Mobile Drag Handle Affordance */}
         <div className="sm:hidden pt-2.5 pb-1 flex justify-center shrink-0">
-          <div className="w-10 h-1.5 rounded-full bg-slate-200" />
+          <div className="w-10 h-1.5 rounded-full bg-slate-300/80" />
         </div>
 
         {/* Top Header */}
-        <header className="px-4 sm:px-8 pt-2 sm:pt-5 pb-3.5 sm:pb-4 border-b border-slate-100 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between shrink-0">
+        <header className="px-4 sm:px-8 pt-2 sm:pt-5 pb-3.5 sm:pb-4 border-b border-white/80 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between shrink-0">
           <div className="flex items-center justify-between gap-3">
             <h2 className="text-lg sm:text-2xl font-bold tracking-tight text-[#0F1B4D] truncate">
               Templates &amp; Design
@@ -98,7 +98,7 @@ export default function TemplateModal({ isOpen, onClose }: TemplateModalProps) {
 
           <div className="flex items-center justify-between sm:justify-end gap-3">
             {/* Sub-Tabs: Gallery vs Customize */}
-            <div className="grid grid-cols-2 sm:flex items-center w-full sm:w-auto bg-[#F4F7FE] p-1 rounded-xl border border-slate-200/70">
+            <div className="grid grid-cols-2 sm:flex items-center w-full sm:w-auto bg-white/60 backdrop-blur-md p-1 rounded-xl border border-white/85 ring-1 ring-slate-900/[0.04]">
               <button
                 type="button"
                 onClick={() => setActiveTab('gallery')}
@@ -164,9 +164,9 @@ export default function TemplateModal({ isOpen, onClose }: TemplateModalProps) {
             )}
           </div>
 
-          {/* Right Column: Live A4 Preview on Desktop */}
-          <div className="hidden lg:flex lg:col-span-5 flex-col min-h-0 bg-[#EEF2FA] rounded-2xl p-4 border border-slate-200/80 overflow-hidden">
-            <div className="flex items-center justify-between pb-2.5 border-b border-slate-200/70 mb-3 shrink-0">
+          {/* Right Column: Live A4 Preview on Desktop (inner A4 sheet stays 100% opaque white) */}
+          <div className="hidden lg:flex lg:col-span-5 flex-col min-h-0 bg-white/46 backdrop-blur-xl rounded-2xl p-4 border border-white/85 ring-1 ring-slate-900/[0.04] overflow-hidden">
+            <div className="flex items-center justify-between pb-2.5 border-b border-white/75 mb-3 shrink-0">
               <span className="text-xs font-bold uppercase tracking-wider text-[#0F1B4D]">
                 Live A4 Preview
               </span>

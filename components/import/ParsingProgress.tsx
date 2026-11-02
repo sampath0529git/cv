@@ -70,10 +70,10 @@ export default function ParsingProgress({
   }, [onComplete]);
 
   return (
-    <div className="w-full bg-white rounded-3xl border border-[#E8EAF5] shadow-[0_8px_30px_rgba(15,27,77,0.06)] p-6 sm:p-10">
+    <div className="w-full bg-white/66 backdrop-blur-2xl backdrop-saturate-150 rounded-3xl border border-white/85 ring-1 ring-slate-900/[0.04] shadow-[0_20px_54px_rgba(15,27,77,0.09),inset_0_1px_2px_rgba(255,255,255,0.95)] p-6 sm:p-10">
       {/* Header with animated beacon */}
       <div className="text-center mb-8">
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50 border border-indigo-100/80 mb-3">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-500/12 border border-indigo-400/25 backdrop-blur-md mb-3">
           <Sparkles className="w-4 h-4 text-[#4B4DED] animate-spin" />
           <span className="text-xs font-semibold text-[#4B4DED]">
             AI CV Parser Active
@@ -82,7 +82,7 @@ export default function ParsingProgress({
         <h2 className="text-xl sm:text-2xl font-bold text-[#0F1B4D] tracking-tight">
           Transforming your CV
         </h2>
-        <div className="flex items-center justify-center gap-2 mt-2 text-xs sm:text-sm text-slate-500">
+        <div className="flex items-center justify-center gap-2 mt-2 text-xs sm:text-sm text-slate-600">
           <FileText className="w-3.5 h-3.5 text-slate-400" />
           <span className="truncate max-w-[280px] font-medium text-slate-700">
             {fileName}
@@ -98,7 +98,7 @@ export default function ParsingProgress({
             {progressPercent}%
           </span>
         </div>
-        <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden p-0.5 border border-slate-200/60">
+        <div className="w-full h-2.5 bg-white/70 backdrop-blur-md rounded-full overflow-hidden p-0.5 border border-white/90 ring-1 ring-slate-900/[0.05]">
           <div
             className="h-full bg-gradient-to-r from-[#4B4DED] to-[#7B7DF6] rounded-full transition-all duration-500 ease-out"
             style={{ width: `${progressPercent}%` }}
@@ -111,17 +111,16 @@ export default function ParsingProgress({
         {STAGES.map((stage, idx) => {
           const isDone = activeStep > idx;
           const isCurrent = activeStep === idx;
-          const isUpcoming = activeStep < idx;
 
           return (
             <div
               key={stage.title}
-              className={`p-3.5 sm:p-4 rounded-2xl border transition-all duration-300 flex items-start gap-3.5 ${
+              className={`p-3.5 sm:p-4 rounded-2xl border backdrop-blur-md transition-all duration-300 flex items-start gap-3.5 ${
                 isCurrent
-                  ? 'border-[#4B4DED] bg-indigo-50/50 shadow-xs'
+                  ? 'border-[#4B4DED]/60 bg-indigo-50/65 shadow-xs'
                   : isDone
-                  ? 'border-emerald-200 bg-emerald-50/30'
-                  : 'border-slate-100 bg-slate-50/50 opacity-60'
+                  ? 'border-emerald-300/70 bg-emerald-50/55'
+                  : 'border-white/75 bg-white/45 opacity-70'
               }`}
             >
               <div className="mt-0.5 shrink-0">
@@ -150,7 +149,7 @@ export default function ParsingProgress({
                     {stage.title}
                   </p>
                   {isCurrent && (
-                    <span className="text-[11px] font-semibold text-[#4B4DED] animate-pulse">
+                    <span className="text-[11px] font-semibold text-[#4B4DED]">
                       In progress...
                     </span>
                   )}
@@ -160,7 +159,7 @@ export default function ParsingProgress({
                     </span>
                   )}
                 </div>
-                <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">
+                <p className="text-xs text-slate-600 mt-0.5 leading-relaxed">
                   {stage.description}
                 </p>
               </div>
@@ -169,8 +168,8 @@ export default function ParsingProgress({
         })}
       </div>
 
-      <div className="mt-6 pt-5 border-t border-slate-100 text-center">
-        <p className="text-xs text-slate-500">
+      <div className="mt-6 pt-5 border-t border-white/75 text-center">
+        <p className="text-xs text-slate-600">
           Your data is processed securely with encrypted transmission. No files are shared publicly.
         </p>
       </div>
