@@ -6,6 +6,8 @@ export type TemplateCategory =
   | 'Creative'
   | 'Creative-Light'
   | 'Graduate'
+  | 'Entry-Level'
+  | 'Acting'
   | 'Tech'
   | 'Healthcare';
 

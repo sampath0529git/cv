@@ -13,6 +13,7 @@ import {
   Award,
   Globe2,
 } from 'lucide-react';
+import { BLOG_POSTS } from '@/data/blogPosts';
 
 interface FaqItem {
   question: string;
@@ -177,6 +178,48 @@ export default function UkCvSeoSection() {
               );
             })}
           </div>
+
+          {/* Featured UK CV Writing Guides Internal Link Strip */}
+          {BLOG_POSTS.length > 0 && (
+            <div className="mt-12 pt-10 border-t border-slate-200/80">
+              <div className="flex items-center justify-between gap-4 mb-5">
+                <h4 className="text-lg sm:text-xl font-extrabold text-[#0B112C]">
+                  Essential UK CV Writing Guides
+                </h4>
+                <Link
+                  href="/blog"
+                  className="text-xs sm:text-sm font-semibold text-[#2563EB] hover:underline whitespace-nowrap"
+                >
+                  View all guides &rarr;
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
+                {BLOG_POSTS.slice(0, 3).map((post) => (
+                  <Link
+                    key={post.id}
+                    href={`/blog/${post.id}`}
+                    className="group p-4 sm:p-5 rounded-2xl bg-white/90 hover:bg-white border border-slate-200/90 hover:border-[#2563EB] shadow-2xs hover:shadow-md transition-all flex flex-col justify-between gap-3"
+                  >
+                    <div>
+                      <div className="flex items-center gap-1.5 text-[11px] font-medium text-slate-500">
+                        <span className="font-semibold text-[#2563EB]">{post.category}</span>
+                        <span aria-hidden="true">·</span>
+                        <span>{post.readTime}</span>
+                      </div>
+                      <h5 className="text-sm font-bold text-[#0B112C] group-hover:text-[#2563EB] transition-colors mt-1 leading-snug line-clamp-2">
+                        {post.seoTitle}
+                      </h5>
+                    </div>
+                    <span className="text-xs font-semibold text-[#2563EB] inline-flex items-center gap-1">
+                      <span>Read article</span>
+                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Quick CTA Prompt */}
           <div className="mt-10 p-6 rounded-2xl bg-white/80 backdrop-blur-xl border border-white/90 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-[0_8px_30px_rgba(37,99,235,0.08),inset_0_1px_2px_rgba(255,255,255,0.95)] text-center sm:text-left">

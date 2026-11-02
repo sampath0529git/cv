@@ -30,7 +30,7 @@ export default function NotFound() {
           Return Home
         </Link>
         <Link
-          href="/templates"
+          href="/cv-templates"
           className="px-6 py-3 bg-white border border-slate-200 text-slate-700 font-semibold rounded-full hover:bg-slate-50 transition"
         >
           Browse UK CV Templates

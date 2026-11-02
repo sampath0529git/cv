@@ -105,7 +105,6 @@ export async function POST(req: NextRequest) {
         systemInstruction,
         responseMimeType: 'application/json',
         responseSchema: SKILLS_SCHEMA,
-        temperature: 0.3,
       },
     });
 

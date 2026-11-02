@@ -66,8 +66,6 @@ export async function POST(req: NextRequest) {
       contents: prompt,
       config: {
         systemInstruction,
-        temperature: 0.7,
-        maxOutputTokens: 120,
       },
     });
 

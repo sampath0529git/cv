@@ -28,7 +28,7 @@ export default function CardiffTemplate({
   const location = cv.personal.location || '';
   const linkedin = cv.personal.linkedin || '';
   const website = cv.personal.website || '';
-  const photo = cv.personal.photo;
+  const photo = cv.settings.showPhoto ? cv.personal.photoUrl : undefined;
 
   const isFirstPage = pageIndex === 0;
   const isLastPage = pageIndex === totalPages - 1;
@@ -99,7 +99,7 @@ export default function CardiffTemplate({
                 <div key={idx} className="min-w-0 flex justify-between items-start text-[10.5px]">
                   <div className="min-w-0 pr-3">
                     <div className="font-bold text-slate-900 break-words">
-                      {edu.degree} {edu.field ? `in ${edu.field}` : ''}
+                      {edu.qualification || edu.degree} {edu.field ? `in ${edu.field}` : ''}
                     </div>
                     <div className="text-[10px] text-slate-600">
                       {edu.institution}
@@ -135,7 +135,7 @@ export default function CardiffTemplate({
                 <div key={idx} className="min-w-0 pl-3 border-l-2" style={{ borderColor: accent }}>
                   <div className="flex justify-between items-baseline min-w-0 flex-wrap gap-1 mb-0.5">
                     <span className="text-[11.5px] font-bold text-slate-900 break-words">
-                      {exp.position}
+                      {exp.role || exp.position}
                     </span>
                     <span className="text-[10px] font-medium text-slate-500 shrink-0">
                       {exp.startDate} – {exp.current ? 'Present' : exp.endDate}
@@ -303,7 +303,7 @@ export default function CardiffTemplate({
               <div className="space-y-2">
                 {projects.map((proj: any, idx: number) => (
                   <div key={idx} className="min-w-0 text-[10.5px]">
-                    <div className="font-bold text-slate-900 break-words">{proj.name}</div>
+                    <div className="font-bold text-slate-900 break-words">{proj.title || proj.name}</div>
                     {proj.description && (
                       <p className="text-[10px] text-slate-700 leading-relaxed break-words [overflow-wrap:anywhere] [text-wrap:pretty]">
                         {proj.description}

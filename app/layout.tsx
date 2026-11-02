@@ -142,7 +142,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             position: 1,
             name: 'Choose a UK CV Template',
             text: 'Select from recruiter-approved corporate, modern, minimal, academic, or graduate ISO A4 UK CV templates.',
-            url: `${canonicalDomainUrl}/templates`,
+            url: `${canonicalDomainUrl}/cv-templates`,
           },
           {
             '@type': 'HowToStep',

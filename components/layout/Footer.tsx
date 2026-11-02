@@ -183,40 +183,45 @@ export default function Footer() {
               </ul>
             </div>
 
-            {/* Column 3: CV Templates (2 cols) */}
+            {/* Column 3: CV Templates Hub & Spokes (2 cols) */}
             <div className="lg:col-span-2 space-y-3.5">
               <h4 className="text-xs font-bold tracking-wider text-white uppercase">
-                Templates
+                CV Templates
               </h4>
               <ul className="space-y-2 text-xs sm:text-sm text-slate-400">
                 <li>
-                  <Link href="/templates" className="hover:text-white transition-colors">
-                    Corporate Executive
+                  <Link href="/cv-templates" className="hover:text-white transition-colors">
+                    All Free CV Templates
                   </Link>
                 </li>
                 <li>
-                  <Link href="/templates" className="hover:text-white transition-colors">
-                    Modern Minimalist
+                  <Link href="/cv-template-16-year-old" className="hover:text-white transition-colors">
+                    16-Year-Old CV Template
                   </Link>
                 </li>
                 <li>
-                  <Link href="/templates" className="hover:text-white transition-colors">
-                    Tech &amp; Engineering
+                  <Link href="/school-leaver-cv-template" className="hover:text-white transition-colors">
+                    School Leaver CV
                   </Link>
                 </li>
                 <li>
-                  <Link href="/templates" className="hover:text-white transition-colors">
-                    Graduate &amp; Starter
+                  <Link href="/graduate-cv-templates" className="hover:text-white transition-colors">
+                    Graduate CV Templates
                   </Link>
                 </li>
                 <li>
-                  <Link href="/templates" className="hover:text-white transition-colors">
-                    Academic Traditional
+                  <Link href="/acting-cv-template" className="hover:text-white transition-colors">
+                    Acting &amp; Spotlight CV
                   </Link>
                 </li>
                 <li>
-                  <Link href="/templates" className="hover:text-white transition-colors">
-                    Creative &amp; Design
+                  <Link href="/finance-cv-template" className="hover:text-white transition-colors">
+                    Finance &amp; Banking CV
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/nursing-cv-template" className="hover:text-white transition-colors">
+                    NHS &amp; Nursing CV
                   </Link>
                 </li>
               </ul>
@@ -225,27 +230,32 @@ export default function Footer() {
             {/* Column 4: Career Advice & Guides (2 cols) */}
             <div className="lg:col-span-2 space-y-3.5">
               <h4 className="text-xs font-bold tracking-wider text-white uppercase">
-                Resources
+                CV Guides
               </h4>
               <ul className="space-y-2 text-xs sm:text-sm text-slate-400">
                 <li>
-                  <Link href="/templates" className="hover:text-white transition-colors">
-                    UK CV Templates
+                  <Link href="/blog/how-to-write-a-cv-uk" className="hover:text-white transition-colors">
+                    How to Write a UK CV
                   </Link>
                 </li>
                 <li>
-                  <Link href="/import" className="hover:text-white transition-colors">
-                    Smart CV Parser
+                  <Link href="/blog/ats-friendly-cv-uk-guide" className="hover:text-white transition-colors">
+                    Beat UK ATS Scanners
                   </Link>
                 </li>
                 <li>
-                  <Link href="/builder" className="hover:text-white transition-colors">
-                    AI Summary Rewrite
+                  <Link href="/blog/first-cv-guide-16-year-old-school-leaver-graduate-uk" className="hover:text-white transition-colors">
+                    First CV &amp; Grad Guide
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/ats-friendly-cv-template" className="hover:text-white transition-colors">
+                    ATS-Friendly Templates
                   </Link>
                 </li>
                 <li>
                   <Link href="/blog" className="hover:text-white transition-colors">
-                    Career Advice Blog
+                    All Career Guides
                   </Link>
                 </li>
               </ul>

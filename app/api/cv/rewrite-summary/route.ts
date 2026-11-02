@@ -14,6 +14,7 @@ interface RewriteEducationContext {
 
 interface RewriteSummaryPayload {
   summary?: string;
+  currentSummary?: string;
   jobTitle?: string;
   experiences?: RewriteExperienceContext[];
   educations?: RewriteEducationContext[];
@@ -25,7 +26,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = (await req.json()) as RewriteSummaryPayload;
 
-    const currentSummary = (body.summary ?? '').trim();
+    const currentSummary = (body.summary ?? body.currentSummary ?? '').trim();
     const jobTitle = (body.jobTitle ?? '').trim();
     const experiences = Array.isArray(body.experiences) ? body.experiences.slice(0, 4) : [];
     const educations = Array.isArray(body.educations) ? body.educations.slice(0, 3) : [];
@@ -120,7 +121,6 @@ export async function POST(req: NextRequest) {
       contents: userPrompt,
       config: {
         systemInstruction,
-        temperature: 0.6,
       },
     });
 

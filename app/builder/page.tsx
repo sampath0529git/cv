@@ -327,6 +327,34 @@ export default function BuilderPage() {
   const effectiveScale = manualZoom !== null ? manualZoom / 100 : fitScale;
   const displayedZoomPercent = Math.round(effectiveScale * 100);
 
+  const setStoreTemplate = store.setTemplate;
+  const setStoreShowPhoto = store.setShowPhoto;
+
+  // Apply ?template=<id> deep-link parameter from /cv-templates and spoke pages
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const applyTemplateFromQuery = () => {
+      const params = new URLSearchParams(window.location.search);
+      const requestedId = params.get('template')?.trim();
+      if (!requestedId) return;
+      const matched = CV_TEMPLATES.find((t) => t.id === requestedId);
+      if (matched) {
+        setStoreTemplate(matched.id as any);
+        if (!matched.supportsPhoto) {
+          setStoreShowPhoto(false);
+        }
+      }
+    };
+
+    applyTemplateFromQuery();
+    const unsubHydrate = useCvStore.persist.onFinishHydration(() => {
+      applyTemplateFromQuery();
+    });
+    return () => {
+      unsubHydrate();
+    };
+  }, [setStoreTemplate, setStoreShowPhoto]);
+
   // Smoothly center the active step pill inside the horizontal scroll strip
   useEffect(() => {
     const activeBtn = stepButtonRefs.current[currentStep];

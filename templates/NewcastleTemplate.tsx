@@ -157,7 +157,7 @@ export default function NewcastleTemplate({
                 <div key={idx} className="min-w-0 pl-2.5 border-l-2" style={{ borderColor: accent }}>
                   <div className="flex justify-between items-baseline min-w-0 flex-wrap gap-1 mb-0.5">
                     <span className="text-[11.5px] font-bold text-slate-900 break-words font-sans">
-                      {exp.position}
+                      {exp.role || exp.position}
                     </span>
                     <span className="text-[10px] font-mono font-medium text-slate-500 shrink-0">
                       {exp.startDate} – {exp.current ? 'Present' : exp.endDate}
@@ -207,7 +207,7 @@ export default function NewcastleTemplate({
                 <div key={idx} className="min-w-0 flex justify-between items-start text-[10.5px]">
                   <div className="min-w-0 pr-2">
                     <div className="font-bold text-slate-900 break-words font-sans">
-                      {edu.degree} {edu.field ? `in ${edu.field}` : ''}
+                      {edu.qualification || edu.degree} {edu.field ? `in ${edu.field}` : ''}
                     </div>
                     <div className="text-[10px] text-slate-600 font-mono">
                       {edu.institution}
@@ -307,7 +307,7 @@ export default function NewcastleTemplate({
                 {projects.map((proj: any, idx: number) => (
                   <div key={idx} className="min-w-0 p-2 bg-slate-50/70 border border-slate-200 rounded">
                     <div className="flex justify-between items-baseline text-[10.5px] mb-0.5">
-                      <span className="font-bold text-slate-900 break-words font-sans">{proj.name}</span>
+                      <span className="font-bold text-slate-900 break-words font-sans">{proj.title || proj.name}</span>
                       {proj.link && (
                         <span className="text-[9px] font-mono text-slate-500 shrink-0">{proj.link}</span>
                       )}

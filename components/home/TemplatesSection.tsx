@@ -123,7 +123,7 @@ export default function TemplatesSection() {
 
   const handleSelectTemplate = (templateId: string) => {
     setStoreTemplate(templateId as any);
-    router.push('/start');
+    router.push(`/builder?template=${encodeURIComponent(templateId)}`);
   };
 
   return (
@@ -176,13 +176,13 @@ export default function TemplatesSection() {
         </div>
 
         {/* Main Grid: Template Cards + Right Side "Why Choose" Card */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-          {/* Cards: Spans 9 or 8 cols on desktop */}
-          <div className="lg:col-span-8 xl:col-span-9 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-5">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-stretch">
+          {/* Cards: 2 per row on mobile, 4 on desktop */}
+          <div className="lg:col-span-8 xl:col-span-9 grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-5">
             {filteredTemplates.map((template) => (
               <div
                 key={template.id}
-                className="group relative rounded-2xl bg-[#0D1533] border border-white/10 hover:border-blue-400/50 p-3 transition-all duration-200 hover:-translate-y-0.5 flex flex-col justify-between shadow-lg"
+                className="group relative rounded-xl sm:rounded-2xl bg-[#0D1533] border border-white/10 hover:border-blue-400/50 p-2.5 sm:p-3 transition-all duration-200 hover:-translate-y-0.5 flex flex-col justify-between shadow-lg min-w-0"
               >
                 {/* Live Scaled A4 CV Template Preview */}
                 <HomeTemplateThumb
@@ -191,37 +191,39 @@ export default function TemplatesSection() {
                 />
 
                 {/* Card Title & Category Tag */}
-                <div className="px-1 pb-2 text-left">
+                <div className="px-0.5 sm:px-1 pb-2 text-left min-w-0">
                   <div className="flex items-center justify-between gap-1">
-                    <h4 className="text-sm font-bold text-white group-hover:text-blue-300 transition-colors truncate">
+                    <h4 className="text-[13px] sm:text-sm font-bold text-white group-hover:text-blue-300 transition-colors truncate">
                       {template.name}
                     </h4>
-                    <span className="text-[10px] text-blue-300/80 font-mono">
+                    <span className="text-[10px] text-blue-300/80 font-mono shrink-0">
                       A4
                     </span>
                   </div>
-                  <p className="text-[11px] text-slate-400 capitalize mt-0.5">
+                  <p className="text-[10.5px] sm:text-[11px] text-slate-400 capitalize mt-0.5 truncate">
                     {template.category}
                   </p>
                 </div>
 
                 {/* Action Buttons: Preview & Use */}
-                <div className="grid grid-cols-2 gap-1.5 pt-1 border-t border-white/5">
+                <div className="flex sm:grid sm:grid-cols-2 items-center gap-1.5 pt-1.5 border-t border-white/5">
                   <button
                     type="button"
                     onClick={() => setPreviewTemplate(template)}
-                    className="min-h-[34px] px-2 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer"
+                    aria-label={`Preview ${template.name} template`}
+                    title={`Preview ${template.name}`}
+                    className="min-h-[36px] w-[36px] sm:w-auto px-0 sm:px-2 py-1.5 rounded-lg sm:rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-semibold flex items-center justify-center gap-1 transition-colors cursor-pointer shrink-0"
                   >
-                    <Eye className="w-3.5 h-3.5 text-blue-300" />
-                    <span>Preview</span>
+                    <Eye className="w-3.5 h-3.5 text-blue-300 shrink-0" />
+                    <span className="hidden sm:inline">Preview</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => handleSelectTemplate(template.id)}
-                    className="min-h-[34px] px-2 py-1.5 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-semibold flex items-center justify-center gap-1 transition-all active:scale-95 cursor-pointer shadow-xs"
+                    className="flex-1 min-h-[36px] px-2 py-1.5 rounded-lg sm:rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-semibold flex items-center justify-center gap-1 transition-all active:scale-95 cursor-pointer shadow-xs whitespace-nowrap"
                   >
                     <span>Use</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <ArrowRight className="w-3.5 h-3.5 shrink-0" />
                   </button>
                 </div>
               </div>
@@ -247,7 +249,7 @@ export default function TemplatesSection() {
             </div>
 
             <Link
-              href="/templates"
+              href="/cv-templates"
               className="w-full min-h-[44px] px-5 py-2.5 rounded-full bg-gradient-to-r from-[#0EA5E9] to-[#00B67A] hover:opacity-95 text-white font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md transition-all active:scale-[0.99] whitespace-nowrap"
             >
               <span>Browse All Templates</span>

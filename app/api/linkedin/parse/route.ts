@@ -294,7 +294,6 @@ export async function POST(req: NextRequest) {
       config: {
         responseMimeType: 'application/json',
         responseSchema: LINKEDIN_SCHEMA,
-        temperature: 0.2,
       },
     });
 

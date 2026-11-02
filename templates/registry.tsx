@@ -17,16 +17,23 @@ import BrightonTemplate from './BrightonTemplate';
 import NewcastleTemplate from './NewcastleTemplate';
 import BelfastTemplate from './BelfastTemplate';
 import CardiffTemplate from './CardiffTemplate';
+import SpotlightActingTemplate from './SpotlightActingTemplate';
+import SohoPerformerTemplate from './SohoPerformerTemplate';
+import YorkTeenTemplate from './YorkTeenTemplate';
+import StratfordFirstJobTemplate from './StratfordFirstJobTemplate';
+import DurhamSchoolLeaverTemplate from './DurhamSchoolLeaverTemplate';
 
 export const TEMPLATE_CATEGORIES: TemplateCategory[] = [
-  'Executive',
   'Classic',
+  'Executive',
   'Modern',
   'Minimal',
-  'Creative',
+  'Entry-Level',
   'Graduate',
-  'Tech',
+  'Acting',
   'Healthcare',
+  'Tech',
+  'Creative',
 ];
 
 /**
@@ -96,7 +103,7 @@ export const CV_TEMPLATES: TemplateDefinition[] = [
     supportsPhoto: false,
     component: (props) => <UkTraditionalTemplate {...props} />,
   },
-  // 10 New UK & European City Templates
+  // UK & European City Templates
   {
     id: 'edinburgh',
     name: 'Edinburgh',
@@ -174,7 +181,7 @@ export const CV_TEMPLATES: TemplateDefinition[] = [
     name: 'Belfast',
     category: 'Healthcare',
     description: 'Clinical academic trust layout with Royal College affiliations, GMC/NMC registration standing, and research publications.',
-    bestFor: 'Consultant physicians, surgeons, clinical researchers, and medical academics.',
+    bestFor: 'Specialist nurses, consultant clinicians, clinical researchers, and medical academics.',
     supportsPhoto: false,
     component: (props) => <BelfastTemplate {...props} />,
   },
@@ -186,6 +193,52 @@ export const CV_TEMPLATES: TemplateDefinition[] = [
     bestFor: 'University graduates, civil service apprentices, entry-level associates, and career changers.',
     supportsPhoto: true,
     component: (props) => <CardiffTemplate {...props} />,
+  },
+  // Dedicated UK Niche Career Layouts (Teen, School Leaver & Acting)
+  {
+    id: 'york',
+    name: 'York',
+    category: 'Entry-Level',
+    description: 'Skills-and-GCSE-first British starter layout highlighting core strengths, school achievements, volunteering, and weekend roles.',
+    bestFor: '16-year-olds, Year 11 GCSE students, Saturday retail/hospitality applicants, and first CVs.',
+    supportsPhoto: false,
+    component: (props) => <YorkTeenTemplate {...props} />,
+  },
+  {
+    id: 'stratford',
+    name: 'Stratford',
+    category: 'Entry-Level',
+    description: 'Clean two-zone early-career layout pairing GCSE or Sixth Form qualifications with transferable skills and work placements.',
+    bestFor: '16–18 students, work experience placements, customer service starters, and seasonal roles.',
+    supportsPhoto: false,
+    component: (props) => <StratfordFirstJobTemplate {...props} />,
+  },
+  {
+    id: 'durham',
+    name: 'Durham',
+    category: 'Entry-Level',
+    description: 'Structured A-Level, BTEC, and T-Level layout calibrated for UK degree apprenticeships, school-leaver schemes, and insight weeks.',
+    bestFor: 'Sixth Form & college leavers, Level 3–6 apprenticeship candidates, and junior office trainees.',
+    supportsPhoto: false,
+    component: (props) => <DurhamSchoolLeaverTemplate {...props} />,
+  },
+  {
+    id: 'west-end',
+    name: 'West End',
+    category: 'Acting',
+    description: 'Industry-standard British Spotlight & Equity performer layout with tabular credits, headshot frame, playing specs, and conservatoire training.',
+    bestFor: 'Stage, television, film, and musical theatre actors submitting to UK casting directors and agents.',
+    supportsPhoto: true,
+    component: (props) => <SpotlightActingTemplate {...props} />,
+  },
+  {
+    id: 'soho',
+    name: 'Soho',
+    category: 'Acting',
+    description: 'Contemporary two-column UK screen and theatre performer CV with portrait sidebar, representation details, accents, and production credits.',
+    bestFor: 'Screen actors, voiceover artists, commercial performers, and drama school graduates.',
+    supportsPhoto: true,
+    component: (props) => <SohoPerformerTemplate {...props} />,
   },
 ];
 

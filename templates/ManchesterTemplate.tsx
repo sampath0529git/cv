@@ -97,7 +97,7 @@ export default function ManchesterTemplate({
           <div className="grid grid-cols-2 gap-2 min-w-0">
             {cv.skills && cv.skills.length > 0 ? (
               cv.skills.map((group, gIdx) => (
-                <div key={group.id || gIdx} className="bg-slate-50 border border-slate-200/80 rounded-lg p-2 min-w-0">
+                <div key={group.category || group.group || gIdx} className="bg-slate-50 border border-slate-200/80 rounded-lg p-2 min-w-0">
                   <div style={{ color: accent }} className="text-[9.5px] font-bold font-mono uppercase tracking-wider mb-1">
                     {group.category || 'Competency'}
                   </div>

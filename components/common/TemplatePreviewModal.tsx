@@ -8,18 +8,15 @@ import {
   ArrowRight,
   ZoomIn,
   ZoomOut,
-  Maximize2,
-  Check,
   ShieldCheck,
-  Camera,
-  FileText,
-  Sparkles,
+  FilePenLine,
 } from 'lucide-react';
 
 interface TemplatePreviewModalProps {
   template: TemplateDefinition | null;
   onClose: () => void;
   onUseTemplate: (templateId: string) => void;
+  onUseWithSample?: (templateId: string, sampleCv: CV) => void;
   customCv?: CV;
   accentColor?: string;
 }
@@ -28,6 +25,7 @@ export default function TemplatePreviewModal({
   template,
   onClose,
   onUseTemplate,
+  onUseWithSample,
   customCv,
   accentColor,
 }: TemplatePreviewModalProps) {
@@ -35,7 +33,6 @@ export default function TemplatePreviewModal({
   const [containerWidth, setContainerWidth] = useState<number>(0);
   const [manualScale, setManualScale] = useState<number | null>(null);
 
-  // Lock body scroll when modal is active
   useEffect(() => {
     if (!template) return;
     const originalOverflow = document.body.style.overflow;
@@ -45,7 +42,6 @@ export default function TemplatePreviewModal({
     };
   }, [template]);
 
-  // Measure container width for responsive auto-fit
   const updateContainerWidth = useCallback(() => {
     if (containerRef.current) {
       setContainerWidth(containerRef.current.clientWidth);
@@ -71,7 +67,6 @@ export default function TemplatePreviewModal({
     };
   }, [template, updateContainerWidth]);
 
-  // Close on Escape
   useEffect(() => {
     if (!template) return;
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -83,11 +78,12 @@ export default function TemplatePreviewModal({
 
   if (!template) return null;
 
-  // Calculate crisp auto-fit scale based on measured container dimensions
   const isMobile = containerWidth < 640;
-  // Container horizontal padding: 16px on mobile, 32px on desktop
   const padding = isMobile ? 16 : 36;
-  const availableWidth = Math.max(220, (containerWidth || (typeof window !== 'undefined' ? window.innerWidth - 32 : 360)) - padding);
+  const availableWidth = Math.max(
+    220,
+    (containerWidth || (typeof window !== 'undefined' ? window.innerWidth - 32 : 360)) - padding
+  );
   const autoFitScale = Math.min(1.0, Math.max(0.25, availableWidth / A4_WIDTH_PX));
 
   const effectiveScale = manualScale !== null ? manualScale : autoFitScale;
@@ -97,15 +93,18 @@ export default function TemplatePreviewModal({
   const scaledHeight = Math.round(A4_HEIGHT_PX * effectiveScale);
 
   const Component = template.component;
-  const resolvedAccent = accentColor || SAMPLE_UK_CV.settings.accentColor;
+  const baseCv = customCv || SAMPLE_UK_CV;
+  const resolvedAccent = accentColor || baseCv.settings.accentColor || SAMPLE_UK_CV.settings.accentColor;
 
   const cvData: CV = {
-    ...(customCv || SAMPLE_UK_CV),
+    ...baseCv,
     settings: {
-      ...(customCv?.settings || SAMPLE_UK_CV.settings),
+      ...baseCv.settings,
       templateId: template.id,
       accentColor: resolvedAccent,
-      showPhoto: template.supportsPhoto,
+      showPhoto: Boolean(
+        template.supportsPhoto && baseCv.settings.showPhoto && baseCv.personal.photoUrl
+      ),
     },
   };
 
@@ -144,29 +143,21 @@ export default function TemplatePreviewModal({
         onClick={(e) => e.stopPropagation()}
         className="w-full bg-[#0F1B4D] border-b border-white/10 text-white px-3 sm:px-6 py-2.5 sm:py-3.5 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 shrink-0 shadow-lg z-20"
       >
-        {/* Template Information */}
+        {/* Template Information — Clean Inline Typographic Metadata */}
         <div className="flex items-center justify-between sm:justify-start gap-2.5 min-w-0">
           <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-blue-500/20 text-blue-300 border border-blue-400/30 whitespace-nowrap">
-                {template.category}
-              </span>
-              {template.supportsPhoto ? (
-                <span className="hidden xs:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-500/15 text-emerald-300 border border-emerald-400/20">
-                  <Camera className="w-2.5 h-2.5" /> Photo
-                </span>
-              ) : (
-                <span className="hidden xs:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-500/20 text-slate-300 border border-slate-400/20">
-                  <FileText className="w-2.5 h-2.5" /> Text-Focused
-                </span>
-              )}
+            <div className="flex flex-wrap items-center gap-1.5 text-[11px] font-medium text-blue-200/90">
+              <span>{template.category}</span>
+              <span className="text-slate-500">·</span>
+              <span>ISO A4</span>
+              <span className="text-slate-500">·</span>
+              <span>{template.supportsPhoto ? 'Photo Optional' : 'Text-Only Layout'}</span>
             </div>
             <h2 className="text-base sm:text-xl font-bold tracking-tight text-white truncate mt-0.5">
-              {template.name}
+              {template.name} Template
             </h2>
           </div>
 
-          {/* Mobile Direct Close Button */}
           <button
             type="button"
             onClick={onClose}
@@ -177,9 +168,8 @@ export default function TemplatePreviewModal({
           </button>
         </div>
 
-        {/* Center / Action Toolbar: Zoom Controls & CTA */}
-        <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0">
-          {/* Zoom Cluster */}
+        {/* Center / Action Toolbar: Zoom Controls & CTAs */}
+        <div className="flex items-center justify-between sm:justify-end gap-2 shrink-0 flex-wrap">
           <div className="flex items-center bg-white/10 rounded-xl border border-white/10 p-0.5">
             <button
               type="button"
@@ -212,7 +202,7 @@ export default function TemplatePreviewModal({
               onClick={manualScale === null ? handleSetActualSize : handleResetFit}
               className={`min-h-[30px] px-2 rounded-lg text-[11px] font-semibold transition-colors cursor-pointer whitespace-nowrap ${
                 manualScale === null
-                  ? 'bg-[#4B4DED] text-white shadow-xs'
+                  ? 'bg-[#2563EB] text-white shadow-xs'
                   : 'text-slate-300 hover:text-white hover:bg-white/15'
               }`}
               title={manualScale === null ? 'View 100% actual size' : 'Fit to screen'}
@@ -221,12 +211,23 @@ export default function TemplatePreviewModal({
             </button>
           </div>
 
-          {/* Action CTAs */}
           <div className="flex items-center gap-2">
+            {onUseWithSample && customCv && (
+              <button
+                type="button"
+                onClick={() => onUseWithSample(template.id, cvData)}
+                className="hidden md:inline-flex min-h-[38px] px-3.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-slate-100 text-xs font-semibold items-center gap-1.5 cursor-pointer transition-colors whitespace-nowrap"
+                title="Open in builder pre-filled with this UK sample CV"
+              >
+                <FilePenLine className="w-3.5 h-3.5 text-blue-300" />
+                <span>Edit UK Example</span>
+              </button>
+            )}
+
             <button
               type="button"
               onClick={() => onUseTemplate(template.id)}
-              className="min-h-[36px] sm:min-h-[38px] px-4 sm:px-5 rounded-xl bg-[#4B4DED] hover:bg-[#3D3FC9] text-white text-xs sm:text-sm font-semibold shadow-md flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 whitespace-nowrap"
+              className="min-h-[36px] sm:min-h-[38px] px-4 sm:px-5 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs sm:text-sm font-semibold shadow-md flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 whitespace-nowrap"
             >
               <span>Use Template</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -252,7 +253,6 @@ export default function TemplatePreviewModal({
         }}
         className="flex-1 overflow-x-auto overflow-y-auto p-3 sm:p-6 flex justify-center items-start min-h-0 relative select-none"
       >
-        {/* Scaled A4 Document Card */}
         <div
           onClick={(e) => e.stopPropagation()}
           style={{
@@ -261,7 +261,6 @@ export default function TemplatePreviewModal({
           }}
           className="relative bg-white shadow-2xl rounded-lg overflow-hidden border border-slate-300/80 transition-[width,height] duration-150 shrink-0 select-text"
         >
-          {/* Printable A4 Container: 794px × 1123px */}
           <div
             style={{
               width: `${A4_WIDTH_PX}px`,
@@ -297,13 +296,21 @@ export default function TemplatePreviewModal({
         </div>
 
         <div className="flex items-center gap-3 text-[11px] text-slate-400 ml-auto">
-          <span className="hidden sm:inline">Pinch or use zoom controls to inspect typography</span>
+          {onUseWithSample && customCv && (
+            <button
+              type="button"
+              onClick={() => onUseWithSample(template.id, cvData)}
+              className="md:hidden text-slate-300 hover:text-white font-semibold cursor-pointer underline underline-offset-2"
+            >
+              Load UK example
+            </button>
+          )}
           <button
             type="button"
             onClick={() => onUseTemplate(template.id)}
             className="text-blue-400 hover:text-blue-300 font-semibold cursor-pointer underline underline-offset-2"
           >
-            Start with {template.name} &rarr;
+            Open {template.name} in Builder &rarr;
           </button>
         </div>
       </footer>
