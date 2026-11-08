@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
@@ -71,12 +71,12 @@ export default function StartPage() {
   const router = useRouter();
   const store = useCvStore();
   const [isLinkedInModalOpen, setIsLinkedInModalOpen] = useState<boolean>(false);
-  const [isHydrated, setIsHydrated] = useState<boolean>(false);
   const [confirmingReset, setConfirmingReset] = useState<boolean>(false);
-
-  useEffect(() => {
-    setIsHydrated(true);
-  }, []);
+  const isHydrated = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
 
   const hasSavedDraft =
     isHydrated &&

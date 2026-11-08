@@ -17,13 +17,13 @@ const CATEGORIES = [
 
 const POPULAR_TEMPLATE_HUBS = [
   { label: 'All UK CV Templates', href: '/cv-templates' },
-  { label: 'ATS-Friendly CV', href: '/ats-friendly-cv-template' },
-  { label: '16-Year-Old CV', href: '/cv-template-16-year-old' },
-  { label: 'School Leaver CV', href: '/school-leaver-cv-template' },
-  { label: 'Graduate CVs', href: '/graduate-cv-templates' },
-  { label: 'Finance & Banking', href: '/finance-cv-template' },
-  { label: 'NHS & Nursing', href: '/nursing-cv-template' },
-  { label: 'Acting & Spotlight', href: '/acting-cv-template' },
+  { label: 'ATS-Friendly CV', href: '/cv-templates/ats-friendly' },
+  { label: '16-Year-Old CV', href: '/cv-templates/16-year-old' },
+  { label: 'School Leaver CV', href: '/cv-templates/school-leaver' },
+  { label: 'Graduate CVs', href: '/cv-templates/graduate' },
+  { label: 'Finance & Banking', href: '/cv-templates/finance' },
+  { label: 'NHS & Nursing', href: '/cv-templates/nursing' },
+  { label: 'Acting & Spotlight', href: '/cv-templates/acting' },
 ];
 
 export default function BlogPage() {

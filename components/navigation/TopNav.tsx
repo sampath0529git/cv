@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useSyncExternalStore } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { AnimatePresence, motion } from 'motion/react';
@@ -9,19 +9,23 @@ import Logo from '@/components/brand/Logo';
 import { useCvStore } from '@/store/useCvStore';
 
 const UK_NICHE_SHORTCUTS = [
-  { href: '/cv-template-16-year-old', label: '16-Year-Old CV' },
-  { href: '/school-leaver-cv-template', label: 'School Leaver' },
-  { href: '/graduate-cv-templates', label: 'Graduate CVs' },
-  { href: '/nursing-cv-template', label: 'NHS & Nursing' },
-  { href: '/finance-cv-template', label: 'Finance & City' },
-  { href: '/ats-friendly-cv-template', label: 'ATS-Friendly' },
+  { href: '/cv-templates/16-year-old', label: '16-Year-Old CV' },
+  { href: '/cv-templates/school-leaver', label: 'School Leaver' },
+  { href: '/cv-templates/graduate', label: 'Graduate CVs' },
+  { href: '/cv-templates/nursing', label: 'NHS & Nursing' },
+  { href: '/cv-templates/finance', label: 'Finance & City' },
+  { href: '/cv-templates/ats-friendly', label: 'ATS-Friendly' },
 ];
 
 export default function TopNav() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [hasSavedDraft, setHasSavedDraft] = useState(false);
+  const isHydrated = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
 
   const experiencesCount = useCvStore((s) => s.experiences.length);
   const educationsCount = useCvStore((s) => s.educations.length);
@@ -30,34 +34,19 @@ export default function TopNav() {
   const hasJobTitle = useCvStore((s) => Boolean(s.contact?.jobTitle?.trim()));
   const hasImportedFile = useCvStore((s) => Boolean(s.importedFileName));
 
-  useEffect(() => {
-    setHasSavedDraft(
-      experiencesCount > 0 ||
-        educationsCount > 0 ||
-        skillsCount > 0 ||
-        hasSummary ||
-        hasJobTitle ||
-        hasImportedFile
-    );
-  }, [
-    experiencesCount,
-    educationsCount,
-    skillsCount,
-    hasSummary,
-    hasJobTitle,
-    hasImportedFile,
-  ]);
+  const hasSavedDraft =
+    isHydrated &&
+    (experiencesCount > 0 ||
+      educationsCount > 0 ||
+      skillsCount > 0 ||
+      hasSummary ||
+      hasJobTitle ||
+      hasImportedFile);
 
   const isStartPage = pathname === '/start';
   const isTemplateRoute =
     pathname === '/cv-templates' ||
-    pathname.startsWith('/cv-template') ||
-    pathname === '/school-leaver-cv-template' ||
-    pathname === '/graduate-cv-templates' ||
-    pathname === '/acting-cv-template' ||
-    pathname === '/finance-cv-template' ||
-    pathname === '/nursing-cv-template' ||
-    pathname === '/ats-friendly-cv-template';
+    pathname.startsWith('/cv-templates/');
 
   const navItems = [
     { href: '/', label: 'Home', isActive: pathname === '/' },
@@ -79,9 +68,11 @@ export default function TopNav() {
   ];
 
   // Close mobile drawer automatically on route change
-  useEffect(() => {
+  const [prevPathname, setPrevPathname] = useState(pathname);
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname);
     setMobileMenuOpen(false);
-  }, [pathname]);
+  }
 
   // Scroll listener for subtle sticky elevation
   useEffect(() => {

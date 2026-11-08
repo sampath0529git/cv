@@ -91,17 +91,17 @@ export const BLOG_POSTS: BlogPost[] = [
       },
       {
         label: 'ATS-Friendly CV Templates',
-        href: '/ats-friendly-cv-template',
+        href: '/cv-templates/ats-friendly',
         description: 'Single-column layouts tested on Reed, Indeed UK, and Workday.',
       },
       {
         label: 'Finance & Banking CV Template',
-        href: '/finance-cv-template',
+        href: '/cv-templates/finance',
         description: 'City of London & Canary Wharf deal-ready corporate formatting.',
       },
       {
         label: 'NHS & Nursing CV Template',
-        href: '/nursing-cv-template',
+        href: '/cv-templates/nursing',
         description: 'NMC PIN, CPD, and clinical governance layouts for NHS Trusts.',
       },
     ],
@@ -131,7 +131,7 @@ export const BLOG_POSTS: BlogPost[] = [
           heading: '1. Understand the British ISO A4 Standard (Not a US Resume)',
           body: [
             'One of the most frequent mistakes UK applicants make is downloading an American "US Letter" resume template. US Letter paper (215.9 × 279.4 mm) is wider and shorter than British ISO A4 (210 × 297 mm), causing awkward margin clipping when printed or previewed by British recruitment agencies.',
-            'Equally important are UK hiring norms under the Equality Act 2010. Never include your date of birth, marital status, nationality (unless clarifying Right to Work), or a profile photograph—unless you are a performer using a specialist [UK acting and Spotlight CV template](/acting-cv-template). Your header needs only your full name, target job title, town/city (for example, "Leeds, West Yorkshire"), mobile number, professional email, and LinkedIn URL.',
+            'Equally important are UK hiring norms under the Equality Act 2010. Never include your date of birth, marital status, nationality (unless clarifying Right to Work), or a profile photograph—unless you are a performer using a specialist [UK acting and Spotlight CV template](/cv-templates/acting). Your header needs only your full name, target job title, town/city (for example, "Leeds, West Yorkshire"), mobile number, professional email, and LinkedIn URL.',
           ],
           bullets: [
             'Page size: Strict ISO A4 (210 × 297 mm) with balanced 15–20 mm margins.',
@@ -152,7 +152,7 @@ export const BLOG_POSTS: BlogPost[] = [
           heading: '3. Quantify Your Work History With Outcomes, Not Duties',
           body: [
             'Hiring managers already know what a Marketing Executive, Staff Nurse, or Financial Analyst does day to day—they want proof of how well you did it. List your roles in reverse-chronological order (most recent first) and replace copied job descriptions with 3 to 5 bullet points starting with strong past-tense action verbs.',
-            'Sector expectations vary across Britain. City banking and audit recruiters expect deal values, IFRS/ACA credentials, and margin basis points formatted cleanly like our [finance CV template](/finance-cv-template), whereas NHS Trust shortlisting panels check NMC registration, patient safety audits, and multidisciplinary care aligned with our [NHS nursing CV template](/nursing-cv-template).',
+            'Sector expectations vary across Britain. City banking and audit recruiters expect deal values, IFRS/ACA credentials, and margin basis points formatted cleanly like our [finance CV template](/cv-templates/finance), whereas NHS Trust shortlisting panels check NMC registration, patient safety audits, and multidisciplinary care aligned with our [NHS nursing CV template](/cv-templates/nursing).',
           ],
           bullets: [
             'Lead with impact: "Increased regional B2B renewal rates from 76% to 91% within 12 months."',
@@ -165,7 +165,7 @@ export const BLOG_POSTS: BlogPost[] = [
           heading: '4. Structure Qualifications, Core Skills & ATS Compatibility',
           body: [
             'If you have two or more years of full-time work history, place Education below Work Experience. List your university degree with classification (e.g., "BA (Hons) Business Management, 2:1"), institution, and graduation year. Summarize A-Levels by subject and grade, and condense GCSEs to a single clean line such as "9 GCSEs (Grades 9–6), including English Language and Mathematics." If you are still in education or applying for your first role, read our dedicated [first CV guide for 16-year-olds, school leavers, and graduates](/blog/first-cv-guide-16-year-old-school-leaver-graduate-uk).',
-            'Finally, ensure your layout passes automated screening software before a human ever opens it. Over 75% of large UK employers filter incoming CVs using parser software—so pair clean typography with an [ATS-friendly CV template](/ats-friendly-cv-template) and review our in-depth [guide to beating UK Applicant Tracking Systems](/blog/ats-friendly-cv-uk-guide).',
+            'Finally, ensure your layout passes automated screening software before a human ever opens it. Over 75% of large UK employers filter incoming CVs using parser software—so pair clean typography with an [ATS-friendly CV template](/cv-templates/ats-friendly) and review our in-depth [guide to beating UK Applicant Tracking Systems](/blog/ats-friendly-cv-uk-guide).',
           ],
         },
       ],
@@ -212,7 +212,7 @@ export const BLOG_POSTS: BlogPost[] = [
     relatedTemplateLinks: [
       {
         label: 'ATS-Friendly CV Templates',
-        href: '/ats-friendly-cv-template',
+        href: '/cv-templates/ats-friendly',
         description: 'Zero-table linear DOM layouts built for strict corporate & public portals.',
       },
       {
@@ -222,7 +222,7 @@ export const BLOG_POSTS: BlogPost[] = [
       },
       {
         label: 'NHS & Clinical Nursing Templates',
-        href: '/nursing-cv-template',
+        href: '/cv-templates/nursing',
         description: 'Structured for NHS Jobs, Trac shortlisting, and clinical agency portals.',
       },
       {
@@ -250,7 +250,7 @@ export const BLOG_POSTS: BlogPost[] = [
     ],
     content: {
       intro:
-        'Across FTSE 250 companies, NHS Trusts, Civil Service departments, and major job boards like Reed.co.uk, Totaljobs, and Indeed UK, over three-quarters of applications pass through an Applicant Tracking System (ATS) before reaching a hiring manager. An ATS does not "reject" people at random—instead, poorly structured layouts scramble your job titles and dates so your profile never surfaces in recruiter keyword searches. Starting with a verified [ATS-friendly CV template](/ats-friendly-cv-template) eliminates structural parsing errors from day one.',
+        'Across FTSE 250 companies, NHS Trusts, Civil Service departments, and major job boards like Reed.co.uk, Totaljobs, and Indeed UK, over three-quarters of applications pass through an Applicant Tracking System (ATS) before reaching a hiring manager. An ATS does not "reject" people at random—instead, poorly structured layouts scramble your job titles and dates so your profile never surfaces in recruiter keyword searches. Starting with a verified [ATS-friendly CV template](/cv-templates/ats-friendly) eliminates structural parsing errors from day one.',
       sections: [
         {
           id: 'how-uk-ats-parsers-read-your-cv',
@@ -278,7 +278,7 @@ export const BLOG_POSTS: BlogPost[] = [
           heading: '3. Align Keywords With the UK Job Specification Naturally',
           body: [
             'Recruiters filter their ATS talent pool using Boolean searches that combine role titles, qualifications, and technical competencies—for example, `"Management Accountant" AND ("CIMA" OR "ACCA") AND "SAP"`. If a job advert asks for "Stakeholder Engagement" and "GDPR Compliance" while your CV only mentions "client talks" and "data rules", you will rank lower than equally capable peers.',
-            'Tailor your Personal Profile and Core Skills bank for each high-priority application. Include both the spelled-out British qualification and its acronym—such as "Association of Chartered Certified Accountants (ACCA)" on a [finance CV template](/finance-cv-template) or "Nursing and Midwifery Council (NMC) Registered" on an [NHS nursing CV template](/nursing-cv-template). Early-career candidates can apply the same method to degree modules and GCSEs using our [graduate CV templates](/graduate-cv-templates).',
+            'Tailor your Personal Profile and Core Skills bank for each high-priority application. Include both the spelled-out British qualification and its acronym—such as "Association of Chartered Certified Accountants (ACCA)" on a [finance CV template](/cv-templates/finance) or "Nursing and Midwifery Council (NMC) Registered" on an [NHS nursing CV template](/cv-templates/nursing). Early-career candidates can apply the same method to degree modules and GCSEs using our [graduate CV templates](/cv-templates/graduate).',
           ],
         },
         {
@@ -293,7 +293,7 @@ export const BLOG_POSTS: BlogPost[] = [
       conclusion:
         'Passing UK ATS filters is about clarity, not gaming an algorithm. Pair clean linear formatting, standard British headings, and authentic job-spec terminology so both automated parsers and human hiring managers immediately recognise your fit.',
       ctaText: 'Use an ATS-Friendly UK Template',
-      ctaLink: '/ats-friendly-cv-template',
+      ctaLink: '/cv-templates/ats-friendly',
     },
   },
   {
@@ -333,17 +333,17 @@ export const BLOG_POSTS: BlogPost[] = [
     relatedTemplateLinks: [
       {
         label: '16-Year-Old CV Templates',
-        href: '/cv-template-16-year-old',
+        href: '/cv-templates/16-year-old',
         description: 'One-page GCSE and skills-first layouts for Saturday & retail jobs.',
       },
       {
         label: 'School Leaver & Apprenticeship CVs',
-        href: '/school-leaver-cv-template',
+        href: '/cv-templates/school-leaver',
         description: 'Built for Sixth Formers, BTEC/T-Level students, and degree apprenticeships.',
       },
       {
         label: 'UK Graduate CV Templates',
-        href: '/graduate-cv-templates',
+        href: '/cv-templates/graduate',
         description: 'Academic-led layouts for summer internships and graduate schemes.',
       },
       {
@@ -378,7 +378,7 @@ export const BLOG_POSTS: BlogPost[] = [
           heading: '1. Ages 16–17: Building a One-Page GCSE & First-Job CV',
           body: [
             'When applying to high-street retailers, supermarkets, cafés, leisure centres, or local pharmacies at 16, store managers scan for punctuality, polite customer service, numeracy, and weekend availability. Instead of leaving a half-empty work history section at the top, open with a bright three-line Personal Statement, followed immediately by **Key Transferable Skills** and **Education (GCSEs)**.',
-            'Highlight practical school achievements: Prefect or House Captain duties, Duke of Edinburgh (Bronze/Silver), sports teams, drama productions, or helping run a school charity stall. Our dedicated [CV template for a 16-year-old](/cv-template-16-year-old)—including the [York GCSE starter layout in the builder](/builder?template=york)—is pre-structured in this exact single-page order.',
+            'Highlight practical school achievements: Prefect or House Captain duties, Duke of Edinburgh (Bronze/Silver), sports teams, drama productions, or helping run a school charity stall. Our dedicated [CV template for a 16-year-old](/cv-templates/16-year-old)—including the [York GCSE starter layout in the builder](/builder?template=york)—is pre-structured in this exact single-page order.',
           ],
           bullets: [
             'Never include your exact date of birth or school uniform photo—just your name, town, mobile number, and professional email.',
@@ -390,7 +390,7 @@ export const BLOG_POSTS: BlogPost[] = [
           id: 'school-leavers-sixth-form-and-apprenticeships',
           heading: '2. School Leavers (17–19): Winning Degree & Higher Apprenticeships',
           body: [
-            'UK apprenticeship employers—from engineering firms and NHS Trusts to Big Four accounting pathways—assess potential against structured competency frameworks. On a [school leaver CV template](/school-leaver-cv-template), showcase your A-Levels, T-Levels, or BTEC National Extended Diploma alongside relevant coursework modules, Extended Project Qualifications (EPQ), and virtual insight weeks.',
+            'UK apprenticeship employers—from engineering firms and NHS Trusts to Big Four accounting pathways—assess potential against structured competency frameworks. On a [school leaver CV template](/cv-templates/school-leaver), showcase your A-Levels, T-Levels, or BTEC National Extended Diploma alongside relevant coursework modules, Extended Project Qualifications (EPQ), and virtual insight weeks.',
             'If you worked part-time on tills, waited tables, coached junior football, or completed a T-Level industry placement, quantify your reliability: how many customers you served on busy Saturday shifts, how you handled cash-ups accurately, or how you collaborated in a team.',
           ],
         },
@@ -398,8 +398,8 @@ export const BLOG_POSTS: BlogPost[] = [
           id: 'uk-university-graduates-and-placement-students',
           heading: '3. University Graduates: Turning Academic Rigour Into Commercial Value',
           body: [
-            'Graduate recruiters receive hundreds of applications from candidates with similar `2:1` or First-Class Honours degrees. Differentiate yours on our [UK graduate CV templates](/graduate-cv-templates) by unpacking three high-value modules, your dissertation topic and methodology, technical software tools (Python, R, SPSS, AutoCAD, Financial Modelling), and measurable outcomes from university societies or summer internships.',
-            'Applying to creative drama schools or agency showcases instead? Switch to an industry-calibrated [acting and Spotlight CV template](/acting-cv-template) so casting directors see your credits and training in tabular format. Applying to investment banking spring weeks or audit graduate intakes? Pair single-page precision with our [finance CV template](/finance-cv-template).',
+            'Graduate recruiters receive hundreds of applications from candidates with similar `2:1` or First-Class Honours degrees. Differentiate yours on our [UK graduate CV templates](/cv-templates/graduate) by unpacking three high-value modules, your dissertation topic and methodology, technical software tools (Python, R, SPSS, AutoCAD, Financial Modelling), and measurable outcomes from university societies or summer internships.',
+            'Applying to creative drama schools or agency showcases instead? Switch to an industry-calibrated [acting and Spotlight CV template](/cv-templates/acting) so casting directors see your credits and training in tabular format. Applying to investment banking spring weeks or audit graduate intakes? Pair single-page precision with our [finance CV template](/cv-templates/finance).',
           ],
         },
         {
@@ -458,12 +458,12 @@ export const BLOG_POSTS: BlogPost[] = [
       },
       {
         label: 'Finance & Banking CV Template',
-        href: '/finance-cv-template',
+        href: '/cv-templates/finance',
         description: 'Executive summary layouts tailored for City & Canary Wharf roles.',
       },
       {
         label: 'NHS & Nursing CV Template',
-        href: '/nursing-cv-template',
+        href: '/cv-templates/nursing',
         description: 'Clinical personal statement structures highlighting NMC PIN and Band level.',
       },
       {
@@ -511,7 +511,7 @@ export const BLOG_POSTS: BlogPost[] = [
           heading: '2. Sector-Specific UK Personal Statement Examples',
           body: [
             '**Corporate & Operations:** "Operations Lead with 7 years’ experience optimising multi-site UK grocery and 3PL supply chains. Reduced regional fulfilment costs by £340k YoY while lifting on-time store deliveries from 91% to 98.4%. Targeting a Senior Supply Chain Manager post to scale automated warehouse workflows."',
-            '**Finance & Accountancy:** "ACCA-qualified Financial Analyst with 4 years’ FP&A and statutory reporting experience across mid-market SaaS firms. Built rolling 13-week cash-flow models covering £28m ARR and shortened month-end close by three working days." Format profiles like this cleanly on our [finance CV template](/finance-cv-template) or clinical equivalents on our [NHS nursing CV template](/nursing-cv-template).',
+            '**Finance & Accountancy:** "ACCA-qualified Financial Analyst with 4 years’ FP&A and statutory reporting experience across mid-market SaaS firms. Built rolling 13-week cash-flow models covering £28m ARR and shortened month-end close by three working days." Format profiles like this cleanly on our [finance CV template](/cv-templates/finance) or clinical equivalents on our [NHS nursing CV template](/cv-templates/nursing).',
           ],
         },
         {
@@ -565,7 +565,7 @@ export const BLOG_POSTS: BlogPost[] = [
     relatedTemplateLinks: [
       {
         label: 'ATS-Friendly CV Templates',
-        href: '/ats-friendly-cv-template',
+        href: '/cv-templates/ats-friendly',
         description: 'Clean single-column British A4 templates engineered for keyword clarity.',
       },
       {
@@ -575,7 +575,7 @@ export const BLOG_POSTS: BlogPost[] = [
       },
       {
         label: 'Finance & Corporate Templates',
-        href: '/finance-cv-template',
+        href: '/cv-templates/finance',
         description: 'High-density A4 layouts ideal for quantified commercial bullet points.',
       },
       {
@@ -603,7 +603,7 @@ export const BLOG_POSTS: BlogPost[] = [
     ],
     content: {
       intro:
-        'Once your layout follows clean structural rules—as covered in our [UK ATS formatting guide](/blog/ats-friendly-cv-uk-guide)—the words inside your bullet points determine where you rank in recruiter searches. Combining precise domain nouns with strong British action verbs turns flat job descriptions into persuasive evidence on any [ATS-friendly CV template](/ats-friendly-cv-template).',
+        'Once your layout follows clean structural rules—as covered in our [UK ATS formatting guide](/blog/ats-friendly-cv-uk-guide)—the words inside your bullet points determine where you rank in recruiter searches. Combining precise domain nouns with strong British action verbs turns flat job descriptions into persuasive evidence on any [ATS-friendly CV template](/cv-templates/ats-friendly).',
       sections: [
         {
           id: 'hard-nouns-vs-action-verbs-in-ats',
@@ -638,7 +638,7 @@ export const BLOG_POSTS: BlogPost[] = [
       conclusion:
         'Strong UK CV writing pairs recruiter search terms with tangible commercial or clinical proof. Open any layout in our [British CV template hub](/cv-templates) to put sharp, ATS-ready phrasing to work immediately.',
       ctaText: 'Try an ATS-Ready UK Template',
-      ctaLink: '/ats-friendly-cv-template',
+      ctaLink: '/cv-templates/ats-friendly',
     },
   },
   {
@@ -677,17 +677,17 @@ export const BLOG_POSTS: BlogPost[] = [
     relatedTemplateLinks: [
       {
         label: 'School Leaver & Apprenticeship CVs',
-        href: '/school-leaver-cv-template',
+        href: '/cv-templates/school-leaver',
         description: 'Purpose-built A4 layouts for Sixth Form, BTEC, T-Level, and apprenticeship applicants.',
       },
       {
         label: '16-Year-Old GCSE CV Templates',
-        href: '/cv-template-16-year-old',
+        href: '/cv-templates/16-year-old',
         description: 'Clean one-page templates for post-16 Level 2 and Level 3 apprenticeships.',
       },
       {
         label: 'UK Graduate CV Templates',
-        href: '/graduate-cv-templates',
+        href: '/cv-templates/graduate',
         description: 'Structured academic & project layouts for competitive corporate intakes.',
       },
       {
@@ -715,13 +715,13 @@ export const BLOG_POSTS: BlogPost[] = [
     ],
     content: {
       intro:
-        'Competition for UK Higher and Degree Apprenticeships now rivals Russell Group university admissions, while Level 3 trade, digital, and business apprenticeships attract dozens of applicants per post. Using a dedicated [school leaver and apprenticeship CV template](/school-leaver-cv-template) ensures apprenticeship assessors immediately spot your qualifications, technical curiosity, and workplace readiness.',
+        'Competition for UK Higher and Degree Apprenticeships now rivals Russell Group university admissions, while Level 3 trade, digital, and business apprenticeships attract dozens of applicants per post. Using a dedicated [school leaver and apprenticeship CV template](/cv-templates/school-leaver) ensures apprenticeship assessors immediately spot your qualifications, technical curiosity, and workplace readiness.',
       sections: [
         {
           id: 'tailoring-for-level-3-vs-degree-apprenticeships',
           heading: '1. Tailoring Your Layout for Level 3 vs Level 6 Degree Apprenticeships',
           body: [
-            'Post-GCSE applicants targeting Level 2 or Level 3 apprenticeships in engineering maintenance, IT support, dental nursing, or business administration should lead with practical dependability, hands-on school subjects, and punctuality—using a crisp one-page layout from our [16-year-old CV template collection](/cv-template-16-year-old).',
+            'Post-GCSE applicants targeting Level 2 or Level 3 apprenticeships in engineering maintenance, IT support, dental nursing, or business administration should lead with practical dependability, hands-on school subjects, and punctuality—using a crisp one-page layout from our [16-year-old CV template collection](/cv-templates/16-year-old).',
             'Sixth Formers and college leavers targeting Level 4–6 Higher or Degree Apprenticeships in software engineering, quantity surveying, audit, or aerospace need stronger technical proof. Unpack relevant A-Level, T-Level, or BTEC modules, Extended Project Qualifications (EPQ), coding repositories, or CAD coursework right beneath your education entry.',
           ],
         },
@@ -747,9 +747,9 @@ export const BLOG_POSTS: BlogPost[] = [
         },
       ],
       conclusion:
-        'A winning UK apprenticeship CV shows employers you are ready to learn fast, show up reliably, and contribute from week one. Pick a free ISO A4 design on our [school leaver CV template page](/school-leaver-cv-template) and export your PDF today.',
+        'A winning UK apprenticeship CV shows employers you are ready to learn fast, show up reliably, and contribute from week one. Pick a free ISO A4 design on our [school leaver CV template page](/cv-templates/school-leaver) and export your PDF today.',
       ctaText: 'Browse Apprenticeship CV Templates',
-      ctaLink: '/school-leaver-cv-template',
+      ctaLink: '/cv-templates/school-leaver',
     },
   },
 ];
@@ -813,7 +813,10 @@ export function getRelatedBlogPosts(currentSlug: string, limit = 3): BlogPost[] 
 export function getBlogPostsForCategorySlug(categorySlug: string): BlogPost[] {
   const byId = (id: string) => BLOG_POSTS.find((p) => p.id === id);
 
-  if (categorySlug === 'school-leaver-cv-template') {
+  if (
+    categorySlug === 'school-leaver' ||
+    categorySlug === 'school-leaver-cv-template'
+  ) {
     return [
       byId('uk-apprenticeship-cv-guide'),
       byId('first-cv-guide-16-year-old-school-leaver-graduate-uk'),
@@ -822,7 +825,9 @@ export function getBlogPostsForCategorySlug(categorySlug: string): BlogPost[] {
   }
 
   if (
+    categorySlug === '16-year-old' ||
     categorySlug === 'cv-template-16-year-old' ||
+    categorySlug === 'graduate' ||
     categorySlug === 'graduate-cv-templates'
   ) {
     return [
@@ -833,8 +838,11 @@ export function getBlogPostsForCategorySlug(categorySlug: string): BlogPost[] {
   }
 
   if (
+    categorySlug === 'ats-friendly' ||
     categorySlug === 'ats-friendly-cv-template' ||
+    categorySlug === 'finance' ||
     categorySlug === 'finance-cv-template' ||
+    categorySlug === 'nursing' ||
     categorySlug === 'nursing-cv-template'
   ) {
     return [

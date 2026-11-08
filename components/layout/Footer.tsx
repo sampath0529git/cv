@@ -200,32 +200,32 @@ export default function Footer() {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/cv-template-16-year-old" className="hover:text-white transition-colors">
+                  <Link href="/cv-templates/16-year-old" className="hover:text-white transition-colors">
                     16-Year-Old CV Template
                   </Link>
                 </li>
                 <li>
-                  <Link href="/school-leaver-cv-template" className="hover:text-white transition-colors">
+                  <Link href="/cv-templates/school-leaver" className="hover:text-white transition-colors">
                     School Leaver CV
                   </Link>
                 </li>
                 <li>
-                  <Link href="/graduate-cv-templates" className="hover:text-white transition-colors">
+                  <Link href="/cv-templates/graduate" className="hover:text-white transition-colors">
                     Graduate CV Templates
                   </Link>
                 </li>
                 <li>
-                  <Link href="/acting-cv-template" className="hover:text-white transition-colors">
+                  <Link href="/cv-templates/acting" className="hover:text-white transition-colors">
                     Acting &amp; Spotlight CV
                   </Link>
                 </li>
                 <li>
-                  <Link href="/finance-cv-template" className="hover:text-white transition-colors">
+                  <Link href="/cv-templates/finance" className="hover:text-white transition-colors">
                     Finance &amp; Banking CV
                   </Link>
                 </li>
                 <li>
-                  <Link href="/nursing-cv-template" className="hover:text-white transition-colors">
+                  <Link href="/cv-templates/nursing" className="hover:text-white transition-colors">
                     NHS &amp; Nursing CV
                   </Link>
                 </li>
@@ -254,7 +254,7 @@ export default function Footer() {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/ats-friendly-cv-template" className="hover:text-white transition-colors">
+                  <Link href="/cv-templates/ats-friendly" className="hover:text-white transition-colors">
                     ATS-Friendly Templates
                   </Link>
                 </li>

@@ -331,25 +331,25 @@ export default function CvTemplatesPageContent({
                   template={template}
                   sampleCv={
                     template.category === 'Acting'
-                      ? ALL_SPOKE_LIST.find((s) => s.slug === 'acting-cv-template')?.sampleCv ||
+                      ? ALL_SPOKE_LIST.find((s) => s.slug === 'acting' || s.slug === 'acting-cv-template')?.sampleCv ||
                         SAMPLE_UK_CV
                       : template.category === 'Entry-Level'
-                      ? ALL_SPOKE_LIST.find((s) => s.slug === 'school-leaver-cv-template')
+                      ? ALL_SPOKE_LIST.find((s) => s.slug === 'school-leaver' || s.slug === 'school-leaver-cv-template')
                           ?.sampleCv || SAMPLE_UK_CV
                       : template.category === 'Healthcare'
-                      ? ALL_SPOKE_LIST.find((s) => s.slug === 'nursing-cv-template')?.sampleCv ||
+                      ? ALL_SPOKE_LIST.find((s) => s.slug === 'nursing' || s.slug === 'nursing-cv-template')?.sampleCv ||
                         SAMPLE_UK_CV
                       : SAMPLE_UK_CV
                   }
                   onPreview={(tpl) => {
                     const matchedSample =
                       tpl.category === 'Acting'
-                        ? ALL_SPOKE_LIST.find((s) => s.slug === 'acting-cv-template')?.sampleCv
+                        ? ALL_SPOKE_LIST.find((s) => s.slug === 'acting' || s.slug === 'acting-cv-template')?.sampleCv
                         : tpl.category === 'Entry-Level'
-                        ? ALL_SPOKE_LIST.find((s) => s.slug === 'school-leaver-cv-template')
+                        ? ALL_SPOKE_LIST.find((s) => s.slug === 'school-leaver' || s.slug === 'school-leaver-cv-template')
                             ?.sampleCv
                         : tpl.category === 'Healthcare'
-                        ? ALL_SPOKE_LIST.find((s) => s.slug === 'nursing-cv-template')?.sampleCv
+                        ? ALL_SPOKE_LIST.find((s) => s.slug === 'nursing' || s.slug === 'nursing-cv-template')?.sampleCv
                         : SAMPLE_UK_CV;
                     setPreviewSampleCv(matchedSample || SAMPLE_UK_CV);
                     setPreviewTemplate(tpl);

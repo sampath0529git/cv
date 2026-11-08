@@ -149,20 +149,20 @@ export const CV_TEMPLATE_HUB_CONFIG: CvCategoryPageConfig = {
     },
   ],
   relatedSlugs: [
-    'cv-template-16-year-old',
-    'school-leaver-cv-template',
-    'graduate-cv-templates',
-    'acting-cv-template',
-    'finance-cv-template',
-    'nursing-cv-template',
-    'ats-friendly-cv-template',
+    '16-year-old',
+    'school-leaver',
+    'graduate',
+    'acting',
+    'finance',
+    'nursing',
+    'ats-friendly',
   ],
 };
 
 export const CV_SPOKE_CONFIGS: Record<string, CvCategoryPageConfig> = {
-  'cv-template-16-year-old': {
-    slug: 'cv-template-16-year-old',
-    urlPath: '/cv-template-16-year-old',
+  '16-year-old': {
+    slug: '16-year-old',
+    urlPath: '/cv-templates/16-year-old',
     categoryLabel: 'Teen (16 Year Old)',
     breadcrumbLabel: 'CV Template for a 16 Year Old',
     targetKeyword: 'cv template 16 year old',
@@ -259,12 +259,12 @@ export const CV_SPOKE_CONFIGS: Record<string, CvCategoryPageConfig> = {
           'You do not need to print referee phone numbers on your CV—simply include "School and volunteer references available on request" at the bottom, then ask your Head of Year, form tutor, sports coach, or charity shop supervisor before an interview.',
       },
     ],
-    relatedSlugs: ['school-leaver-cv-template', 'graduate-cv-templates', 'ats-friendly-cv-template'],
+    relatedSlugs: ['school-leaver', 'graduate', 'ats-friendly'],
   },
 
-  'school-leaver-cv-template': {
-    slug: 'school-leaver-cv-template',
-    urlPath: '/school-leaver-cv-template',
+  'school-leaver': {
+    slug: 'school-leaver',
+    urlPath: '/cv-templates/school-leaver',
     categoryLabel: 'School Leaver',
     breadcrumbLabel: 'School Leaver CV Template',
     targetKeyword: 'school leaver cv template',
@@ -350,12 +350,12 @@ export const CV_SPOKE_CONFIGS: Record<string, CvCategoryPageConfig> = {
           'Write the full qualification title and grade profile—such as "T-Level in Digital Production, Design and Development (Predicted Distinction)" or "BTEC Level 3 National Extended Diploma in Engineering (DDD)"—and detail your 45-day industry placement directly in the Work Experience section.',
       },
     ],
-    relatedSlugs: ['cv-template-16-year-old', 'graduate-cv-templates', 'finance-cv-template'],
+    relatedSlugs: ['16-year-old', 'graduate', 'finance'],
   },
 
-  'graduate-cv-templates': {
-    slug: 'graduate-cv-templates',
-    urlPath: '/graduate-cv-templates',
+  'graduate': {
+    slug: 'graduate',
+    urlPath: '/cv-templates/graduate',
     categoryLabel: 'Graduate',
     breadcrumbLabel: 'Graduate CV Templates',
     targetKeyword: 'graduate cv templates',
@@ -441,12 +441,12 @@ export const CV_SPOKE_CONFIGS: Record<string, CvCategoryPageConfig> = {
           'Mention the dissertation title and grade in a two-line note directly beneath your degree entry, and add technical capstones, case-competition wins, or hackathons to the Key Projects section so recruiters see applied problem-solving.',
       },
     ],
-    relatedSlugs: ['school-leaver-cv-template', 'finance-cv-template', 'ats-friendly-cv-template'],
+    relatedSlugs: ['school-leaver', 'finance', 'ats-friendly'],
   },
 
-  'acting-cv-template': {
-    slug: 'acting-cv-template',
-    urlPath: '/acting-cv-template',
+  'acting': {
+    slug: 'acting',
+    urlPath: '/cv-templates/acting',
     categoryLabel: 'Acting',
     breadcrumbLabel: 'Acting CV Template',
     targetKeyword: 'acting cv template',
@@ -531,12 +531,12 @@ export const CV_SPOKE_CONFIGS: Record<string, CvCategoryPageConfig> = {
           'If you have an agent, list your agency name, agent email, and office phone number rather than personal details. If you are currently self-represented, include a dedicated professional casting email, Spotlight link, and your primary UK base city (e.g., London & Manchester).',
       },
     ],
-    relatedSlugs: ['cv-templates', 'graduate-cv-templates', 'ats-friendly-cv-template'],
+    relatedSlugs: ['cv-templates', 'graduate', 'ats-friendly'],
   },
 
-  'finance-cv-template': {
-    slug: 'finance-cv-template',
-    urlPath: '/finance-cv-template',
+  'finance': {
+    slug: 'finance',
+    urlPath: '/cv-templates/finance',
     categoryLabel: 'Finance',
     breadcrumbLabel: 'Finance CV Template',
     targetKeyword: 'finance cv template',
@@ -620,12 +620,12 @@ export const CV_SPOKE_CONFIGS: Record<string, CvCategoryPageConfig> = {
           'Describe transactions anonymously using sector and £GBP enterprise value—such as "Advised on £65M cross-border SaaS buyout (buy-side FDD)"—unless the deal has already been publicly announced via RNS or press release.',
       },
     ],
-    relatedSlugs: ['graduate-cv-templates', 'ats-friendly-cv-template', 'cv-templates'],
+    relatedSlugs: ['graduate', 'ats-friendly', 'cv-templates'],
   },
 
-  'nursing-cv-template': {
-    slug: 'nursing-cv-template',
-    urlPath: '/nursing-cv-template',
+  'nursing': {
+    slug: 'nursing',
+    urlPath: '/cv-templates/nursing',
     categoryLabel: 'Nursing & NHS',
     breadcrumbLabel: 'Nursing CV Template',
     targetKeyword: 'nursing cv template',
@@ -709,12 +709,12 @@ export const CV_SPOKE_CONFIGS: Record<string, CvCategoryPageConfig> = {
           'Prioritise extended clinical skills such as IV drug administration, venepuncture, peripheral cannulation, male/female catheterisation, ECG interpretation, ILS/ALS resuscitation status, Safeguarding Level 3, and NMC Practice Assessor (SSSA) sign-off.',
       },
     ],
-    relatedSlugs: ['ats-friendly-cv-template', 'graduate-cv-templates', 'cv-templates'],
+    relatedSlugs: ['ats-friendly', 'graduate', 'cv-templates'],
   },
 
-  'ats-friendly-cv-template': {
-    slug: 'ats-friendly-cv-template',
-    urlPath: '/ats-friendly-cv-template',
+  'ats-friendly': {
+    slug: 'ats-friendly',
+    urlPath: '/cv-templates/ats-friendly',
     categoryLabel: 'Simple / ATS-Friendly',
     breadcrumbLabel: 'ATS-Friendly CV Template',
     targetKeyword: 'ats friendly cv template',
@@ -798,21 +798,31 @@ export const CV_SPOKE_CONFIGS: Record<string, CvCategoryPageConfig> = {
           'Mirror the exact British role title and core competencies from the person specification naturally inside your 4-line Personal Profile, Key Skills list, and quantified experience bullets—never hide invisible white text, which triggers instant ATS rejection.',
       },
     ],
-    relatedSlugs: ['cv-templates', 'finance-cv-template', 'graduate-cv-templates'],
+    relatedSlugs: ['cv-templates', 'finance', 'graduate'],
   },
 };
 
 export const ALL_SPOKE_LIST: CvCategoryPageConfig[] = [
-  CV_SPOKE_CONFIGS['cv-template-16-year-old'],
-  CV_SPOKE_CONFIGS['school-leaver-cv-template'],
-  CV_SPOKE_CONFIGS['graduate-cv-templates'],
-  CV_SPOKE_CONFIGS['acting-cv-template'],
-  CV_SPOKE_CONFIGS['finance-cv-template'],
-  CV_SPOKE_CONFIGS['nursing-cv-template'],
-  CV_SPOKE_CONFIGS['ats-friendly-cv-template'],
+  CV_SPOKE_CONFIGS['16-year-old'],
+  CV_SPOKE_CONFIGS['school-leaver'],
+  CV_SPOKE_CONFIGS['graduate'],
+  CV_SPOKE_CONFIGS['acting'],
+  CV_SPOKE_CONFIGS['finance'],
+  CV_SPOKE_CONFIGS['nursing'],
+  CV_SPOKE_CONFIGS['ats-friendly'],
 ];
 
 export function getCategoryConfigBySlug(slug: string): CvCategoryPageConfig | undefined {
   if (slug === 'cv-templates') return CV_TEMPLATE_HUB_CONFIG;
-  return CV_SPOKE_CONFIGS[slug];
+  const legacyToNew: Record<string, string> = {
+    'cv-template-16-year-old': '16-year-old',
+    'school-leaver-cv-template': 'school-leaver',
+    'graduate-cv-templates': 'graduate',
+    'acting-cv-template': 'acting',
+    'finance-cv-template': 'finance',
+    'nursing-cv-template': 'nursing',
+    'ats-friendly-cv-template': 'ats-friendly',
+  };
+  const key = legacyToNew[slug] || slug;
+  return CV_SPOKE_CONFIGS[key];
 }

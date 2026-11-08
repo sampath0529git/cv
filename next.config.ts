@@ -15,6 +15,41 @@ const nextConfig: NextConfig = {
         destination: '/cv-templates',
         permanent: true,
       },
+      {
+        source: '/cv-template-16-year-old',
+        destination: '/cv-templates/16-year-old',
+        permanent: true,
+      },
+      {
+        source: '/school-leaver-cv-template',
+        destination: '/cv-templates/school-leaver',
+        permanent: true,
+      },
+      {
+        source: '/graduate-cv-templates',
+        destination: '/cv-templates/graduate',
+        permanent: true,
+      },
+      {
+        source: '/acting-cv-template',
+        destination: '/cv-templates/acting',
+        permanent: true,
+      },
+      {
+        source: '/finance-cv-template',
+        destination: '/cv-templates/finance',
+        permanent: true,
+      },
+      {
+        source: '/nursing-cv-template',
+        destination: '/cv-templates/nursing',
+        permanent: true,
+      },
+      {
+        source: '/ats-friendly-cv-template',
+        destination: '/cv-templates/ats-friendly',
+        permanent: true,
+      },
     ];
   },
   // Allow access to remote image placeholder.
