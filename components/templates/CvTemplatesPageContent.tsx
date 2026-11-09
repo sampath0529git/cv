@@ -146,9 +146,11 @@ export default function CvTemplatesPageContent({
                     {config.templateCount === 1 ? 'Layout' : 'Layouts'}
                   </span>
                   <span className="text-slate-300">·</span>
-                  <span>210 × 297 mm British Standard</span>
+                  <span>CV UK Format (ISO A4 210 × 297 mm)</span>
                   <span className="text-slate-300">·</span>
-                  <span>Free 300 DPI PDF &amp; Word Export</span>
+                  <span>Free CV Template PDF &amp; Word (.docx)</span>
+                  <span className="text-slate-300">·</span>
+                  <span>CV Layout Free Customisation</span>
                 </div>
               </div>
 
@@ -232,10 +234,10 @@ export default function CvTemplatesPageContent({
                   id="specialist-categories-heading"
                   className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight [text-wrap:balance]"
                 >
-                  Specialist UK CV Templates Tailored to Your Role
+                  Specialist UK CV Format Template Designs (Word &amp; PDF)
                 </h2>
                 <p className="text-sm sm:text-base text-slate-600 mt-2 leading-relaxed">
-                  Different British industries follow distinct formatting conventions—from single-page GCSE and Spotlight performer layouts to NMC clinical nursing and Canary Wharf deal sheets.
+                  Different British sectors demand tailored conventions—from our <strong className="font-semibold text-slate-700">cv template 16 year old</strong> and <strong className="font-semibold text-slate-700">cv templates for students</strong> to Spotlight-ready <strong className="font-semibold text-slate-700">acting cv template</strong> layouts, NHS clinical structures, and City banking deal sheets. Customise any <strong className="font-semibold text-slate-700">cv layout free</strong> and export as a <strong className="font-semibold text-slate-700">free cv template pdf</strong> or <strong className="font-semibold text-slate-700">free cv template word</strong> document.
                 </p>
               </div>
 

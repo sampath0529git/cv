@@ -52,8 +52,9 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  // Allow access to remote image placeholder.
+  // Allow access to remote image placeholder and configure modern WebP/AVIF formats.
   images: {
+    formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       {
         protocol: 'https',

@@ -66,42 +66,47 @@ export const CV_TEMPLATE_HUB_CONFIG: CvCategoryPageConfig = {
     'minimal-clean': '#334155',
     hopkins: '#2563EB',
   },
-  seoTitle: 'Free CV Templates UK – British A4 Layouts | freecvmakeruk',
+  seoTitle: 'Free CV Templates UK – Free CV Template Word & PDF | freecvmakeruk',
   metaDescription:
-    'Browse recruiter-approved free CV templates built for UK employers. Customise British A4 layouts online and download instant ATS-friendly PDF or Word files.',
+    'Browse recruiter-approved free cv templates. Download a free cv template word or free cv template pdf in standard cv uk format and uk cv format template designs.',
   keywords: [
     'free cv templates',
-    'free cv templates uk',
-    'uk cv templates',
+    'free cv template',
+    'free cv template word',
+    'free cv template pdf',
+    'cv uk format',
+    'uk cv format template',
+    'cv layout free',
+    'cv template 16 year old',
+    'acting cv template',
+    'cv templates for students',
     'british a4 cv template',
-    'classic cv template uk',
-    'professional cv template free download',
   ],
-  eyebrow: 'UK ISO A4 CV Template Library',
-  h1: 'Free CV Templates Built for UK Employers',
+  eyebrow: 'UK ISO A4 CV Template Library · CV Layout Free',
+  h1: 'Free CV Templates Built for UK Employers (Word & PDF Formats)',
   heroSubtitle:
-    'Start with our four flagship British A4 CV templates—or select a specialist layout tailored for 16-year-olds, school leavers, graduates, actors, finance, NHS nursing, and strict ATS portals.',
+    'Explore our recruiter-tested free cv templates crafted in authentic cv uk format. Whether you need a free cv template word (.docx) file, a crisp free cv template pdf, an entry-level cv template 16 year old, an acting cv template, or cv templates for students, our uk cv format template collection delivers every cv layout free of charge.',
   sampleRoleLabel: 'UK Corporate & Professional Standard',
   sampleCv: SAMPLE_UK_CV,
-  guideHeading: 'How to Choose the Right UK CV Template in 2026',
+  guideHeading: 'How to Choose the Right UK CV Format Template in 2026',
   guideIntro:
-    'British hiring managers spend an average of seven seconds on an initial CV scan. Choosing a clean ISO A4 structure with predictable headings ensures both human recruiters and Applicant Tracking Systems read your achievements effortlessly.',
+    'British hiring managers spend an average of seven seconds scanning an application. Selecting a clean cv uk format with clear section headings ensures both human recruiters and Applicant Tracking Systems read your achievements effortlessly.',
   formattingRules: [
     {
-      title: 'Stick to Two Pages of ISO A4',
-      body: 'Standard UK CVs run up to two A4 pages (210 × 297 mm) for experienced hires, or a single crisp A4 page for students, 16-year-olds, school leavers, and performers.',
+      title: 'Stick to Standard CV UK Format Dimensions',
+      body: 'Standard UK CVs run up to two A4 pages (210 × 297 mm) for experienced candidates, or a single page when using cv templates for students, school leavers, or a cv template 16 year old.',
     },
     {
-      title: 'Omit Photos Unless Casting Requires One',
-      body: 'Under UK Equality Act 2010 hiring norms, corporate, public-sector, and NHS employers prefer text-only CVs without headshots, age, or marital status. Only UK acting and Spotlight CVs require a portrait.',
+      title: 'Choose a Professional CV Layout Free of Clutter',
+      body: 'Under UK Equality Act 2010 hiring norms, corporate and NHS employers prefer text-only layouts without headshots. The main exception is an acting cv template where a casting headshot is expected.',
     },
     {
       title: 'Lead with a 4-Line Personal Profile',
-      body: 'Open directly beneath your contact bar with a focused Personal Statement summarising your specialism, years of experience or qualifications, and measurable commercial or clinical outcomes.',
+      body: 'Open directly beneath your contact bar with a focused personal profile summarizing your specialism, qualifications, and measurable commercial or academic achievements.',
     },
     {
-      title: 'Export Clean Vector PDF or Editable DOCX',
-      body: 'Every layout in our builder exports true selectable text at 300 DPI for Reed, Indeed UK, Totaljobs, NHS Trac, and Civil Service Jobs—never flattened image scans.',
+      title: 'Download as Free CV Template PDF or Word Document',
+      body: 'Every uk cv format template exports true selectable text as a free cv template pdf at 300 DPI or an editable free cv template word (.docx) file ready for Reed, Indeed UK, and Totaljobs.',
     },
   ],
   recommendedSectionOrder: [
@@ -115,37 +120,37 @@ export const CV_TEMPLATE_HUB_CONFIG: CvCategoryPageConfig = {
   faqs: [
     {
       id: 'faq-hub-free-download',
-      question: 'Are all CV templates on freecvmakeruk.co.uk genuinely free to download?',
+      question: 'Are all free cv templates genuinely free to download as Word and PDF?',
       answer:
-        'Yes. Every template—including our classic British A4 layouts and specialist sector templates—can be customised online and downloaded as a high-resolution 300 DPI PDF or editable Microsoft Word (.docx) document completely free, with no watermarks or trial paywalls.',
+        'Yes. Every single layout in our catalogue can be downloaded as a free cv template pdf or an editable free cv template word (.docx) document with no watermarks, hidden paywalls, or card demands.',
       recommendedTemplateId: 'classic-corporate',
     },
     {
-      id: 'faq-hub-uk-vs-us',
-      question: 'What is the difference between a UK CV template and a US resume template?',
+      id: 'faq-hub-uk-format',
+      question: 'What defines a proper cv uk format compared to international resumes?',
       answer:
-        'US resumes use Letter-size paper (8.5 × 11 in) and ultra-compressed one-page layouts. British CVs are calibrated to ISO A4 (210 × 297 mm), open with a Personal Profile rather than an Objective, list UK qualifications (GCSEs, A-Levels, Honours degrees), and allow two pages for experienced candidates.',
+        'A proper cv uk format strictly adheres to ISO A4 paper size, leads with a 3–5 line Personal Profile instead of an objective, lists British qualifications (GCSEs, A-Levels, Honours degrees), and omits personal photos, nationality, and marital status in accordance with UK hiring legislation.',
       recommendedTemplateId: 'uk-traditional',
     },
     {
-      id: 'faq-hub-switch-layouts',
-      question: 'Can I switch CV templates later without retyping my information?',
+      id: 'faq-hub-student-templates',
+      question: 'Do you offer cv templates for students and 16 year olds?',
       answer:
-        'Yes. Clicking Use Template opens the CV builder directly with your chosen layout applied while keeping all your existing work history, qualifications, and skills intact so you can switch between classic, minimal, and executive designs in one click.',
+        'Yes. We provide dedicated cv templates for students, graduates, and school leavers—including a specialized cv template 16 year old layout (York) designed for GCSE pupils applying for their first weekend or summer job.',
       recommendedTemplateId: 'minimal-clean',
     },
     {
-      id: 'faq-hub-pdf-vs-docx',
-      question: 'Should I download my UK CV as a PDF or Word document?',
+      id: 'faq-hub-acting-templates',
+      question: 'Do you have an acting cv template for Spotlight and West End auditions?',
       answer:
-        'PDF is ideal when emailing employers directly or uploading to modern portals because it locks your exact ISO A4 typography and margins. Choose DOCX when recruitment agencies ask for an editable file to attach candidate cover sheets.',
+        'Yes. Our acting cv template options (West End and Soho) format stage, film, and TV credits in horizontal columns with playing age, casting headshots, and Equity details.',
+      recommendedTemplateId: 'hopkins',
     },
     {
-      id: 'faq-hub-uk-cv-length',
-      question: 'How long should a standard UK CV be in 2026?',
+      id: 'faq-hub-layout-free',
+      question: 'Can I customise every cv layout free in the online builder?',
       answer:
-        'Two full sides of A4 is the benchmark for professionals with three or more years of experience. School leavers, 16-year-olds, university finalists applying to investment banks, and Spotlight actors should keep their CV to a single crisp A4 page.',
-      recommendedTemplateId: 'hopkins',
+        'Yes. You can adjust typography, colours, margin spacing, and section order for any cv layout free inside our live preview builder before downloading.',
     },
   ],
   relatedSlugs: [
@@ -366,10 +371,11 @@ export const CV_SPOKE_CONFIGS: Record<string, CvCategoryPageConfig> = {
       cardiff: '#2563EB',
       'minimal-clean': '#334155',
     },
-    seoTitle: 'Graduate CV Templates UK – Free A4 Layouts | freecvmakeruk',
+    seoTitle: 'CV Templates for Students & UK Graduates – Free A4 | freecvmakeruk',
     metaDescription:
-      'Free UK graduate CV templates designed for university students and recent graduates. Showcase 1st/2:1 honours degrees, placements, and dissertations cleanly.',
+      'Recruiter-approved cv templates for students and UK university graduates. Showcase 1st/2:1 honours degrees, internships, placements, and dissertations.',
     keywords: [
+      'cv templates for students',
       'graduate cv templates',
       'uk graduate cv template',
       'university student cv template uk',
@@ -377,14 +383,14 @@ export const CV_SPOKE_CONFIGS: Record<string, CvCategoryPageConfig> = {
       'placement year cv template uk',
     ],
     eyebrow: 'University & Graduate Scheme Layouts · 3 Templates',
-    h1: 'Graduate CV Templates for UK Schemes & Entry-Level Roles',
+    h1: 'CV Templates for Students & UK University Graduates',
     heroSubtitle:
-      'Engineered for final-year undergraduates, Masters students, and recent alumni applying to Times Top 100 graduate schemes, internships, and analyst roles.',
+      'Specialist cv templates for students, final-year undergraduates, and recent alumni applying to Times Top 100 graduate schemes, university placements, and junior analyst roles.',
     sampleRoleLabel: 'First-Class Honours Graduate & Internship Example',
     sampleCv: SAMPLE_GRADUATE_CV,
-    guideHeading: 'What UK Graduate Recruiters Expect on Your CV',
+    guideHeading: 'What UK Graduate Recruiters Expect on Student & Graduate CVs',
     guideIntro:
-      'Graduate recruitment teams screen thousands of applications through Workday, Taleo, and Cappfinity. Placing your university degree, dissertation impact, and internship outcomes in an unmistakable hierarchy gets you past initial screening.',
+      'Graduate recruitment teams screen thousands of applications through Workday, Taleo, and Cappfinity. Using our cv templates for students ensures your university degree, dissertation, and internships pass initial ATS checks.',
     formattingRules: [
       {
         title: 'Place University Education Above Experience',

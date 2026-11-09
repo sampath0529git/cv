@@ -4,7 +4,7 @@ import { BLOG_POSTS } from '@/data/blogPosts';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = getSiteUrl();
-  const now = new Date('2026-11-01T00:00:00.000Z');
+  const now = new Date();
 
   const staticPages: MetadataRoute.Sitemap = [
     {

@@ -14,50 +14,18 @@ import {
   Globe2,
 } from 'lucide-react';
 import { BLOG_POSTS } from '@/data/blogPosts';
-
-interface FaqItem {
-  question: string;
-  answer: string;
-}
-
-const UK_FAQS: FaqItem[] = [
-  {
-    question: 'Is freecvmakeruk.co.uk really a free CV maker in the UK?',
-    answer:
-      'Yes, 100%. freecvmakeruk.co.uk is a completely free CV maker UK jobseekers can use to build, format, and download job-winning CVs. There are no hidden paywalls, credit card demands, or surprise fees when downloading your finished PDF or Word document.',
-  },
-  {
-    question: 'Does this free CV maker support standard UK CV formats?',
-    answer:
-      'Every template is crafted to meet British employment standards. This includes the standard 2-page reverse-chronological layout, structured personal statements, UK date conventions, and bias-free structures aligned with the UK Equality Act 2010 (no photo, marital status, or date of birth required).',
-  },
-  {
-    question: 'Will my UK CV pass ATS scanners used by British recruiters?',
-    answer:
-      'Yes. Our templates are engineered to pass through Applicant Tracking Systems (ATS) used by major UK recruiters and job boards such as Reed.co.uk, Indeed UK, Totaljobs, CV-Library, and LinkedIn UK.',
-  },
-  {
-    question: 'What is the main difference between a UK CV and a US Resume?',
-    answer:
-      'In the UK, "CV" is the standard term (short for Curriculum Vitae), typically 2 pages long, featuring a punchy Personal Profile / Summary at the top, chronological employment history with measurable achievements, and key skills. Unlike European or international CVs, photos and personal demographics should be omitted for UK job applications.',
-  },
-  {
-    question: 'Can I download my finished UK CV as a PDF for free?',
-    answer:
-      'Yes. You can instantly export your completed CV in high-resolution, ATS-compliant A4 PDF format suitable for direct emailing to UK hiring managers or uploading to British job portals.',
-  },
-];
+import { HOMEPAGE_UK_FAQS } from '@/data/homepageFaqs';
 
 const UK_FEATURES = [
   {
     icon: ShieldCheck,
     title: 'UK Equality Act Compliant',
-    desc: 'Templates follow British hiring laws—no photos, date of birth, or gender required, protecting you against unconscious bias.',
+    desc: 'Templates follow British hiring laws—no photos, date of birth, or marital status, safeguarding you against recruitment bias.',
   },
   {
     icon: FileCheck,
     title: 'A4 & ATS-Optimized Layouts',
-    desc: 'Standard UK A4 page dimensions with machine-readable headings calibrated for British ATS systems.',
+    desc: 'Standard UK A4 page dimensions (210 × 297 mm) with machine-readable headings calibrated for British ATS systems.',
   },
   {
     icon: Award,
@@ -66,8 +34,8 @@ const UK_FEATURES = [
   },
   {
     icon: Globe2,
-    title: 'Tested on Leading UK Job Boards',
-    desc: 'Formatted specifically for flawless uploads to Reed.co.uk, CV-Library, Totaljobs, and Indeed UK.',
+    title: 'Europass CV & Vita CV Converter',
+    desc: 'Quickly convert international Europass CV or vita CV profiles into high-scoring British corporate CV layouts.',
   },
 ];
 
@@ -97,15 +65,15 @@ export default function UkCvSeoSection() {
         {/* Section Header */}
         <div className="max-w-3xl mx-auto text-center mb-12 sm:mb-16">
           <p className="text-xs font-bold tracking-wider uppercase text-[#2563EB] mb-2.5">
-            UK Job Market Standard
+            British Employment Standards · CV Creator Free
           </p>
 
           <h2 className="text-3xl sm:text-4xl lg:text-[42px] font-extrabold text-[#0B112C] tracking-tight leading-tight [text-wrap:balance]">
-            The #1 Free CV Maker UK for Jobseekers
+            The #1 Free CV Creator Online &amp; CV Maker UK
           </h2>
 
           <p className="text-base sm:text-lg text-slate-600 mt-4 leading-relaxed max-w-2xl mx-auto">
-            Crafting a job-winning CV in the UK requires specific formatting, concise personal statements, and full ATS compatibility. freecvmakeruk.co.uk provides the premier free CV maker UK professionals trust to secure interviews.
+            Crafting a job-winning curriculum vitae in the UK requires specific formatting, concise personal statements, and full ATS compatibility. freecvmakeruk.co.uk provides the premier <strong className="font-semibold text-slate-800">curriculum vitae maker free</strong> tool that UK professionals, graduates, and school leavers trust to secure interviews.
           </p>
         </div>
 
@@ -132,6 +100,44 @@ export default function UkCvSeoSection() {
           })}
         </div>
 
+        {/* Comparison & Guide Card: UK CV vs Europass CV, Vita CV & US Resume */}
+        <div className="mb-16 bg-white/64 backdrop-blur-2xl backdrop-saturate-150 rounded-3xl border border-white/85 ring-1 ring-slate-900/[0.04] p-6 sm:p-10 shadow-[0_16px_44px_rgba(15,23,42,0.06),inset_0_1px_2px_rgba(255,255,255,0.95)]">
+          <div className="max-w-3xl">
+            <h3 className="text-2xl sm:text-3xl font-extrabold text-[#0B112C] tracking-tight">
+              Why British Recruiters Prefer Our Free Online Resume Builder Over Generic Formats
+            </h3>
+            <p className="text-sm sm:text-base text-slate-600 mt-3 leading-relaxed">
+              When applying for jobs across London, Manchester, Birmingham, Edinburgh, and Leeds, using an international <strong className="font-semibold text-slate-800">europass cv</strong> or unformatted <strong className="font-semibold text-slate-800">vita cv</strong> can lead to immediate screening rejection. British recruitment teams expect:
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 mt-8">
+            <div className="p-5 rounded-2xl bg-white/60 border border-white/80 ring-1 ring-slate-900/[0.03]">
+              <span className="text-xs font-bold text-[#2563EB] uppercase tracking-wider">Format Standard</span>
+              <h4 className="text-base font-bold text-slate-900 mt-1 mb-2">UK CV Format vs Europass CV</h4>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                Europass formats often feature rigid European layouts and demographic data. Our <strong className="font-semibold text-slate-700">cv creator free</strong> tool adapts your history to the 2-page reverse-chronological standard expected by British employers.
+              </p>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-white/60 border border-white/80 ring-1 ring-slate-900/[0.03]">
+              <span className="text-xs font-bold text-[#2563EB] uppercase tracking-wider">ATS Optimization</span>
+              <h4 className="text-base font-bold text-slate-900 mt-1 mb-2">Resume Builder Resume Precision</h4>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                Our <strong className="font-semibold text-slate-700">free online resume builder</strong> structures headings, date ranges, and bullet points specifically to score maximum compatibility in Workday, Taleo, Greenhouse, and Reed ATS scanners.
+              </p>
+            </div>
+
+            <div className="p-5 rounded-2xl bg-white/60 border border-white/80 ring-1 ring-slate-900/[0.03]">
+              <span className="text-xs font-bold text-[#2563EB] uppercase tracking-wider">Application Success</span>
+              <h4 className="text-base font-bold text-slate-900 mt-1 mb-2">Curriculum Vitae C Strategy</h4>
+              <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                Searching for <strong className="font-semibold text-slate-700">curriculum vitae c</strong> guidance? Pair your ATS-friendly CV with tailored personal statement phrasing and bullet points that demonstrate measurable commercial value.
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* FAQ Section with Accordion */}
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-8">
@@ -140,12 +146,12 @@ export default function UkCvSeoSection() {
               <span>FREQUENTLY ASKED QUESTIONS</span>
             </div>
             <h3 className="text-2xl sm:text-3xl font-extrabold text-[#0B112C]">
-              Free CV Maker UK: Everything You Need to Know
+              Free CV Creator Online: Everything You Need to Know
             </h3>
           </div>
 
           <div className="space-y-3.5">
-            {UK_FAQS.map((faq, idx) => {
+            {HOMEPAGE_UK_FAQS.map((faq, idx) => {
               const isOpen = openFaq === idx;
               return (
                 <div
